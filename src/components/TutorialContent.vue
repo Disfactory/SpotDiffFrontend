@@ -192,6 +192,7 @@ export default {
 <style scoped lang="scss">
 .content {
   width: 375px;
+  padding-bottom: 46px;
   display: flex;
   flex-direction: column;
   align-items: center;
