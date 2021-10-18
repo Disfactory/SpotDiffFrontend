@@ -1,5 +1,5 @@
 <template>
-  <div class="content qusestionA" v-if="tutorialStatus === 1">
+  <div class="content qusestionA" v-if="stageOfTutorial === 1">
     <div class="question-text">
       你覺得 2017 框內是
       <br />
@@ -18,7 +18,7 @@
       <button @click="sendAnswer"><ButtonUnknown /></button>
     </div>
 
-    <BrownCard :change-status="changeStatus" class="card-answer" v-if="isAnswerSend">
+    <BrownCard :next-question="nextQuestion" class="card-answer" v-if="isAnswerSend">
       <template v-slot:icon>
         <LandWithShadow class="card-icon" />
       </template>
@@ -31,7 +31,7 @@
     </BrownCard>
   </div>
 
-  <div class="content qusestionB" v-if="tutorialStatus === 2">
+  <div class="content qusestionB" v-if="stageOfTutorial === 2">
     <div class=" question-text">
       2017你選了<span class="text-color-green">農地</span>，在框內<br />2020有建物嗎？
     </div>
@@ -54,17 +54,16 @@
       </div>
       <div class="previous-answer-caption">2017 你選了農地</div>
     </div>
-    <BrownCard :change-status="changeStatus" class="card-answer answer2" v-if="isAnswerSend">
+    <BrownCard :next-question="nextQuestion" class="card-answer answer2" v-if="isAnswerSend">
       <template v-slot:icon>
         <HasBuildingWithShadow class="card-icon" />
       </template>
       <template v-slot:answer>
         <p class="card-text text-strong ">答案：有建物</p>
-        <br />
       </template>
     </BrownCard>
   </div>
-  <div class="content qusestionA" v-if="tutorialStatus === 3">
+  <div class="content qusestionA" v-if="stageOfTutorial === 3">
     <div class="question-text">
       你覺得 2017 框內是
       <br />
@@ -83,7 +82,7 @@
       <button @click="sendAnswer"><ButtonUnknown /></button>
     </div>
 
-    <BrownCard :change-status="changeStatus" class="card-answer" v-if="isAnswerSend">
+    <BrownCard :next-question="nextQuestion" class="card-answer" v-if="isAnswerSend">
       <template v-slot:icon>
         <FactoryWithShadow class="card-icon" />
       </template>
@@ -96,7 +95,7 @@
     </BrownCard>
   </div>
 
-  <div class="content qusestionB" v-if="tutorialStatus === 4">
+  <div class="content qusestionB" v-if="stageOfTutorial === 4">
     <div class=" question-text">
       2017你選了<span class="text-color-blue">建物</span>，在框內<br />2020有建物嗎？
     </div>
@@ -119,7 +118,7 @@
       </div>
       <div class="previous-answer-caption">2017 你選了建地</div>
     </div>
-    <BrownCard :change-status="changeStatus" class="card-answer answer2" v-if="isAnswerSend">
+    <BrownCard :next-question="nextQuestion" class="card-answer answer2" v-if="isAnswerSend">
       <template v-slot:icon>
         <HasExpansionWithShadow class="card-icon" />
       </template>
@@ -150,7 +149,7 @@ import HasExpansionWithShadow from '../assets/svg-icon/has-expansion-with-shadow
 import NoExpansion from '../assets/svg-icon/no-expansion.svg';
 
 export default {
-  name: 'TheContent',
+  name: 'TutorialContent',
   components: {
     BrownCard,
     ButtonLand,
@@ -171,7 +170,6 @@ export default {
   },
   data() {
     return {
-      tutorialStatus: 1,
       isAnswerSend: false,
     };
   },
@@ -179,13 +177,12 @@ export default {
     sendAnswer() {
       this.isAnswerSend = true;
     },
-    changeStatus() {
-      if (this.tutorialStatus < 4) {
-        this.tutorialStatus += 1;
-        this.isAnswerSend = false;
-      }
+    nextQuestion() {
+      this.changeStageOfTutorial();
+      this.isAnswerSend = false;
     },
   },
+  props: ['stageOfTutorial', 'changeStageOfTutorial'],
 };
 </script>
 
@@ -280,14 +277,16 @@ export default {
     font-weight: 400;
     line-height: 25px;
     letter-spacing: 0.5px;
-    margin-bottom: 44px;
     text-align: left;
+    padding-top: 22px;
+    padding-bottom: 19px;
   }
   .text-strong {
     text-align: center;
     font-size: 25px;
     padding-left: 21px;
-    margin-bottom: 19px;
+    padding-top: 0px;
+    padding-bottom: 0px;
   }
   &.answer2 {
     .text-strong {

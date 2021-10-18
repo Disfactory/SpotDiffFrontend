@@ -4,7 +4,7 @@
     <CardDecorationRight class="card-decoration right-decoration" />
     <slot name="icon"></slot>
     <slot name="answer"></slot>
-    <button @click="changeStatus" class="continue-button">
+    <button @click="nextQuestion" class="continue-button">
       <ContinueButton />
     </button>
   </div>
@@ -18,7 +18,7 @@ import ContinueButton from '../assets/svg-icon/continue-button.svg';
 export default {
   name: 'BlueCard',
   components: { CardDecorationLeft, CardDecorationRight, ContinueButton },
-  props: ['changeStatus'],
+  props: ['nextQuestion'],
 };
 </script>
 <style lang="scss" scoped>
@@ -34,6 +34,7 @@ export default {
   border-left: none;
   margin-left: -14px;
   padding-top: 21px;
+  padding-bottom: 22px;
   padding-right: 19px;
   padding-left: 43px;
   background-color: #71512e;
@@ -54,6 +55,6 @@ export default {
 .continue-button {
   position: absolute;
   right: 25px;
-  bottom: -15px;
+  bottom: -25px;
 }
 </style>
