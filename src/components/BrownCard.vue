@@ -26,17 +26,17 @@ export default {
   margin: 0 auto;
   text-align: center;
   position: relative;
+  left: calc(-50vw + 187.5px - 21px);
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  width: 368px;
+  width: calc(50vw + 187.5px - 21px);
   border: 4px solid #8f6433;
   border-left: none;
-  margin-left: -14px;
   padding-top: 21px;
   padding-bottom: 22px;
   padding-right: 19px;
-  padding-left: 43px;
+  padding-left: calc(50vw - 187.5px + 21px);
   background-color: #71512e;
 }
 .card-decoration {
@@ -45,7 +45,7 @@ export default {
 
   &.left-decoration {
     bottom: 8px;
-    left: 22px;
+    left: calc(50vw - 187.5px + 7px);
   }
   &.right-decoration {
     top: 8px;

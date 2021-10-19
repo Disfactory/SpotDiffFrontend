@@ -16,8 +16,6 @@ export default {
 .footer {
   width: 100%;
   background: #1d1d1d;
-  position: absolute;
-  bottom: 0px;
   display: flex;
   justify-content: space-between;
   padding-top: 7px;
