@@ -186,7 +186,7 @@ export default {
       this.hasAnswered = true;
     },
     nextQuestion() {
-      this.changeStageOfTutorial();
+      this.goToNextStage();
     },
   },
   watch: {
@@ -194,7 +194,7 @@ export default {
       this.hasAnswered = false;
     },
   },
-  props: ['stageOfTutorial', 'changeStageOfTutorial'],
+  props: ['stageOfTutorial', 'goToNextStage'],
 };
 </script>
 

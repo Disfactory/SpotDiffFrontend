@@ -1,21 +1,30 @@
 <template>
-  <div class="progress-bar border-color-brown  bg-brown">
-    <div class="text">教學進度</div>
-    <div class="status">
-      <Status1BrownActive v-if="nowStatus === 1" />
-      <Status1BrownNormal v-else />
-      <Status2BrownActive v-if="nowStatus === 2" />
-      <Status2BrownNormal v-else />
-      <Status3BrownActive v-if="nowStatus === 3" />
-      <Status3BrownNormal v-else />
-      <Status4BrownActive v-if="nowStatus === 4" />
-      <Status4BrownNormal v-else />
+  <div class="progress-bar border-color-brown bg-brown">
+    <button class="previous-stage" v-if="stageOfTutorial !== 1" @click="backToPreviousStage">
+      <ArrowLeft />
+    </button>
+    <div class="now-stage">
+      <p>教學進度</p>
+      <div class="stage-icon">
+        <Status1BrownActive v-if="stageOfTutorial === 1" />
+        <Status1BrownNormal v-else />
+        <Status2BrownActive v-if="stageOfTutorial === 2" />
+        <Status2BrownNormal v-else />
+        <Status3BrownActive v-if="stageOfTutorial === 3" />
+        <Status3BrownNormal v-else />
+        <Status4BrownActive v-if="stageOfTutorial === 4" />
+        <Status4BrownNormal v-else />
+      </div>
     </div>
-    <!-- <button class="test" @click="nowStatus++">test</button> -->
+    <button class="next-stage" v-if="stageOfTutorial !== 4" @click="goToNextStage">
+      <ArrowRight />
+    </button>
   </div>
 </template>
 
 <script>
+import ArrowLeft from '../assets/svg-icon/arrow-left.svg';
+import ArrowRight from '../assets/svg-icon/arrow-right.svg';
 import Status1BrownActive from '../assets/svg-icon/progress-status-icon/brown/active/status1-brown-active.svg';
 import Status2BrownActive from '../assets/svg-icon/progress-status-icon/brown/active/status2-brown-active.svg';
 import Status3BrownActive from '../assets/svg-icon/progress-status-icon/brown/active/status3-brown-active.svg';
@@ -28,6 +37,8 @@ import Status4BrownNormal from '../assets/svg-icon/progress-status-icon/brown/no
 export default {
   name: 'ProgressBar',
   components: {
+    ArrowLeft,
+    ArrowRight,
     Status1BrownActive,
     Status2BrownActive,
     Status3BrownActive,
@@ -37,38 +48,52 @@ export default {
     Status3BrownNormal,
     Status4BrownNormal,
   },
-  data() {
-    return {
-      isActive: false,
-      nowStatus: 1,
-    };
-  },
+  props: ['stageOfTutorial', 'goToNextStage', 'backToPreviousStage'],
 };
 </script>
 <style scoped lang="scss">
 .progress-bar {
+  display: flex;
   width: 100%;
   margin: 0 auto;
+
+  justify-content: space-between;
+  display: flex;
+  justify-content: center;
+}
+.previous-stage,
+.next-stage {
   border-left: 2px solid #8f6433;
   border-top: 2px solid #8f6433;
   border-right: 2px solid #190f04;
-  border-bottom: 2px solid #190f04;
+  border-bottom: 2px solid #3a2c1e;
+  min-width: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.now-stage {
+  min-width: 230px;
+  border-left: 2px solid #8f6433;
+  border-top: 2px solid #8f6433;
+  border-right: 2px solid #190f04;
+  border-bottom: 2px solid #3a2c1e;
   padding-top: 15px;
   padding-bottom: 12px;
   display: flex;
   justify-content: center;
-}
-
-.text {
-  margin-right: 16px;
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 26px;
-  letter-spacing: 2px;
-  color: #ffedb2;
-}
-.status {
-  display: flex;
-  height: auto;
+  width: 100%;
+  p {
+    margin-right: 16px;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 26px;
+    letter-spacing: 2px;
+    color: #ffedb2;
+  }
+  .stage-icon {
+    display: flex;
+    height: auto;
+  }
 }
 </style>

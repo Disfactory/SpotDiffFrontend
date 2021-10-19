@@ -1,8 +1,12 @@
 <template>
   <div class="container bg-darkBrown">
     <TheHeader />
-    <ProgressBar />
-    <TutorialContent />
+    <ProgressBar
+      :stage-of-tutorial="stageOfTutorial"
+      :go-to-next-stage="goToNextStage"
+      :back-to-previous-stage="backToPreviousStage"
+    />
+    <TutorialContent :stage-of-tutorial="stageOfTutorial" :go-to-next-stage="goToNextStage" />
   </div>
 </template>
 
@@ -13,7 +17,21 @@ import TutorialContent from '@/components/TutorialContent.vue';
 
 export default {
   name: 'TheTutorial',
-
+  data() {
+    return { stageOfTutorial: 1 };
+  },
+  methods: {
+    goToNextStage() {
+      if (this.stageOfTutorial < 4) {
+        this.stageOfTutorial += 1;
+      }
+    },
+    backToPreviousStage() {
+      if (this.stageOfTutorial > 1) {
+        this.stageOfTutorial -= 1;
+      }
+    },
+  },
   components: {
     TheHeader,
     ProgressBar,
@@ -21,4 +39,4 @@ export default {
   },
 };
 </script>
-<style scoped></style>
+<style lang="scss" scoped></style>

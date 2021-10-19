@@ -9,7 +9,6 @@
   </div>
 </template>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .header {
   width: 100%;
@@ -31,8 +30,8 @@
   padding-bottom: 12px;
   padding-right: 9px;
   padding-left: 8.5px;
-  border-left: 2px solid #626262;
   border-top: 2px solid #626262;
+  border-left: 2px solid #626262;
   border-right: 2px solid #000000;
 }
 </style>
