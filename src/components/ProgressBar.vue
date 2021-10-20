@@ -6,14 +6,14 @@
     <div class="now-stage">
       <p>教學進度</p>
       <div class="stage-icon">
-        <Status1BrownActive v-if="stageOfTutorial === 1" />
-        <Status1BrownNormal v-else />
-        <Status2BrownActive v-if="stageOfTutorial === 2" />
-        <Status2BrownNormal v-else />
-        <Status3BrownActive v-if="stageOfTutorial === 3" />
-        <Status3BrownNormal v-else />
-        <Status4BrownActive v-if="stageOfTutorial === 4" />
-        <Status4BrownNormal v-else />
+        <Status1BrownActive class="svg-icon" v-if="stageOfTutorial === 1" />
+        <Status1BrownNormal class="svg-icon" v-else />
+        <Status2BrownActive class="svg-icon" v-if="stageOfTutorial === 2" />
+        <Status2BrownNormal class="svg-icon" v-else />
+        <Status3BrownActive class="svg-icon" v-if="stageOfTutorial === 3" />
+        <Status3BrownNormal class="svg-icon" v-else />
+        <Status4BrownActive class="svg-icon" v-if="stageOfTutorial === 4" />
+        <Status4BrownNormal class="svg-icon" v-else />
       </div>
     </div>
     <button class="next-stage" v-if="stageOfTutorial !== 4" @click="goToNextStage">
@@ -91,5 +91,8 @@ export default {
   .stage-icon {
     height: auto;
   }
+}
+.svg-icon {
+width: 30px;
 }
 </style>
