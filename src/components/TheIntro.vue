@@ -1,10 +1,11 @@
 <template>
   <div class="container">
     <div class="intro">
-      <!-- <SvgIcon class="webTitle" iconName="webTitle" /> -->
       <WebTitle />
       <div v-bind:class="{ main: true, changeOrder: isSecondIntro }">
-        <div class="animation"></div>
+        <div class="animation">
+          <IntroAnimation :is-second-intro="isSecondIntro" />
+        </div>
         <BlueCard>
           <slot>
             <span v-if="!isSecondIntro"
@@ -39,43 +40,44 @@ import WebTitle from '../assets/svg-icon/web-title.svg';
 import HowToHelp from '../assets/svg-icon/how-to-help.svg';
 import StartToPlay from '../assets/svg-icon/start-to-play.svg';
 import BlueCard from './BlueCard.vue';
+import IntroAnimation from './IntroAnimation.vue';
 
 export default {
   name: 'TheIntro',
   data() {
-    return { isSecondIntro: false };
+    return {
+      isSecondIntro: false,
+    };
   },
   components: {
     WebTitle,
     HowToHelp,
     StartToPlay,
     BlueCard,
+    IntroAnimation,
   },
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .intro {
+  width: 375px;
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
   padding-top: 20px;
   padding-bottom: 50px;
+  padding-right: 21px;
+  padding-left: 21px;
 }
 
 .main {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  padding-top: 13px;
   .animation {
-    margin: 0 auto;
-    margin-bottom: 20px;
-    width: 50%;
-    height: 200px;
-    border: 1px black solid;
+    margin-top: 15px;
   }
 }
 .changeOrder {

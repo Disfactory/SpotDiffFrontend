@@ -27,6 +27,7 @@ export default {
   border: 4px solid #061e29;
   background: #006788;
   padding: 28px;
+  margin-top: 20px;
 }
 .card-decoration {
   margin: 0 auto;
