@@ -18,19 +18,19 @@
         <button @click="sendAnswer"><ButtonFactory /></button>
         <button @click="sendAnswer"><ButtonUnknown /></button>
       </div>
-
-      <BrownCard :next-question="nextQuestion" class="card-answer" v-if="hasAnswered">
-        <template v-slot:icon>
-          <LandWithShadow class="card-icon" />
-        </template>
-        <template v-slot:answer>
-          <p class="card-text text-strong ">答案：農地</p>
-          <p class="card-text">
-            每塊地的形狀不一，若是農地，不一定會是綠色，但是會呈現均值的平面感。
-          </p>
-        </template>
-      </BrownCard>
     </div>
+
+    <BrownCard :next-question="nextQuestion" class="card-answer" v-if="hasAnswered">
+      <template v-slot:icon>
+        <LandWithShadow class="card-icon" />
+      </template>
+      <template v-slot:answer>
+        <p class="card-text text-strong ">答案：農地</p>
+        <p class="card-text">
+          每塊地的形狀不一，若是農地，不一定會是綠色，但是會呈現均值的平面感。
+        </p>
+      </template>
+    </BrownCard>
   </div>
   <div class="content" v-if="stageOfTutorial === 2">
     <div class="questionB">
@@ -56,17 +56,17 @@
         </div>
         <div class="previous-answer-caption">2017 你選了農地</div>
       </div>
-      <BrownCard :next-question="nextQuestion" class="card-answer answerB" v-if="hasAnswered">
-        <template v-slot:icon>
-          <HasBuildingWithShadow class="card-icon" />
-        </template>
-        <template v-slot:answer>
-          <p class="card-text text-strong ">答案：有建物</p>
-        </template>
-      </BrownCard>
     </div>
-  </div>
 
+    <BrownCard :next-question="nextQuestion" class="card-answer answerB" v-if="hasAnswered">
+      <template v-slot:icon>
+        <HasBuildingWithShadow class="card-icon" />
+      </template>
+      <template v-slot:answer>
+        <p class="card-text text-strong ">答案：有建物</p>
+      </template>
+    </BrownCard>
+  </div>
   <div class="content" v-if="stageOfTutorial === 3">
     <div class="qusestionA">
       <div class="question-text">
@@ -86,19 +86,18 @@
         <button @click="sendAnswer"><ButtonFactory /></button>
         <button @click="sendAnswer"><ButtonUnknown /></button>
       </div>
-
-      <BrownCard :next-question="nextQuestion" class="card-answer" v-if="hasAnswered">
-        <template v-slot:icon>
-          <FactoryWithShadow class="card-icon" />
-        </template>
-        <template v-slot:answer>
-          <p class="card-text text-strong ">答案：建物</p>
-          <p class="card-text">
-            若是建物，會有陰影、突起物、非均值的感覺。
-          </p>
-        </template>
-      </BrownCard>
     </div>
+    <BrownCard :next-question="nextQuestion" class="card-answer" v-if="hasAnswered">
+      <template v-slot:icon>
+        <FactoryWithShadow class="card-icon" />
+      </template>
+      <template v-slot:answer>
+        <p class="card-text text-strong ">答案：建物</p>
+        <p class="card-text">
+          若是建物，會有陰影、突起物、非均值的感覺。
+        </p>
+      </template>
+    </BrownCard>
   </div>
 
   <div class="content" v-if="stageOfTutorial === 4">
@@ -125,16 +124,16 @@
         </div>
         <div class="previous-answer-caption">2017 你選了建地</div>
       </div>
-      <BrownCard :next-question="nextQuestion" class="card-answer answerB" v-if="hasAnswered">
-        <template v-slot:icon>
-          <HasExpansionWithShadow class="card-icon" />
-        </template>
-        <template v-slot:answer>
-          <p class="card-text text-strong ">答案：有擴建</p>
-          <p class="card-text">有擴建，跟以前比白色建築物會增加。</p>
-        </template>
-      </BrownCard>
     </div>
+    <BrownCard :next-question="nextQuestion" class="card-answer answerB" v-if="hasAnswered">
+      <template v-slot:icon>
+        <HasExpansionWithShadow class="card-icon" />
+      </template>
+      <template v-slot:answer>
+        <p class="card-text text-strong ">答案：有擴建</p>
+        <p class="card-text">有擴建，跟以前比白色建築物會增加。</p>
+      </template>
+    </BrownCard>
   </div>
 </template>
 
