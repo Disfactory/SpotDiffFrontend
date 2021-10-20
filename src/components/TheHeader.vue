@@ -25,11 +25,11 @@
 }
 
 .book {
-  min-width: 50px;
+  width: 50px;
   padding-top: 12px;
   padding-bottom: 12px;
   padding-right: 9px;
-  padding-left: 8.5px;
+  padding-left: 9px;
   border-top: 2px solid #626262;
   border-left: 2px solid #626262;
   border-right: 2px solid #000000;

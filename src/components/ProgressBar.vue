@@ -55,10 +55,6 @@ export default {
 .progress-bar {
   display: flex;
   width: 100%;
-  margin: 0 auto;
-
-  justify-content: space-between;
-  display: flex;
   justify-content: center;
 }
 .previous-stage,
@@ -68,6 +64,7 @@ export default {
   border-right: 2px solid #190f04;
   border-bottom: 2px solid #3a2c1e;
   min-width: 50px;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -92,7 +89,6 @@ export default {
     color: #ffedb2;
   }
   .stage-icon {
-    display: flex;
     height: auto;
   }
 }
