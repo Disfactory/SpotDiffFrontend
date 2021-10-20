@@ -70,6 +70,8 @@ export default {
   align-items: center;
 }
 .now-stage {
+  flex-grow: 1;
+  width: 100%;
   min-width: 230px;
   border-left: 2px solid #8f6433;
   border-top: 2px solid #8f6433;
@@ -93,6 +95,6 @@ export default {
   }
 }
 .svg-icon {
-width: 30px;
+  width: 30px;
 }
 </style>
