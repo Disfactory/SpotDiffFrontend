@@ -102,19 +102,4 @@ export default {
     line-height: 38px;
   }
 }
-
-// .v-enter-active,
-// .v-leave-active {
-//   transition: opacity 0.5s;
-// }
-
-// .v-enter-from,
-// .v-leave-to {
-//   opacity: 0;
-// }
-
-// .v-enter-to,
-// .v-leave-from {
-//   opacity: 1;
-// }
 </style>
