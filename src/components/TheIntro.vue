@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="intro">
-      <WebTitle />
+      <IntroTitle class="intro-title" />
       <div v-bind:class="{ main: true, changeOrder: isSecondIntro }">
         <div class="animation">
           <IntroAnimation :is-second-intro="isSecondIntro" />
@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import WebTitle from '../assets/svg-icon/web-title.svg';
+import IntroTitle from '../assets/svg-icon/intro-title.svg';
 import HowToHelp from '../assets/svg-icon/how-to-help.svg';
 import StartToPlay from '../assets/svg-icon/start-to-play.svg';
 import BlueCard from './BlueCard.vue';
@@ -50,7 +50,7 @@ export default {
     };
   },
   components: {
-    WebTitle,
+    IntroTitle,
     HowToHelp,
     StartToPlay,
     BlueCard,
