@@ -1,7 +1,12 @@
 <template>
   <div class="container">
     <div class="intro">
-      <IntroTitle class="intro-title" />
+      <div class="intro-title">
+        <IntroTitle />
+        <transition appear name="icon-search" @before-enter="beforeEnter" @after-enter="afterEnter">
+          <Search v-if="showSearchIcon" class="icon-search" />
+        </transition>
+      </div>
       <div v-bind:class="{ main: true, changeOrder: isSecondIntro }">
         <div class="animation">
           <IntroAnimation :is-second-intro="isSecondIntro" />
@@ -37,6 +42,7 @@
 
 <script>
 import IntroTitle from '../assets/svg-icon/intro-title.svg';
+import Search from '../assets/svg-icon/search.svg';
 import HowToHelp from '../assets/svg-icon/how-to-help.svg';
 import StartToPlay from '../assets/svg-icon/start-to-play.svg';
 import BlueCard from './BlueCard.vue';
@@ -47,14 +53,28 @@ export default {
   data() {
     return {
       isSecondIntro: false,
+      showSearchIcon: true,
     };
   },
   components: {
     IntroTitle,
+    Search,
     HowToHelp,
     StartToPlay,
     BlueCard,
     IntroAnimation,
+  },
+  methods: {
+    beforeEnter() {
+      console.log('HI');
+    },
+    afterEnter() {
+      console.log('123456');
+      //   this.showSearchIcon = false;
+      setTimeout(() => {
+        this.showSearchIcon = false;
+      }, 1000);
+    },
   },
 };
 </script>
@@ -70,6 +90,14 @@ export default {
   padding-bottom: 50px;
   padding-right: 21px;
   padding-left: 21px;
+}
+.intro-title {
+  position: relative;
+  .icon-search {
+    position: absolute;
+    bottom: -65%;
+    left: 0;
+  }
 }
 
 .main {
@@ -101,5 +129,17 @@ export default {
     font-weight: 700;
     line-height: 38px;
   }
+}
+.icon-search-enter-active {
+  transition: opacity 0.5s ease-out, transform 1.5s 0.5s ease-out;
+}
+
+.icon-search-leave-active {
+  transition: transform 1.5s ease-out, opacity 0.5s 1s ease-out;
+}
+.icon-search-enter-from,
+.icon-search-leave-to {
+  transform: translateX(189px);
+  opacity: 0;
 }
 </style>
