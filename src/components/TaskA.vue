@@ -5,17 +5,26 @@
       <br />
       <span class="text-color-green">農地</span>還是<span class="text-color-blue">建築物</span>？
     </div>
-    <div class="identify-box">
-      <InnerBoundingBox :class="{ 'inner-bounding-box': true, mask: hasAnswered }" />
-      <div class="address">{{ infoOfCurrentStage.address }}</div>
+    <div
+      :class="{
+        'identify-box': true,
+        'border-color-brown': !isGamePage(),
+        'border-color-blue': isGamePage(),
+      }"
+    >
+      <InnerBoundingBox :class="{ 'inner-bounding-box': true, mask: isTaskCompleted }" />
+      <div class="address">
+        {{ `${questionInfo.cityName}・${questionInfo.townName}` }}
+      </div>
       <PhotoYear2017 class="photo-year" />
-      <img :src="require(`@/assets/img/${infoOfCurrentStage.images}`)" />
+      <img :src="require(`@/assets/img/${questionInfo.olderPhotoId}`)" />
     </div>
-
-    <div class="button-group" v-if="!hasAnswered">
-      <button @click="sendAnswer"><ButtonLand /></button>
-      <button @click="sendAnswer"><ButtonFactory /></button>
-      <button @click="sendAnswer"><ButtonUnknown /></button>
+    <div class="button-group" v-if="!isTaskCompleted">
+      <button @click="identifyLandUsage('farm-land')">
+        <ButtonLand />
+      </button>
+      <button @click="identifyLandUsage('building-land')"><ButtonFactory /></button>
+      <button @click="identifyLandUsage('unknown')"><ButtonUnknown /></button>
     </div>
   </div>
 </template>
@@ -28,7 +37,8 @@ import PhotoYear2017 from '../assets/svg-icon/2017.svg';
 import InnerBoundingBox from '../assets/svg-icon/inner-bounding-box.svg';
 
 export default {
-  name: 'QuestionA',
+  name: 'TaskA',
+
   components: {
     ButtonLand,
     ButtonFactory,
@@ -37,27 +47,19 @@ export default {
     InnerBoundingBox,
   },
   props: {
-    hasAnswered: Boolean,
-    sendAnswer: Function,
-    infoOfCurrentStage: Object,
+    isTaskCompleted: Boolean,
+    questionInfo: Object,
+    identifyLandUsage: Function,
   },
+  inject: ['isGamePage'],
 };
 </script>
 
 <style scoped lang="scss">
-.questionA {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
 .identify-box {
   position: relative;
   margin-bottom: 17px;
-  border-left: 4px solid #947451;
-  border-top: 4px solid #947451;
-  border-right: 4px solid #1a0f04;
-  border-bottom: 4px solid #1a0f04;
+
   overflow: hidden;
   .address {
     position: absolute;
@@ -75,7 +77,18 @@ export default {
     bottom: 0;
   }
 }
-
+.border-color-brown {
+  border-left: 4px solid #947451;
+  border-top: 4px solid #947451;
+  border-right: 4px solid #1a0f04;
+  border-bottom: 4px solid #1a0f04;
+}
+.border-color-blue {
+  border-left: 4px solid #0f7ea1;
+  border-top: 4px solid #0f7ea1;
+  border-right: 4px solid #061e29;
+  border-bottom: 4px solid #061e29;
+}
 .inner-bounding-box {
   z-index: 2;
   position: absolute;

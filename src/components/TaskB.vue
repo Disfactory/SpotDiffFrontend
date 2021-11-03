@@ -1,33 +1,50 @@
 <template>
   <div class=" question-text">
-    2017你選了
-    <span v-if="stageOfTutorial === 2" class="text-color-green">農地</span>
-    <span v-if="stageOfTutorial === 4" class="text-color-blue">建地</span>
+    2017你選了<span v-if="landUsage === 'farm-land'" class="text-color-green">農地</span
+    ><span v-if="landUsage === 'building-land'" class="text-color-blue">建地</span>
     ，在框內<br />2020有建物嗎？
   </div>
-  <div class="identify-box">
-    <InnerBoundingBox :class="{ 'inner-bounding-box': true, mask: hasAnswered }" />
-    <div class="address">{{ infoOfCurrentStage.address }}</div>
+  <div
+    :class="{
+      'identify-box': true,
+      'border-color-brown': !isGamePage(),
+      'border-color-blue': isGamePage(),
+    }"
+  >
+    <InnerBoundingBox :class="{ 'inner-bounding-box': true, mask: isTaskCompleted }" />
+    <div class="address">{{ `${questionInfo.cityName}・${questionInfo.townName}` }}</div>
     <PhotoYear2020 class="photo-year" />
-    <img :src="require(`@/assets/img/${infoOfCurrentStage.images}`)" />
+    <img :src="require(`@/assets/img/${questionInfo.newerPhotoId}`)" />
   </div>
-  <div class="button-group" v-if="!hasAnswered">
-    <button v-if="stageOfTutorial === 2" @click="sendAnswer"><HasBuilding /></button>
-    <button v-if="stageOfTutorial === 2" @click="sendAnswer"><NoBuilding /></button>
-    <button v-if="stageOfTutorial === 4" @click="sendAnswer"><HasExpansion /></button>
-    <button v-if="stageOfTutorial === 4" @click="sendAnswer"><NoExpansion /></button>
+  <div class="button-group" v-if="!isTaskCompleted">
+    <button v-if="landUsage === 'farm-land'" @click="identifyHasIllegalFactory(true)">
+      <HasBuilding />
+    </button>
+    <button v-if="landUsage === 'farm-land'" @click="identifyHasIllegalFactory(false)">
+      <NoBuilding />
+    </button>
+    <button v-if="landUsage === 'building-land'" @click="identifyHasIllegalFactory(true)">
+      <HasExpansion />
+    </button>
+    <button v-if="landUsage === 'building-land'" @click="identifyHasIllegalFactory(false)">
+      <NoExpansion />
+    </button>
   </div>
-  <DividerIconBrown class="divider-icon-brown" />
-
-  <div class="previous-answer-box">
-    <div class="previous-answer-img border-brown">
+  <DividerIconBrown :class="{ 'divider-icon': true, 'divider-icon-blue': isGamePage() }" />
+  <div class="previous-answer-box ">
+    <div
+      :class="{
+        'previous-answer-img': true,
+        'border-color-brown': !isGamePage(),
+        'border-color-blue': isGamePage(),
+      }"
+    >
       <InnerBoundingBox class="inner-bounding-box mask" />
-      <img src="@/assets/img/tutorial1-2017.png" v-if="stageOfTutorial === 2" />
-      <img src="@/assets/img/tutorial2-2017.png" v-if="stageOfTutorial === 4" />
+      <img :src="require(`@/assets/img//${questionInfo.olderPhotoId}`)" />
     </div>
     <div class="previous-answer-caption">
-      2017 你選了<span v-if="stageOfTutorial === 2">農地</span>
-      <span v-if="stageOfTutorial === 4">建地</span>
+      2017 你選了<span v-if="landUsage === 'farm-land'">農地</span>
+      <span v-if="landUsage === 'building-land'">建地</span>
     </div>
   </div>
 </template>
@@ -42,7 +59,7 @@ import HasExpansion from '../assets/svg-icon/has-expansion.svg';
 import NoExpansion from '../assets/svg-icon/no-expansion.svg';
 
 export default {
-  name: 'QuestionB',
+  name: 'TaskB',
   components: {
     PhotoYear2020,
     InnerBoundingBox,
@@ -53,28 +70,20 @@ export default {
     DividerIconBrown,
   },
   props: {
-    hasAnswered: Boolean,
-    sendAnswer: Function,
-    infoOfCurrentStage: Object,
-    stageOfTutorial: Number,
+    identifyHasIllegalFactory: Function,
+    landUsage: String,
+    questionInfo: Object,
+    isTaskCompleted: Boolean,
   },
+  inject: ['isGamePage'],
 };
 </script>
 
 <style scoped lang="scss">
-.border-brown {
-  border-left: 4px solid #947451;
-  border-top: 4px solid #947451;
-  border-right: 4px solid #1a0f04;
-  border-bottom: 4px solid #1a0f04;
-}
 .identify-box {
   position: relative;
   margin-bottom: 17px;
-  border-left: 4px solid #947451;
-  border-top: 4px solid #947451;
-  border-right: 4px solid #1a0f04;
-  border-bottom: 4px solid #1a0f04;
+
   overflow: hidden;
   .address {
     position: absolute;
@@ -92,7 +101,18 @@ export default {
     bottom: 0;
   }
 }
-
+.border-color-brown {
+  border-left: 4px solid #947451;
+  border-top: 4px solid #947451;
+  border-right: 4px solid #1a0f04;
+  border-bottom: 4px solid #1a0f04;
+}
+.border-color-blue {
+  border-left: 4px solid #0f7ea1;
+  border-top: 4px solid #0f7ea1;
+  border-right: 4px solid #061e29;
+  border-bottom: 4px solid #061e29;
+}
 .inner-bounding-box {
   z-index: 2;
   position: absolute;
@@ -132,7 +152,7 @@ export default {
   }
 }
 
-.divider-icon-brown {
+.divider-icon {
   margin-bottom: 23px;
   margin-left: 0px;
   margin-right: 0px;
@@ -159,5 +179,13 @@ export default {
   line-height: 23px;
   letter-spacing: 0.5px;
   color: #cdb69c;
+}
+</style>
+
+<style lang="scss">
+.divider-icon-blue {
+  path {
+    fill: #365d71;
+  }
 }
 </style>
