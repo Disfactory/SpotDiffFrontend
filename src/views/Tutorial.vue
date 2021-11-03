@@ -2,11 +2,11 @@
   <div class="container bg-darkBrown">
     <TheHeader />
     <ProgressBar
-      :stage-of-tutorial="stageOfTutorial"
+      :which-stage="whichStage"
       :go-to-next-stage="goToNextStage"
       :back-to-previous-stage="backToPreviousStage"
     />
-    <TutorialContent :stage-of-tutorial="stageOfTutorial" :go-to-next-stage="goToNextStage" />
+    <TutorialContent :which-stage="whichStage" :go-to-next-stage="goToNextStage" />
   </div>
 </template>
 
@@ -18,17 +18,17 @@ import TutorialContent from '@/components/TutorialContent.vue';
 export default {
   name: 'TheTutorial',
   data() {
-    return { stageOfTutorial: 1 };
+    return { whichStage: 1 };
   },
   methods: {
     goToNextStage() {
-      if (this.stageOfTutorial < 4) {
-        this.stageOfTutorial += 1;
+      if (this.whichStage < 4) {
+        this.whichStage += 1;
       }
     },
     backToPreviousStage() {
-      if (this.stageOfTutorial > 1) {
-        this.stageOfTutorial -= 1;
+      if (this.whichStage > 1) {
+        this.whichStage -= 1;
       }
     },
   },
