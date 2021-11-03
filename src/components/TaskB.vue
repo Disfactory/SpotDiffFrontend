@@ -14,7 +14,8 @@
     <InnerBoundingBox :class="{ 'inner-bounding-box': true, mask: isTaskCompleted }" />
     <div class="address">{{ `${questionInfo.cityName}・${questionInfo.townName}` }}</div>
     <PhotoYear2020 class="photo-year" />
-    <img :src="require(`@/assets/img/${questionInfo.newerPhotoId}`)" />
+    <img v-if="!isGamePage()" :src="require(`@/assets/img/${questionInfo.newerPhotoId}`)" />
+    <div v-else id="newMap" class="map"></div>
   </div>
   <div class="button-group" v-if="!isTaskCompleted">
     <button v-if="landUsage === 'farm-land'" @click="identifyHasIllegalFactory(true)">
@@ -40,7 +41,8 @@
       }"
     >
       <InnerBoundingBox class="inner-bounding-box mask" />
-      <img :src="require(`@/assets/img//${questionInfo.olderPhotoId}`)" />
+      <img v-if="!isGamePage()" :src="require(`@/assets/img//${questionInfo.olderPhotoId}`)" />
+      <div v-else id="oldMap" class="map"></div>
     </div>
     <div class="previous-answer-caption">
       2017 你選了<span v-if="landUsage === 'farm-land'">農地</span>
@@ -57,9 +59,22 @@ import NoBuilding from '../assets/svg-icon/no-building.svg';
 import DividerIconBrown from '../assets/svg-icon/divider-icon-brown.svg';
 import HasExpansion from '../assets/svg-icon/has-expansion.svg';
 import NoExpansion from '../assets/svg-icon/no-expansion.svg';
+import L from '../../node_modules/leaflet/dist/leaflet';
 
 export default {
   name: 'TaskB',
+  data() {
+    return {
+      newMap: '',
+      newLayer: '',
+      oldMap: '',
+      oldLayer: '',
+      control: '',
+      longitude: this.questionInfo.longitude,
+      latitude: this.questionInfo.latitude,
+      zoomInLevel: this.questionInfo.zoomInLevel,
+    };
+  },
   components: {
     PhotoYear2020,
     InnerBoundingBox,
@@ -76,6 +91,40 @@ export default {
     isTaskCompleted: Boolean,
   },
   inject: ['isGamePage'],
+  mounted() {
+    if (this.isGamePage()) {
+      this.newMap = L.map('newMap', {
+        zoomControl: false,
+        attributionControl: false,
+        dragging: false,
+        doubleClickZoom: false,
+        scrollWheelZoom: false,
+        keyboard: false,
+      });
+      this.newMap.setView([this.latitude, this.longitude], this.zoomInLevel);
+      this.newLayer = L.tileLayer(
+        'https://data.csrsr.ncu.edu.tw/SP/SP2020NC_3857/{z}/{x}/{y}.png',
+        {
+          opacity: 1,
+        },
+      ).addTo(this.newMap);
+      this.oldMap = L.map('oldMap', {
+        zoomControl: false,
+        attributionControl: false,
+        dragging: false,
+        doubleClickZoom: false,
+        scrollWheelZoom: false,
+        keyboard: false,
+      });
+      this.oldMap.setView([this.latitude, this.longitude], this.zoomInLevel);
+      this.oldLayer = L.tileLayer(
+        'https://data.csrsr.ncu.edu.tw/SP/SP2017NC_3857/{z}/{x}/{y}.png',
+        {
+          opacity: 1,
+        },
+      ).addTo(this.oldMap);
+    }
+  },
 };
 </script>
 
@@ -83,8 +132,9 @@ export default {
 .identify-box {
   position: relative;
   margin-bottom: 17px;
-
   overflow: hidden;
+  width: 333px;
+  height: 208px;
   .address {
     position: absolute;
     left: 11px;
@@ -94,11 +144,13 @@ export default {
     font-weight: normal;
     font-size: 13px;
     line-height: 15px;
+    z-index: 10;
   }
   .photo-year {
     position: absolute;
     right: 0;
     bottom: 0;
+    z-index: 10;
   }
 }
 .border-color-brown {
@@ -114,7 +166,7 @@ export default {
   border-bottom: 4px solid #061e29;
 }
 .inner-bounding-box {
-  z-index: 2;
+  z-index: 10;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -179,6 +231,15 @@ export default {
   line-height: 23px;
   letter-spacing: 0.5px;
   color: #cdb69c;
+}
+.map {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
 }
 </style>
 

@@ -36,12 +36,11 @@ export default {
         {
           questionInfo: {
             id: '',
-            lat: '',
-            lng: '',
+            longitude: '121.511944',
+            latitude: '25.04',
             cityName: '彰化縣',
             townName: '鹿港鎮',
-            olderPhotoId: 'tutorial1-2017.png',
-            newerPhotoId: 'tutorial1-2020.png',
+            zoomInLevel: 17,
           },
           userAnswer: {
             landUsage: '',
@@ -81,12 +80,11 @@ export default {
       return {
         questionInfo: {
           id: '',
-          lat: '',
-          lng: '',
+          longitude: '121.511944',
+          latitude: '25.04',
           cityName: '彰化縣',
           townName: '鹿港鎮',
-          olderPhotoId: 'tutorial1-2017.png',
-          newerPhotoId: 'tutorial1-2020.png',
+          zoomInLevel: 17,
         },
         userAnswer: {
           landUsage: '',
