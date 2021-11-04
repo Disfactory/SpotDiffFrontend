@@ -40,7 +40,7 @@ export default {
             latitude: '25.04',
             cityName: '彰化縣',
             townName: '鹿港鎮',
-            zoomInLevel: 17,
+            zoomInLevel: 16,
           },
           userAnswer: {
             landUsage: '',

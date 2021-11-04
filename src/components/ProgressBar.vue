@@ -18,8 +18,9 @@
         'border-color-blue': isGamePage(),
       }"
     >
+      <div v-if="whichStage === 1" class="padding-box"></div>
       <p class="text-color-brown" v-if="!isGamePage()">教學進度</p>
-      <p class="text-color-blue" v-if="isGamePage()">辨識題目</p>
+      <p class="text-color-blue" v-else>辨識題目</p>
       <div v-if="!isGamePage()" class="stage-icon">
         <Status1BrownActive class="svg-icon" v-if="whichStage === 1" />
         <Status1BrownNormal class="svg-icon" v-else />
@@ -42,6 +43,15 @@
         <Status5BlueActive class="svg-icon" v-if="whichStage === 5" />
         <Status5BlueNormal class="svg-icon" v-else />
       </div>
+      <div
+        class="padding-box"
+        v-if="
+          !(
+            this.completedStage.some((item) => item === whichStage + 1) &&
+            whichStage !== (this.isGamePage() ? 5 : 4)
+          )
+        "
+      ></div>
     </div>
     <button
       :class="{
@@ -49,7 +59,10 @@
         'border-color-brown': !isGamePage(),
         'border-color-blue': isGamePage(),
       }"
-      v-if="whichStage !== 5"
+      v-if="
+        this.completedStage.some((item) => item === whichStage + 1) &&
+          whichStage !== (this.isGamePage() ? 5 : 4)
+      "
       @click="goToNextStage"
     >
       <ArrowRight />
@@ -81,6 +94,7 @@ import Status5BlueNormal from '../assets/svg-icon/progress-status-icon/blue/norm
 
 export default {
   name: 'ProgressBar',
+
   components: {
     ArrowLeft,
     ArrowRight,
@@ -103,7 +117,7 @@ export default {
     Status4BlueNormal,
     Status5BlueNormal,
   },
-  props: ['whichStage', 'goToNextStage', 'backToPreviousStage'],
+  props: ['whichStage', 'goToNextStage', 'backToPreviousStage', 'completedStage'],
   inject: ['isGamePage'],
 };
 </script>
@@ -111,14 +125,10 @@ export default {
 .progress-bar {
   display: flex;
   width: 100%;
-  justify-content: center;
 }
 .previous-stage,
-.next-stage {
-  border-left: 2px solid #8f6433;
-  border-top: 2px solid #8f6433;
-  border-right: 2px solid #190f04;
-  border-bottom: 2px solid #3a2c1e;
+.next-stage,
+.padding-box {
   min-width: 50px;
   height: 100%;
   display: flex;
@@ -129,10 +139,6 @@ export default {
   flex-grow: 1;
   width: 100%;
   min-width: 230px;
-  border-left: 2px solid #8f6433;
-  border-top: 2px solid #8f6433;
-  border-right: 2px solid #190f04;
-  border-bottom: 2px solid #3a2c1e;
   padding-top: 15px;
   padding-bottom: 12px;
   display: flex;
@@ -144,6 +150,7 @@ export default {
     font-weight: 700;
     line-height: 26px;
     letter-spacing: 2px;
+    text-align: center;
   }
   .text-color-brown {
     color: #ffedb2;
@@ -164,6 +171,7 @@ export default {
   border-right: 2px solid #190f04;
   border-bottom: 2px solid #3a2c1e;
 }
+
 .border-color-blue {
   border-left: 2px solid #4198b5;
   border-top: 2px solid #4198b5;
