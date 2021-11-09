@@ -12,9 +12,14 @@
     }"
   >
     <InnerBoundingBox :class="{ 'inner-bounding-box': true, mask: isTaskCompleted }" />
-    <div class="address">{{ `${questionInfo.cityName}・${questionInfo.townName}` }}</div>
+    <div v-if="!isGamePage()" class="address">
+      {{ `${tutorialInfo.cityName}・${tutorialInfo.townName}` }}
+    </div>
+    <div v-else class="address">
+      {{ `${questionInfo.cityName}・${questionInfo.townName}` }}
+    </div>
     <PhotoYear2020 class="photo-year" />
-    <img v-if="!isGamePage()" :src="require(`@/assets/img/${questionInfo.newerPhotoId}`)" />
+    <img v-if="!isGamePage()" :src="require(`@/assets/img/${tutorialInfo.newerPhotoId}`)" />
     <div v-else id="newMap" class="map"></div>
   </div>
   <div class="button-group" v-if="!isTaskCompleted">
@@ -41,7 +46,7 @@
       }"
     >
       <InnerBoundingBox class="inner-bounding-box mask" />
-      <img v-if="!isGamePage()" :src="require(`@/assets/img//${questionInfo.olderPhotoId}`)" />
+      <img v-if="!isGamePage()" :src="require(`@/assets/img//${tutorialInfo.olderPhotoId}`)" />
       <div v-else id="oldMap" class="map"></div>
     </div>
     <div class="previous-answer-caption">
@@ -65,14 +70,12 @@ export default {
   name: 'TaskB',
   data() {
     return {
-      newMap: '',
-      newLayer: '',
+      test: '123',
       oldMap: '',
       oldLayer: '',
-      control: '',
-      longitude: this.questionInfo.longitude,
-      latitude: this.questionInfo.latitude,
-      zoomInLevel: this.questionInfo.zoomInLevel,
+      newMap: '',
+      newLayer: '',
+      zoomInLevel: 17,
     };
   },
   components: {
@@ -87,8 +90,10 @@ export default {
   props: {
     identifyHasIllegalFactory: Function,
     landUsage: String,
-    questionInfo: Object,
+    tutorialInfo: Object,
     isTaskCompleted: Boolean,
+    whichQuestion: Number,
+    questionInfo: Object,
   },
   inject: ['isGamePage'],
   mounted() {
@@ -101,7 +106,7 @@ export default {
         scrollWheelZoom: false,
         keyboard: false,
       });
-      this.newMap.setView([this.latitude, this.longitude], this.zoomInLevel);
+      this.newMap.setView([this.questionInfo.latitude, this.questionInfo.longitude], 17);
       this.newLayer = L.tileLayer(
         'https://data.csrsr.ncu.edu.tw/SP/SP2020NC_3857/{z}/{x}/{y}.png',
         {
@@ -116,7 +121,10 @@ export default {
         scrollWheelZoom: false,
         keyboard: false,
       });
-      this.oldMap.setView([this.latitude, this.longitude], this.zoomInLevel);
+      this.oldMap.setView(
+        [this.questionInfo.latitude, this.questionInfo.longitude],
+        this.zoomInLevel,
+      );
       this.oldLayer = L.tileLayer(
         'https://data.csrsr.ncu.edu.tw/SP/SP2017NC_3857/{z}/{x}/{y}.png',
         {

@@ -13,12 +13,15 @@
       }"
     >
       <InnerBoundingBox :class="{ 'inner-bounding-box': true, mask: isTaskCompleted }" />
-      <div class="address">
+      <div v-if="!isGamePage()" class="address">
+        {{ `${tutorialInfo.cityName}・${tutorialInfo.townName}` }}
+      </div>
+      <div v-else class="address">
         {{ `${questionInfo.cityName}・${questionInfo.townName}` }}
       </div>
       <PhotoYear2017 class="photo-year" />
-      <img v-if="!isGamePage()" :src="require(`@/assets/img/${questionInfo.olderPhotoId}`)" />
-      <div v-else id="oldmap" class="map"></div>
+      <img v-if="!isGamePage()" :src="require(`@/assets/img/${tutorialInfo.olderPhotoId}`)" />
+      <div v-else id="oldMap" class="map"></div>
     </div>
     <div class="button-group" v-if="!isTaskCompleted">
       <button @click="identifyLandUsage('farm-land')">
@@ -31,6 +34,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 import ButtonLand from '../assets/svg-icon/button-land.svg';
 import ButtonFactory from '../assets/svg-icon/button-factory.svg';
 import ButtonUnknown from '../assets/svg-icon/button-unknown.svg';
@@ -42,12 +47,10 @@ export default {
   name: 'TaskA',
   data() {
     return {
-      oldmap: '',
-      oldlayer: '',
-      control: '',
-      longitude: this.questionInfo.longitude,
-      latitude: this.questionInfo.latitude,
+      oldMap: '',
+      oldLayer: '',
       zoomInLevel: 17,
+      questionInfo: '',
     };
   },
   components: {
@@ -59,27 +62,47 @@ export default {
   },
   props: {
     isTaskCompleted: Boolean,
-    questionInfo: Object,
+    tutorialInfo: Object,
     identifyLandUsage: Function,
+    whichQuestion: Number,
   },
   inject: ['isGamePage'],
-  mounted() {
-    if (this.isGamePage()) {
-      this.oldmap = L.map('oldmap', {
-        zoomControl: false,
-        attributionControl: false,
-        dragging: false,
-        doubleClickZoom: false,
-        scrollWheelZoom: false,
-        keyboard: false,
-      });
-      this.oldmap.setView([this.latitude, this.longitude], this.zoomInLevel);
-      this.oldlayer = L.tileLayer(
-        'https://data.csrsr.ncu.edu.tw/SP/SP2017NC_3857/{z}/{x}/{y}.png',
-        {
-          opacity: 1,
-        },
-      ).addTo(this.oldmap);
+  watch: {
+    questionInfo: {
+      deep: true,
+      handler() {
+        if (this.isGamePage() && localStorage.getItem('SpotDiffData') !== null) {
+          this.oldMap = L.map('oldMap', {
+            zoomControl: false,
+            attributionControl: false,
+            dragging: false,
+            doubleClickZoom: false,
+            scrollWheelZoom: false,
+            keyboard: false,
+          });
+          this.oldMap.setView([this.questionInfo.latitude, this.questionInfo.longitude], 17);
+          this.oldLayer = L.tileLayer(
+            'https://data.csrsr.ncu.edu.tw/SP/SP2017NC_3857/{z}/{x}/{y}.png',
+            {
+              opacity: 1,
+            },
+          ).addTo(this.oldMap);
+        }
+      },
+    },
+  },
+
+  async created() {
+    try {
+      if (this.isGamePage() && localStorage.getItem('SpotDiffData') === null) {
+        const res = await axios.get('http://localhost:3000/db');
+        await localStorage.setItem('SpotDiffData', JSON.stringify(res.data.db.questionData));
+      }
+      const data = await JSON.parse(localStorage.getItem('SpotDiffData'));
+      this.questionInfo = data[this.whichQuestion - 1].questionInfo;
+      this.$emit('sendQuestionInfo', this.questionInfo);
+    } catch (e) {
+      console.error(e);
     }
   },
 };

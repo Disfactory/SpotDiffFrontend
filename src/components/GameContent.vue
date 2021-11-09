@@ -1,15 +1,18 @@
 <template>
+  <button @click="removeData">removeData</button>
   <div v-for="(item, key) in whichQuestion" :key="key">
     <div class="content" v-if="whichQuestion === item">
       <TaskA
+        @send-question-info="getQuestionInfo"
         v-if="!isTaskACompleted"
-        :question-info="this.questionData[this.whichQuestion - 1].questionInfo"
+        :which-question="whichQuestion"
         :identify-land-usage="identifyLandUsage"
       />
       <TaskB
         v-else
-        :land-usage="this.questionData[this.whichQuestion - 1].userAnswer.landUsage"
-        :question-info="this.questionData[this.whichQuestion - 1].questionInfo"
+        :land-usage="landUsage"
+        :question-info="questionInfo"
+        :which-question="whichQuestion"
         :identify-has-Illegal-factory="identifyHasIllegalFactory"
       />
     </div>
@@ -17,6 +20,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import TaskA from './TaskA.vue';
 import TaskB from './TaskB.vue';
 
@@ -28,51 +32,39 @@ export default {
   },
   data() {
     return {
+      questionInfo: [],
       hasAnswered: false,
       isTaskACompleted: false,
       // userInfo created when user enter the game
-      userInfo: { id: '', createdTime: '' },
-      questionData: [
-        {
-          questionInfo: {
-            id: '',
-            longitude: '121.511944',
-            latitude: '25.04',
-            cityName: '彰化縣',
-            townName: '鹿港鎮',
-            zoomInLevel: 16,
-          },
-          userAnswer: {
-            landUsage: '',
-            hasIllegalFactory: '',
-          },
-        },
-      ],
+      userInfo: { id: 7897897, createdTime: 'test1' },
     };
   },
   methods: {
-    identifyLandUsage(landUsage) {
-      if (!this.questionData[this.whichQuestion - 1]) {
-        this.questionData.push(this.newArray);
-      }
-      this.questionData[this.whichQuestion - 1].userAnswer.landUsage = landUsage;
-      this.isTaskACompleted = true;
-      if (landUsage === 'unknown') {
-        this.questionData[this.whichQuestion - 1].userAnswer.hasIllegalFactory = 'unknown';
-        this.goToNextStage();
-      }
+    removeData() {
+      localStorage.removeItem('SpotDiffData');
     },
+    getQuestionInfo(data) {
+      this.questionInfo = data;
+    },
+    identifyLandUsage(landUsage) {
+      const data = JSON.parse(localStorage.getItem('SpotDiffData'));
+      data[this.whichQuestion - 1].userAnswer.landUsage = landUsage;
+      if (landUsage === 'unknown') {
+        this.identifyHasIllegalFactory('unknown');
+      }
+      localStorage.setItem('SpotDiffData', JSON.stringify(data));
+      this.isTaskACompleted = true;
+    },
+
     identifyHasIllegalFactory(hasIllegalFactory) {
-      this.questionData[this.whichQuestion - 1].userAnswer.hasIllegalFactory = hasIllegalFactory;
+      const data = JSON.parse(localStorage.getItem('SpotDiffData'));
+      data[this.whichQuestion - 1].userAnswer.hasIllegalFactory = hasIllegalFactory;
       this.goToNextStage();
     },
   },
   watch: {
     whichQuestion() {
       this.isTaskACompleted = false;
-      if (!this.questionData[this.whichQuestion - 1]) {
-        this.questionData.push(this.newArray);
-      }
     },
   },
   computed: {
@@ -80,10 +72,10 @@ export default {
       return {
         questionInfo: {
           id: '',
-          longitude: '121.511944',
-          latitude: '25.04',
-          cityName: '彰化縣',
-          townName: '鹿港鎮',
+          longitude: '',
+          latitude: '',
+          cityName: '',
+          townName: '',
           zoomInLevel: 17,
         },
         userAnswer: {
@@ -92,8 +84,26 @@ export default {
         },
       };
     },
+    landUsage() {
+      const data = JSON.parse(localStorage.getItem('SpotDiffData'));
+      return data[this.whichQuestion - 1].userAnswer.landUsage;
+    },
+    hasIllegalFactory() {
+      const data = JSON.parse(localStorage.getItem('SpotDiffData'));
+      return data[this.whichQuestion - 1].userAnswer.hasIllegalFactory;
+    },
   },
   props: { whichQuestion: Number, goToNextStage: Function },
+  async created() {
+    try {
+      await axios.patch('http://localhost:3000/db', {
+        userId: this.userInfo.id,
+        createdTime: this.userInfo.createdTime,
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  },
 };
 </script>
 

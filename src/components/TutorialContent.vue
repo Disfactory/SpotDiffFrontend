@@ -3,7 +3,7 @@
     <div class="content" v-if="whichStage === item && item % 2 === 1">
       <TaskA
         :is-task-completed="isTaskCompleted"
-        :question-info="this.questionInfo"
+        :tutorial-info="this.tutorialInfo"
         :identify-land-usage="identifyLandUsage"
       />
       <BrownCard :next-question="goToNextStage" class="card-answer" v-if="isTaskCompleted">
@@ -30,7 +30,7 @@
     <div class="content" v-if="whichStage === item && item % 2 === 0">
       <TaskB
         :is-task-completed="isTaskCompleted"
-        :question-info="this.questionInfo"
+        :tutorial-info="this.tutorialInfo"
         :land-usage="this.landUsage"
         :identify-has-Illegal-factory="identifyHasIllegalFactory"
       />
@@ -121,7 +121,7 @@ export default {
     },
   },
   computed: {
-    questionInfo() {
+    tutorialInfo() {
       return this.questionData[
         (this.whichStage % 2 === 0 ? this.whichStage : this.whichStage + 1) / 2 - 1
       ].questionInfo;
