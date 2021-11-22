@@ -95,7 +95,7 @@ export default {
   async created() {
     try {
       if (this.isGamePage() && localStorage.getItem('SpotDiffData') === null) {
-        const res = await axios.get('http://localhost:3000/db');
+        const res = await axios.get(`${process.env.VUE_APP_SPOTDIFF_API_URL}/db`);
         await localStorage.setItem('SpotDiffData', JSON.stringify(res.data.db.questionData));
       }
       const data = await JSON.parse(localStorage.getItem('SpotDiffData'));

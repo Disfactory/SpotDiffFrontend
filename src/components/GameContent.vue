@@ -96,7 +96,7 @@ export default {
   props: { whichQuestion: Number, goToNextStage: Function },
   async created() {
     try {
-      await axios.patch('http://localhost:3000/db', {
+      await axios.patch(`${process.env.VUE_APP_SPOTDIFF_API_URL}/db`, {
         userId: this.userInfo.id,
         createdTime: this.userInfo.createdTime,
       });
