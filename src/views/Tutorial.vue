@@ -23,9 +23,11 @@ export default {
   },
   methods: {
     goToNextStage() {
-      if (this.whichStage < 4) {
-        this.whichStage += 1;
+      this.whichStage += 1;
+      if (this.whichStage === 5) {
+        this.$router.push('game');
       }
+      console.log(this.whichStage);
     },
     backToPreviousStage() {
       if (this.whichStage > 1) {
