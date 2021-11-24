@@ -19,6 +19,12 @@ const routes = [
 
     component: () => import('../views/Game.vue'),
   },
+  {
+    path: '/ending',
+    name: 'Ending',
+
+    component: () => import('../views/EndingPage.vue'),
+  },
 ];
 
 const router = createRouter({

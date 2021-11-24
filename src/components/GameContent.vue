@@ -1,5 +1,4 @@
 <template>
-  <button @click="removeData">removeData</button>
   <div v-for="(item, key) in whichQuestion" :key="key">
     <div class="content" v-if="whichQuestion === item">
       <TaskA
@@ -40,9 +39,6 @@ export default {
     };
   },
   methods: {
-    removeData() {
-      localStorage.removeItem('SpotDiffData');
-    },
     getQuestionInfo(data) {
       this.questionInfo = data;
     },

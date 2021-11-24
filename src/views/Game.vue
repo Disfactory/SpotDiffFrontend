@@ -23,8 +23,9 @@ export default {
   },
   methods: {
     goToNextStage() {
-      if (this.whichStage < 5) {
-        this.whichStage += 1;
+      this.whichStage += 1;
+      if (this.whichStage === 6) {
+        this.$router.push('ending');
       }
     },
     backToPreviousStage() {
