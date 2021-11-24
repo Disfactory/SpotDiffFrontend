@@ -3,7 +3,7 @@
     <div class="intro">
       <div class="intro-title">
         <IntroTitle />
-        <transition appear name="icon-search" @before-enter="beforeEnter" @after-enter="afterEnter">
+        <transition appear name="icon-search" @after-enter="afterEnter">
           <Search v-if="showSearchIcon" class="icon-search" />
         </transition>
       </div>
@@ -65,12 +65,7 @@ export default {
     IntroAnimation,
   },
   methods: {
-    beforeEnter() {
-      console.log('HI');
-    },
     afterEnter() {
-      console.log('123456');
-      //   this.showSearchIcon = false;
       setTimeout(() => {
         this.showSearchIcon = false;
       }, 1000);

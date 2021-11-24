@@ -1,20 +1,20 @@
 <template>
-  <div class="container bg-darkBrown">
+  <div class="container bg-darkBlue">
     <TheHeader />
     <ProgressBar
-      :which-stage="whichStage"
       :go-to-next-stage="goToNextStage"
       :back-to-previous-stage="backToPreviousStage"
+      :whichStage="whichStage"
       :completed-stage="completedStage"
     />
-    <TutorialContent :which-stage="whichStage" :go-to-next-stage="goToNextStage" />
+    <GameContent :which-Question="whichStage" :go-to-next-stage="goToNextStage" />
   </div>
 </template>
 
 <script>
 import TheHeader from '@/components/TheHeader.vue';
 import ProgressBar from '@/components/ProgressBar.vue';
-import TutorialContent from '@/components/TutorialContent.vue';
+import GameContent from '@/components/GameContent.vue';
 
 export default {
   name: 'TheTutorial',
@@ -24,10 +24,9 @@ export default {
   methods: {
     goToNextStage() {
       this.whichStage += 1;
-      if (this.whichStage === 5) {
-        this.$router.push('game');
+      if (this.whichStage === 6) {
+        this.$router.push('ending');
       }
-      console.log(this.whichStage);
     },
     backToPreviousStage() {
       if (this.whichStage > 1) {
@@ -45,8 +44,8 @@ export default {
   components: {
     TheHeader,
     ProgressBar,
-    TutorialContent,
+    GameContent,
   },
+  inject: ['isGamePage'],
 };
 </script>
-<style lang="scss" scoped></style>

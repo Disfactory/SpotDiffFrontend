@@ -1,73 +1,55 @@
 <template>
-  <div class="content" v-if="stageOfTutorial === 1">
-    <TutorialQuestionA
-      :has-answered="hasAnswered"
-      :send-answer="sendAnswer"
-      :info-of-current-stage="infoOfCurrentStage"
-    />
-    <BrownCard :next-question="nextQuestion" class="card-answer" v-if="hasAnswered">
-      <template v-slot:icon>
-        <LandWithShadow class="card-icon" />
-      </template>
-      <template v-slot:answer>
-        <p class="card-text text-strong ">答案：農地</p>
-        <p class="card-text">
-          每塊地的形狀不一，若是農地，不一定會是綠色，但是會呈現均值的平面感。
-        </p>
-      </template>
-    </BrownCard>
-  </div>
-  <div class="content" v-if="stageOfTutorial === 2">
-    <TutorialQuestionB
-      :has-answered="hasAnswered"
-      :send-answer="sendAnswer"
-      :info-of-current-stage="infoOfCurrentStage"
-      :stage-of-tutorial="stageOfTutorial"
-    />
-    <BrownCard :next-question="nextQuestion" class="card-answer answerB" v-if="hasAnswered">
-      <template v-slot:icon>
-        <HasBuildingWithShadow class="card-icon" />
-      </template>
-      <template v-slot:answer>
-        <p class="card-text text-strong ">答案：有建物</p>
-      </template>
-    </BrownCard>
-  </div>
-  <div class="content" v-if="stageOfTutorial === 3">
-    <TutorialQuestionA
-      :has-answered="hasAnswered"
-      :send-answer="sendAnswer"
-      :info-of-current-stage="infoOfCurrentStage"
-    />
-    <BrownCard :next-question="nextQuestion" class="card-answer" v-if="hasAnswered">
-      <template v-slot:icon>
-        <FactoryWithShadow class="card-icon" />
-      </template>
-      <template v-slot:answer>
-        <p class="card-text text-strong ">答案：建物</p>
-        <p class="card-text">
-          若是建物，會有陰影、突起物、非均值的感覺。
-        </p>
-      </template>
-    </BrownCard>
-  </div>
-
-  <div class="content" v-if="stageOfTutorial === 4">
-    <TutorialQuestionB
-      :has-answered="hasAnswered"
-      :send-answer="sendAnswer"
-      :info-of-current-stage="infoOfCurrentStage"
-      :stage-of-tutorial="stageOfTutorial"
-    />
-    <BrownCard :next-question="nextQuestion" class="card-answer answerB" v-if="hasAnswered">
-      <template v-slot:icon>
-        <HasExpansionWithShadow class="card-icon" />
-      </template>
-      <template v-slot:answer>
-        <p class="card-text text-strong ">答案：有擴建</p>
-        <p class="card-text">有擴建，跟以前比白色建築物會增加。</p>
-      </template>
-    </BrownCard>
+  <div v-for="(item, key) in whichStage" :key="key">
+    <div class="content" v-if="whichStage === item && item % 2 === 1">
+      <TaskA
+        :is-task-completed="isTaskCompleted"
+        :tutorial-info="this.tutorialInfo"
+        :identify-land-usage="identifyLandUsage"
+      />
+      <BrownCard :next-question="goToNextStage" class="card-answer" v-if="isTaskCompleted">
+        <template v-slot:icon>
+          <LandWithShadow v-if="whichStage === 1" class="card-icon" />
+          <FactoryWithShadow v-else class="card-icon" />
+        </template>
+        <template v-slot:answer>
+          <div v-if="whichStage === 1">
+            <p class="card-text text-strong ">答案：農地</p>
+            <p class="card-text">
+              每塊地的形狀不一，若是農地，不一定會是綠色，但是會呈現均值的平面感。
+            </p>
+          </div>
+          <div v-else>
+            <p class="card-text text-strong ">答案：建物</p>
+            <p class="card-text">
+              若是建物，會有陰影、突起物、非均值的感覺。
+            </p>
+          </div>
+        </template>
+      </BrownCard>
+    </div>
+    <div class="content" v-if="whichStage === item && item % 2 === 0">
+      <TaskB
+        :is-task-completed="isTaskCompleted"
+        :tutorial-info="this.tutorialInfo"
+        :land-usage="this.landUsage"
+        :identify-has-Illegal-factory="identifyHasIllegalFactory"
+      />
+      <BrownCard :next-question="goToNextStage" class="card-answer answerB" v-if="isTaskCompleted">
+        <template v-slot:icon>
+          <HasBuildingWithShadow v-if="whichStage === 2" class="card-icon" />
+          <HasExpansionWithShadow class="card-icon" v-else />
+        </template>
+        <template v-slot:answer>
+          <div v-if="whichStage === 2">
+            <p class="card-text text-strong ">答案：有建物</p>
+          </div>
+          <div v-else>
+            <p class="card-text text-strong ">答案：有擴建</p>
+            <p class="card-text">有擴建，跟以前比白色建築物會增加。</p>
+          </div>
+        </template>
+      </BrownCard>
+    </div>
   </div>
 </template>
 
@@ -77,15 +59,15 @@ import LandWithShadow from '../assets/svg-icon/land-with-shadow.svg';
 import FactoryWithShadow from '../assets/svg-icon/factory-with-shadow.svg';
 import HasBuildingWithShadow from '../assets/svg-icon/has-building-with-shadow.svg';
 import HasExpansionWithShadow from '../assets/svg-icon/has-expansion-with-shadow.svg';
-import TutorialQuestionA from './TutorialQuestionA.vue';
-import TutorialQuestionB from './TutorialQuestionB.vue';
+import TaskA from './TaskA.vue';
+import TaskB from './TaskB.vue';
 
 export default {
   name: 'TutorialContent',
   components: {
     BrownCard,
-    TutorialQuestionA,
-    TutorialQuestionB,
+    TaskA,
+    TaskB,
     LandWithShadow,
     FactoryWithShadow,
     HasBuildingWithShadow,
@@ -93,40 +75,72 @@ export default {
   },
   data() {
     return {
-      hasAnswered: false,
-      address: ['彰化縣・鹿港鎮', '宜蘭縣・頭城鎮'],
-      images: [
-        'tutorial1-2017.png',
-        'tutorial1-2020.png',
-        'tutorial2-2017.png',
-        'tutorial2-2020.png',
+      questionData: [
+        {
+          questionInfo: {
+            cityName: '彰化縣',
+            townName: '鹿港鎮',
+            olderPhotoId: 'tutorial1-2017.png',
+            newerPhotoId: 'tutorial1-2020.png',
+          },
+          tutorialAnswer: {
+            landUsage: 'farm-land',
+            hasIllegalFactory: true,
+          },
+        },
+        {
+          questionInfo: {
+            cityName: '宜蘭縣',
+            townName: '頭城鎮',
+            olderPhotoId: 'tutorial2-2017.png',
+            newerPhotoId: 'tutorial2-2020.png',
+          },
+          tutorialAnswer: {
+            landUsage: 'building-land',
+            hasIllegalFactory: true,
+          },
+        },
       ],
+      isTaskCompleted: false,
     };
   },
   methods: {
     sendAnswer() {
       this.hasAnswered = true;
     },
-    nextQuestion() {
-      this.goToNextStage();
+    identifyLandUsage() {
+      this.isTaskCompleted = true;
+    },
+    identifyHasIllegalFactory() {
+      this.isTaskCompleted = true;
     },
   },
   watch: {
-    stageOfTutorial() {
-      this.hasAnswered = false;
+    whichStage() {
+      this.isTaskCompleted = false;
     },
   },
   computed: {
+    tutorialInfo() {
+      return this.questionData[
+        (this.whichStage % 2 === 0 ? this.whichStage : this.whichStage + 1) / 2 - 1
+      ].questionInfo;
+    },
+    landUsage() {
+      return this.questionData[
+        (this.whichStage % 2 === 0 ? this.whichStage : this.whichStage + 1) / 2 - 1
+      ].tutorialAnswer.landUsage;
+    },
     infoOfCurrentStage() {
       return {
         address: this.address[
-          (this.stageOfTutorial % 2 === 0 ? this.stageOfTutorial : this.stageOfTutorial + 1) / 2 - 1
+          (this.whichStage % 2 === 0 ? this.whichStage : this.whichStage + 1) / 2 - 1
         ],
-        images: this.images[this.stageOfTutorial - 1],
+        images: this.images[this.whichStage - 1],
       };
     },
   },
-  props: ['stageOfTutorial', 'goToNextStage'],
+  props: ['whichStage', 'goToNextStage'],
 };
 </script>
 
