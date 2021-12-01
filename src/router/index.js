@@ -31,5 +31,12 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes,
 });
-
+// calculate view time of each page
+// ac
+router.afterEach((to) => {
+  if (window.ga) {
+    window.ga('set', { page: to.fullPath, anonymizeIp: true });
+    window.ga('send', 'pageview');
+  }
+});
 export default router;

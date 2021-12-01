@@ -1,5 +1,6 @@
 <template>
   <div v-for="(item, key) in whichQuestion" :key="key">
+    <div @click="test" class="test">測試</div>
     <div class="content" v-if="whichQuestion === item">
       <TaskA
         @send-question-info="getQuestionInfo"
@@ -39,6 +40,9 @@ export default {
     };
   },
   methods: {
+    test() {
+      console.log(this.clientId);
+    },
     getQuestionInfo(data) {
       this.questionInfo = data;
     },
