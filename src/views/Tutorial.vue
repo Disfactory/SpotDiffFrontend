@@ -23,11 +23,11 @@ export default {
   },
   methods: {
     goToNextStage() {
-      this.whichStage += 1;
-      if (this.whichStage === 5) {
+      if (this.whichStage < 4) {
+        this.whichStage += 1;
+      } else {
         this.$router.push('game');
       }
-      console.log(this.whichStage);
     },
     backToPreviousStage() {
       if (this.whichStage > 1) {
@@ -46,6 +46,11 @@ export default {
     TheHeader,
     ProgressBar,
     TutorialContent,
+  },
+  provide() {
+    return {
+      goToNextPage: this.goToNextPage,
+    };
   },
 };
 </script>

@@ -2,7 +2,10 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 import store from './store';
+
 /* eslint-disable */
+
+const app = createApp(App);
 let clientId = '';
 (function(i, s, o, g, r, a, m) {
   i['GoogleAnalyticsObject'] = r;
@@ -24,32 +27,37 @@ function getGoogleClientId() {
   ga(function(tracker) {
     clientId = tracker.get('clientId');
   });
+  app.config.globalProperties.clientId = clientId;
+  console.log('success');
+  console.log(clientId);
 }
 function createCustomClientId() {
   clientId =
     'custom.cid.' +
-    new Date().getTime() +
-    '.' +
     Math.random()
       .toString(36)
-      .substring(2);
+      .substring(2) +
+    '.' +
+    new Date().getTime();
+  app.config.globalProperties.clientId = clientId;
+  console.log('fail');
+  console.log(clientId);
 }
-const app = createApp(App);
 
+//If URL endpoint of GA data sending been blocked
+//If ga() been blocked
 window.addEventListener('load', function() {
-  fetch('https://www.google-analytics.com/collect')
-    .then(function() {
-      getGoogleClientId();
-      console.log('success');
-      console.log(clientId);
-      app.config.globalProperties.clientId = clientId;
-    })
-    .catch(function() {
-      createCustomClientId();
-      console.log('fail');
-      console.log(clientId);
-      app.config.globalProperties.clientId = clientId;
-    });
+  if (window.ga) {
+    fetch('https://www.google-analytics.com/collect')
+      .then(() => {
+        getGoogleClientId();
+      })
+      .catch(() => {
+        createCustomClientId();
+      });
+  } else {
+    createCustomClientId();
+  }
 });
 
 app

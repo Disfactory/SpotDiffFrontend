@@ -94,12 +94,16 @@ export default {
 
   async created() {
     try {
-      if (this.isGamePage() && localStorage.getItem('SpotDiffData') === null) {
+      if (localStorage.getItem('SpotDiffData') === null) {
         const res = await axios.get(`${process.env.VUE_APP_SPOTDIFF_API_URL}/db`);
         await localStorage.setItem('SpotDiffData', JSON.stringify(res.data.db.questionData));
+        console.log('empty local storage');
       }
-      const data = await JSON.parse(localStorage.getItem('SpotDiffData'));
-      this.questionInfo = data[this.whichQuestion - 1].questionInfo;
+      if (this.isGamePage()) {
+        const data = await JSON.parse(localStorage.getItem('SpotDiffData'));
+        this.questionInfo = data[this.whichQuestion - 1].questionInfo;
+        console.log('game page');
+      }
       this.$emit('sendQuestionInfo', this.questionInfo);
     } catch (e) {
       console.error(e);

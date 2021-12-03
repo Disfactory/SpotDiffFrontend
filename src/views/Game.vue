@@ -23,11 +23,13 @@ export default {
   },
   methods: {
     goToNextStage() {
-      this.whichStage += 1;
-      if (this.whichStage === 6) {
+      if (this.whichStage < 5) {
+        this.whichStage += 1;
+      } else {
         this.$router.push('ending');
       }
     },
+
     backToPreviousStage() {
       if (this.whichStage > 1) {
         this.whichStage -= 1;
