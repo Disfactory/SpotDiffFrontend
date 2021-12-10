@@ -22,7 +22,7 @@ export default {
     return { whichStage: 1, completedStage: [1] };
   },
   methods: {
-    goToNextStage() {
+    async goToNextStage() {
       if (this.whichStage < 5) {
         this.whichStage += 1;
       } else {

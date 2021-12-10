@@ -1,9 +1,7 @@
 <template>
   <div v-for="(item, key) in whichQuestion" :key="key">
-    <div @click="test" class="test">測試</div>
     <div class="content" v-if="whichQuestion === item">
       <TaskA
-        @send-question-info="getQuestionInfo"
         v-if="!isTaskACompleted"
         :which-question="whichQuestion"
         :identify-land-usage="identifyLandUsage"
@@ -11,7 +9,6 @@
       <TaskB
         v-else
         :land-usage="landUsage"
-        :question-info="questionInfo"
         :which-question="whichQuestion"
         :identify-has-Illegal-factory="identifyHasIllegalFactory"
       />
@@ -40,25 +37,21 @@ export default {
     };
   },
   methods: {
-    test() {
-      console.log(this.clientId);
-    },
-    getQuestionInfo(data) {
-      this.questionInfo = data;
-    },
     identifyLandUsage(landUsage) {
       const data = JSON.parse(localStorage.getItem('SpotDiffData'));
-      data[this.whichQuestion - 1].userAnswer.landUsage = landUsage;
+      data[this.whichQuestion - 1].landUsage = landUsage;
+      localStorage.setItem('SpotDiffData', JSON.stringify(data));
       if (landUsage === 'unknown') {
         this.identifyHasIllegalFactory('unknown');
+      } else {
+        this.isTaskACompleted = true;
       }
-      localStorage.setItem('SpotDiffData', JSON.stringify(data));
-      this.isTaskACompleted = true;
     },
 
     identifyHasIllegalFactory(hasIllegalFactory) {
       const data = JSON.parse(localStorage.getItem('SpotDiffData'));
-      data[this.whichQuestion - 1].userAnswer.hasIllegalFactory = hasIllegalFactory;
+      data[this.whichQuestion - 1].hasIllegalFactory = hasIllegalFactory;
+      localStorage.setItem('SpotDiffData', JSON.stringify(data));
       this.goToNextStage();
     },
   },
@@ -68,29 +61,13 @@ export default {
     },
   },
   computed: {
-    newArray() {
-      return {
-        questionInfo: {
-          id: '',
-          longitude: '',
-          latitude: '',
-          cityName: '',
-          townName: '',
-          zoomInLevel: 17,
-        },
-        userAnswer: {
-          landUsage: '',
-          hasIllegalFactory: '',
-        },
-      };
-    },
     landUsage() {
       const data = JSON.parse(localStorage.getItem('SpotDiffData'));
-      return data[this.whichQuestion - 1].userAnswer.landUsage;
+      return data[this.whichQuestion - 1].landUsage;
     },
     hasIllegalFactory() {
       const data = JSON.parse(localStorage.getItem('SpotDiffData'));
-      return data[this.whichQuestion - 1].userAnswer.hasIllegalFactory;
+      return data[this.whichQuestion - 1].hasIllegalFactory;
     },
   },
   props: { whichQuestion: Number, goToNextStage: Function },

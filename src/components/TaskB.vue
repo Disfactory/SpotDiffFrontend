@@ -70,7 +70,7 @@ export default {
   name: 'TaskB',
   data() {
     return {
-      test: '123',
+      questionInfo: [],
       oldMap: '',
       oldLayer: '',
       newMap: '',
@@ -93,11 +93,12 @@ export default {
     tutorialInfo: Object,
     isTaskCompleted: Boolean,
     whichQuestion: Number,
-    questionInfo: Object,
   },
   inject: ['isGamePage'],
   mounted() {
     if (this.isGamePage()) {
+      const data = JSON.parse(localStorage.getItem('SpotDiffData'));
+      this.questionInfo = data[this.whichQuestion - 1];
       this.newMap = L.map('newMap', {
         zoomControl: false,
         attributionControl: false,

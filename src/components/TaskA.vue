@@ -51,6 +51,9 @@ export default {
       oldLayer: '',
       zoomInLevel: 17,
       questionInfo: '',
+      factoryId: [],
+      questionInfo2: [],
+      dataInfo: '',
     };
   },
   components: {
@@ -66,6 +69,31 @@ export default {
     identifyLandUsage: Function,
     whichQuestion: Number,
   },
+  methods: {
+    // use factoryId data to get factory coordinate
+    // write factory coordinate into local storage
+    async getFactoryInfo() {
+      const location = await axios.get(`${process.env.VUE_APP_SPOTDIFF_API_URL}/location`);
+      const arr = [];
+      async function getData(factory) {
+        const res = await axios.get(`/factories/${factory.factory_id}`);
+        const obj = {};
+        obj.latitude = res.data.lat;
+        obj.longitude = res.data.lng;
+        obj.locationId = factory.location_id;
+        arr.push(obj);
+      }
+      await location.data.reduce(async (_prev, next) => {
+        const prev = await Promise.resolve(_prev);
+        if (prev !== 'DO_NOT_CALL') {
+          await getData(prev);
+        }
+        await getData(next);
+        return Promise.resolve('DO_NOT_CALL');
+      });
+      localStorage.setItem('SpotDiffData', JSON.stringify(arr));
+    },
+  },
   inject: ['isGamePage'],
   watch: {
     questionInfo: {
@@ -80,7 +108,10 @@ export default {
             scrollWheelZoom: false,
             keyboard: false,
           });
-          this.oldMap.setView([this.questionInfo.latitude, this.questionInfo.longitude], 17);
+          this.oldMap.setView(
+            [this.questionInfo.latitude, this.questionInfo.longitude],
+            this.zoomInLevel,
+          );
           this.oldLayer = L.tileLayer(
             'https://data.csrsr.ncu.edu.tw/SP/SP2017NC_3857/{z}/{x}/{y}.png',
             {
@@ -91,20 +122,17 @@ export default {
       },
     },
   },
-
-  async created() {
+  async mounted() {
     try {
-      if (localStorage.getItem('SpotDiffData') === null) {
-        const res = await axios.get(`${process.env.VUE_APP_SPOTDIFF_API_URL}/db`);
-        await localStorage.setItem('SpotDiffData', JSON.stringify(res.data.db.questionData));
-        console.log('empty local storage');
-      }
+      // get factory id by database 'location'
       if (this.isGamePage()) {
-        const data = await JSON.parse(localStorage.getItem('SpotDiffData'));
-        this.questionInfo = data[this.whichQuestion - 1].questionInfo;
+        if (localStorage.getItem('SpotDiffData') === null) {
+          await this.getFactoryInfo();
+        }
+        const data = JSON.parse(localStorage.getItem('SpotDiffData'));
+        this.questionInfo = data[this.whichQuestion - 1];
         console.log('game page');
       }
-      this.$emit('sendQuestionInfo', this.questionInfo);
     } catch (e) {
       console.error(e);
     }
