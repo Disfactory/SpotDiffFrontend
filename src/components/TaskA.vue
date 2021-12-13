@@ -43,17 +43,15 @@ import PhotoYear2017 from '../assets/svg-icon/2017.svg';
 import InnerBoundingBox from '../assets/svg-icon/inner-bounding-box.svg';
 import L from '../../node_modules/leaflet/dist/leaflet';
 
+const haversineOffset = require('haversine-offset');
+
 export default {
   name: 'TaskA',
   data() {
     return {
       oldMap: '',
       oldLayer: '',
-      zoomInLevel: 17,
       questionInfo: '',
-      factoryId: [],
-      questionInfo2: [],
-      dataInfo: '',
     };
   },
   components: {
@@ -68,30 +66,54 @@ export default {
     tutorialInfo: Object,
     identifyLandUsage: Function,
     whichQuestion: Number,
+    paramsOfMaps: Object,
   },
   methods: {
     // use factoryId data to get factory coordinate
     // write factory coordinate into local storage
-    async getFactoryInfo() {
+    async getFactoriesData() {
       const location = await axios.get(`${process.env.VUE_APP_SPOTDIFF_API_URL}/location`);
-      const arr = [];
-      async function getData(factory) {
+      const allFactoryData = [];
+      async function getCoordinate(factory) {
         const res = await axios.get(`/factories/${factory.factory_id}`);
         const obj = {};
         obj.latitude = res.data.lat;
         obj.longitude = res.data.lng;
         obj.locationId = factory.location_id;
-        arr.push(obj);
+        allFactoryData.push(obj);
       }
       await location.data.reduce(async (_prev, next) => {
         const prev = await Promise.resolve(_prev);
         if (prev !== 'DO_NOT_CALL') {
-          await getData(prev);
+          await getCoordinate(prev);
         }
-        await getData(next);
+        await getCoordinate(next);
         return Promise.resolve('DO_NOT_CALL');
       });
-      localStorage.setItem('SpotDiffData', JSON.stringify(arr));
+      localStorage.setItem('SpotDiffData', JSON.stringify(allFactoryData));
+    },
+    storeBoundingBoxLatLng() {
+      // height and width of innerBoundingBox
+      const widthPx = 153; // pixels
+      const heightPx = 95; // pixels
+      // according to openstreet wiki(https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#Resolution_and_Scale),
+      // 1 pixel is equal to 1.1943meters in zoomin level 17.
+      const widthMeter = widthPx * 1.1943; // meters
+      const heightMeter = heightPx * 1.1943; // meters
+      // use package 'haversine-offset' to calculate coordinate of top-left, bottom-right corner.
+      // This package is base on haversine foumula.
+      const center = {
+        latitude: this.questionInfo.latitude,
+        longitude: this.questionInfo.longitude,
+      };
+      const offsetBotRight = { x: widthMeter / 2, y: -heightMeter / 2 };
+      const offsetTopLeft = { x: -widthMeter / 2, y: heightMeter / 2 };
+      const data = JSON.parse(localStorage.getItem('SpotDiffData'));
+      data[this.whichQuestion - 1].left_top_lat = haversineOffset(center, offsetTopLeft).lat;
+      data[this.whichQuestion - 1].left_top_lng = haversineOffset(center, offsetTopLeft).lng;
+      data[this.whichQuestion - 1].bottom_right_lat = haversineOffset(center, offsetBotRight).lat;
+      data[this.whichQuestion - 1].bottom_right_lng = haversineOffset(center, offsetBotRight).lng;
+      localStorage.setItem('SpotDiffData', JSON.stringify(data));
     },
   },
   inject: ['isGamePage'],
@@ -110,10 +132,10 @@ export default {
           });
           this.oldMap.setView(
             [this.questionInfo.latitude, this.questionInfo.longitude],
-            this.zoomInLevel,
+            this.paramsOfMaps.zoomInLevel,
           );
           this.oldLayer = L.tileLayer(
-            'https://data.csrsr.ncu.edu.tw/SP/SP2017NC_3857/{z}/{x}/{y}.png',
+            `https://data.csrsr.ncu.edu.tw/SP/SP${this.paramsOfMaps.yearOld}NC_3857/{z}/{x}/{y}.png`,
             {
               opacity: 1,
             },
@@ -124,13 +146,14 @@ export default {
   },
   async mounted() {
     try {
-      // get factory id by database 'location'
+      // get factory id from database 'location'
       if (this.isGamePage()) {
         if (localStorage.getItem('SpotDiffData') === null) {
-          await this.getFactoryInfo();
+          await this.getFactoriesData();
         }
         const data = JSON.parse(localStorage.getItem('SpotDiffData'));
         this.questionInfo = data[this.whichQuestion - 1];
+        this.storeBoundingBoxLatLng();
         console.log('game page');
       }
     } catch (e) {

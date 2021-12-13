@@ -5,32 +5,37 @@
         v-if="!isTaskACompleted"
         :which-question="whichQuestion"
         :identify-land-usage="identifyLandUsage"
+        :params-of-maps="paramsOfMaps"
       />
       <TaskB
         v-else
         :land-usage="landUsage"
         :which-question="whichQuestion"
+        :params-of-maps="paramsOfMaps"
         :identify-has-Illegal-factory="identifyHasIllegalFactory"
       />
     </div>
   </div>
+  {{ this.isLoaded }}
+  <!-- <LoadingPage class="loading-page" /> -->
 </template>
 
 <script>
 import axios from 'axios';
 import TaskA from './TaskA.vue';
 import TaskB from './TaskB.vue';
+// import LoadingPage from './LoadingPage.vue';
 
 export default {
   name: 'TutorialContent',
   components: {
     TaskA,
     TaskB,
+    // LoadingPage,
   },
   data() {
     return {
       questionInfo: [],
-      hasAnswered: false,
       isTaskACompleted: false,
       // userInfo created when user enter the game
       userInfo: { id: 7897897, createdTime: 'test1' },
@@ -51,8 +56,16 @@ export default {
     identifyHasIllegalFactory(hasIllegalFactory) {
       const data = JSON.parse(localStorage.getItem('SpotDiffData'));
       data[this.whichQuestion - 1].hasIllegalFactory = hasIllegalFactory;
+      this.StoreParamsOfMaps();
       localStorage.setItem('SpotDiffData', JSON.stringify(data));
       this.goToNextStage();
+    },
+    StoreParamsOfMaps() {
+      const data = JSON.parse(localStorage.getItem('SpotDiffData'));
+      data[this.whichQuestion - 1].yearOld = this.paramsOfMaps.yearOld;
+      data[this.whichQuestion - 1].yearNew = this.paramsOfMaps.yearNew;
+      data[this.whichQuestion - 1].zoomInLevel = this.paramsOfMaps.zoomInLevel;
+      localStorage.setItem('SpotDiffData', JSON.stringify(data));
     },
   },
   watch: {
@@ -65,9 +78,15 @@ export default {
       const data = JSON.parse(localStorage.getItem('SpotDiffData'));
       return data[this.whichQuestion - 1].landUsage;
     },
-    hasIllegalFactory() {
-      const data = JSON.parse(localStorage.getItem('SpotDiffData'));
-      return data[this.whichQuestion - 1].hasIllegalFactory;
+    paramsOfMaps() {
+      return {
+        yearOld: 2017,
+        yearNew: 2020,
+        zoomInLevel: 17,
+      };
+    },
+    isLoaded() {
+      return localStorage.getItem('SpotDiffData') === null;
     },
   },
   props: { whichQuestion: Number, goToNextStage: Function },

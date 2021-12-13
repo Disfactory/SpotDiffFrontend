@@ -75,7 +75,6 @@ export default {
       oldLayer: '',
       newMap: '',
       newLayer: '',
-      zoomInLevel: 17,
     };
   },
   components: {
@@ -87,12 +86,14 @@ export default {
     NoExpansion,
     DividerIconBrown,
   },
+
   props: {
     identifyHasIllegalFactory: Function,
     landUsage: String,
     tutorialInfo: Object,
     isTaskCompleted: Boolean,
     whichQuestion: Number,
+    paramsOfMaps: Object,
   },
   inject: ['isGamePage'],
   mounted() {
@@ -107,9 +108,12 @@ export default {
         scrollWheelZoom: false,
         keyboard: false,
       });
-      this.newMap.setView([this.questionInfo.latitude, this.questionInfo.longitude], 17);
+      this.newMap.setView(
+        [this.questionInfo.latitude, this.questionInfo.longitude],
+        this.paramsOfMaps.zoomInLevel,
+      );
       this.newLayer = L.tileLayer(
-        'https://data.csrsr.ncu.edu.tw/SP/SP2020NC_3857/{z}/{x}/{y}.png',
+        `https://data.csrsr.ncu.edu.tw/SP/SP${this.paramsOfMaps.yearNew}NC_3857/{z}/{x}/{y}.png`,
         {
           opacity: 1,
         },
@@ -124,10 +128,10 @@ export default {
       });
       this.oldMap.setView(
         [this.questionInfo.latitude, this.questionInfo.longitude],
-        this.zoomInLevel,
+        this.paramsOfMaps.zoomInLevel,
       );
       this.oldLayer = L.tileLayer(
-        'https://data.csrsr.ncu.edu.tw/SP/SP2017NC_3857/{z}/{x}/{y}.png',
+        `https://data.csrsr.ncu.edu.tw/SP/SP${this.paramsOfMaps.yearOld}NC_3857/{z}/{x}/{y}.png`,
         {
           opacity: 1,
         },

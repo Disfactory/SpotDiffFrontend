@@ -10,6 +10,7 @@
 	"dependencies": {
 		"axios": "^0.24.0",
 		"core-js": "^3.6.5",
+		"haversine-offset": "^1.0.0",
 		"leaflet": "^1.7.1",
 		"reset-css": "^5.0.1",
 		"vue": "^3.0.0",
