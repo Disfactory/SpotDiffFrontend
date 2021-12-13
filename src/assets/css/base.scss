@@ -20,7 +20,7 @@ button {
 }
 .container {
 	height: calc(100vh - 31px);
-	overflow-y: scroll;
+	overflow-y: inherit;
 	overflow-x: hidden;
 	display: flex;
 	flex-direction: column;

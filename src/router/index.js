@@ -32,7 +32,6 @@ const router = createRouter({
   routes,
 });
 // calculate view time of each page
-// ac
 router.afterEach((to) => {
   if (window.ga) {
     window.ga('set', { page: to.fullPath, anonymizeIp: true });

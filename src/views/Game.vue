@@ -7,6 +7,7 @@
       :whichStage="whichStage"
       :completed-stage="completedStage"
     />
+
     <GameContent :which-Question="whichStage" :go-to-next-stage="goToNextStage" />
   </div>
 </template>

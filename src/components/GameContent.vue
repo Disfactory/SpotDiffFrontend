@@ -16,22 +16,18 @@
       />
     </div>
   </div>
-  {{ this.isLoaded }}
-  <!-- <LoadingPage class="loading-page" /> -->
 </template>
 
 <script>
 import axios from 'axios';
 import TaskA from './TaskA.vue';
 import TaskB from './TaskB.vue';
-// import LoadingPage from './LoadingPage.vue';
 
 export default {
   name: 'TutorialContent',
   components: {
     TaskA,
     TaskB,
-    // LoadingPage,
   },
   data() {
     return {
@@ -86,7 +82,7 @@ export default {
       };
     },
     isLoaded() {
-      return localStorage.getItem('SpotDiffData') === null;
+      return !(localStorage.getItem('SpotDiffData') === null);
     },
   },
   props: { whichQuestion: Number, goToNextStage: Function },

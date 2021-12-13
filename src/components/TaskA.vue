@@ -31,6 +31,7 @@
       <button @click="identifyLandUsage('unknown')"><ButtonUnknown /></button>
     </div>
   </div>
+  <LoadingPage v-if="isLoading" class="loading-page" />
 </template>
 
 <script>
@@ -42,6 +43,7 @@ import ButtonUnknown from '../assets/svg-icon/button-unknown.svg';
 import PhotoYear2017 from '../assets/svg-icon/2017.svg';
 import InnerBoundingBox from '../assets/svg-icon/inner-bounding-box.svg';
 import L from '../../node_modules/leaflet/dist/leaflet';
+import LoadingPage from './LoadingPage.vue';
 
 const haversineOffset = require('haversine-offset');
 
@@ -52,6 +54,7 @@ export default {
       oldMap: '',
       oldLayer: '',
       questionInfo: '',
+      isLoading: false,
     };
   },
   components: {
@@ -60,6 +63,7 @@ export default {
     ButtonUnknown,
     PhotoYear2017,
     InnerBoundingBox,
+    LoadingPage,
   },
   props: {
     isTaskCompleted: Boolean,
@@ -90,6 +94,7 @@ export default {
         await getCoordinate(next);
         return Promise.resolve('DO_NOT_CALL');
       });
+      this.isLoading = false;
       localStorage.setItem('SpotDiffData', JSON.stringify(allFactoryData));
     },
     storeBoundingBoxLatLng() {
@@ -149,6 +154,7 @@ export default {
       // get factory id from database 'location'
       if (this.isGamePage()) {
         if (localStorage.getItem('SpotDiffData') === null) {
+          this.isLoading = true;
           await this.getFactoriesData();
         }
         const data = JSON.parse(localStorage.getItem('SpotDiffData'));
@@ -246,5 +252,11 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1;
+}
+.loading-page {
+  position: fixed;
+  z-index: 999;
+  top: 0;
+  left: 0;
 }
 </style>
