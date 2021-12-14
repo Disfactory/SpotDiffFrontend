@@ -1,54 +1,103 @@
 <template>
   <div class="container bg-skyBlue">
     <div class="ending-page">
-      <IntroTitle class="title" />
-      <p>THANK YOU!</p>
-      <button @click="playAgain" class="play-again">
-        再玩一輪
-        <p>(跳過教學，直接重玩)</p>
+      <div class="title-icon"><IntroTitle /></div>
+      <div class="thank-text">
+        <p class="title">阿伯感謝你！</p>
+        <p>你已經辨識了5間工廠</p>
+      </div>
+      <button @click="playAgain">
+        <PlayAgain />
       </button>
+      <div class="current-result">
+        <p>辨識45,849次</p>
+        <p>已經有1,394人次參與辨識，</p>
+        <p>還差4,5896間工廠</p>
+        <div class="result-bar"><ResultBar /></div>
+      </div>
+      <div class="button-group">
+        <div class="share">
+          <RiceLeft /> <button><Share /></button><RiceRight />
+        </div>
+        <button>
+          <a href="https://www.google.com/" target="blank"><AttendDraw /></a>
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import IntroTitle from '../assets/svg-icon/intro-title.svg';
+import PlayAgain from '../assets/svg-icon/play-again.svg';
+import ResultBar from '../assets/svg-icon/result-bar.svg';
+import Share from '../assets/svg-icon/share.svg';
+import AttendDraw from '../assets/svg-icon/attend-draw.svg';
+import RiceLeft from '../assets/svg-icon/rice-left.svg';
+import RiceRight from '../assets/svg-icon/rice-right.svg';
 
 export default {
   name: 'EndingPage',
-  components: { IntroTitle },
+  components: {
+    IntroTitle,
+    PlayAgain,
+    Share,
+    AttendDraw,
+    ResultBar,
+    RiceLeft,
+    RiceRight,
+  },
   methods: {
     playAgain() {
       this.$router.push('game');
     },
   },
-  mounted() {
-    localStorage.removeItem('SpotDiffData');
-  },
 };
 </script>
 
 <style lang="scss" scoped>
-div {
-  color: #000;
-}
 .ending-page {
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  .title {
-    margin: 20px 0 80px 0;
+  justify-content: space-between;
+  padding: 30px 0 8.2vh;
+  .title-icon {
+    display: block;
+    margin-bottom: 20px;
   }
-  .play-again {
-    width: 200px;
-    margin: 20px;
-    height: 50px;
-    color: black;
-    background: #fff;
-    border-radius: 10px;
-    border: solid 1px gray;
-    &:hover {
-      background: #cce9e9;
+  .thank-text {
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 28px;
+    letter-spacing: 0.86px;
+    text-align: center;
+    color: #2b4754;
+    .title {
+      font-size: 29px;
+      font-weight: 600;
+      line-height: 41px;
+      margin-bottom: 14px;
+    }
+  }
+  .current-result {
+    color: #e79800;
+    font-size: 19px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 30px;
+    letter-spacing: 0.86px;
+    text-align: center;
+    .result-bar {
+      margin-top: 20px;
+    }
+  }
+  .button-group {
+    margin-top: 10px;
+    .share {
+      margin-bottom: 20px;
     }
   }
 }

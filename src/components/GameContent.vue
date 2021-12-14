@@ -1,17 +1,18 @@
 <template>
+  <span class="start-point" ref="start"></span>
   <div v-for="(item, key) in whichQuestion" :key="key">
     <div class="content" v-if="whichQuestion === item">
       <TaskA
-        @send-question-info="getQuestionInfo"
         v-if="!isTaskACompleted"
         :which-question="whichQuestion"
         :identify-land-usage="identifyLandUsage"
+        :params-of-maps="paramsOfMaps"
       />
       <TaskB
         v-else
         :land-usage="landUsage"
-        :question-info="questionInfo"
         :which-question="whichQuestion"
+        :params-of-maps="paramsOfMaps"
         :identify-has-Illegal-factory="identifyHasIllegalFactory"
       />
     </div>
@@ -32,61 +33,64 @@ export default {
   data() {
     return {
       questionInfo: [],
-      hasAnswered: false,
       isTaskACompleted: false,
       // userInfo created when user enter the game
       userInfo: { id: 7897897, createdTime: 'test1' },
     };
   },
   methods: {
-    getQuestionInfo(data) {
-      this.questionInfo = data;
+    scrollToTop() {
+      this.$refs.start.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
     },
     identifyLandUsage(landUsage) {
       const data = JSON.parse(localStorage.getItem('SpotDiffData'));
-      data[this.whichQuestion - 1].userAnswer.landUsage = landUsage;
+      data[this.whichQuestion - 1].landUsage = landUsage;
+      localStorage.setItem('SpotDiffData', JSON.stringify(data));
       if (landUsage === 'unknown') {
         this.identifyHasIllegalFactory('unknown');
+      } else {
+        this.isTaskACompleted = true;
       }
-      localStorage.setItem('SpotDiffData', JSON.stringify(data));
-      this.isTaskACompleted = true;
     },
 
     identifyHasIllegalFactory(hasIllegalFactory) {
       const data = JSON.parse(localStorage.getItem('SpotDiffData'));
-      data[this.whichQuestion - 1].userAnswer.hasIllegalFactory = hasIllegalFactory;
+      data[this.whichQuestion - 1].hasIllegalFactory = hasIllegalFactory;
+      this.StoreParamsOfMaps();
+      localStorage.setItem('SpotDiffData', JSON.stringify(data));
       this.goToNextStage();
+    },
+    StoreParamsOfMaps() {
+      const data = JSON.parse(localStorage.getItem('SpotDiffData'));
+      data[this.whichQuestion - 1].yearOld = this.paramsOfMaps.yearOld;
+      data[this.whichQuestion - 1].yearNew = this.paramsOfMaps.yearNew;
+      data[this.whichQuestion - 1].zoomInLevel = this.paramsOfMaps.zoomInLevel;
+      localStorage.setItem('SpotDiffData', JSON.stringify(data));
     },
   },
   watch: {
     whichQuestion() {
       this.isTaskACompleted = false;
+      this.scrollToTop();
+    },
+    isTaskACompleted() {
+      this.scrollToTop();
     },
   },
   computed: {
-    newArray() {
-      return {
-        questionInfo: {
-          id: '',
-          longitude: '',
-          latitude: '',
-          cityName: '',
-          townName: '',
-          zoomInLevel: 17,
-        },
-        userAnswer: {
-          landUsage: '',
-          hasIllegalFactory: '',
-        },
-      };
-    },
     landUsage() {
       const data = JSON.parse(localStorage.getItem('SpotDiffData'));
-      return data[this.whichQuestion - 1].userAnswer.landUsage;
+      return data[this.whichQuestion - 1].landUsage;
     },
-    hasIllegalFactory() {
-      const data = JSON.parse(localStorage.getItem('SpotDiffData'));
-      return data[this.whichQuestion - 1].userAnswer.hasIllegalFactory;
+    paramsOfMaps() {
+      return {
+        yearOld: 2017,
+        yearNew: 2020,
+        zoomInLevel: 17,
+      };
+    },
+    isLoaded() {
+      return !(localStorage.getItem('SpotDiffData') === null);
     },
   },
   props: { whichQuestion: Number, goToNextStage: Function },
@@ -104,6 +108,11 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.start-point {
+  visibility: hidden;
+  margin-top: -100px;
+  margin-bottom: 100px;
+}
 .content {
   width: 375px;
   padding-bottom: 46px;

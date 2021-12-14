@@ -16,7 +16,7 @@
       {{ `${tutorialInfo.cityName}・${tutorialInfo.townName}` }}
     </div>
     <div v-else class="address">
-      {{ `${questionInfo.cityName}・${questionInfo.townName}` }}
+      <!-- {{ `${questionInfo.cityName}・${questionInfo.townName}` }} -->
     </div>
     <PhotoYear2020 class="photo-year" />
     <img v-if="!isGamePage()" :src="require(`@/assets/img/${tutorialInfo.newerPhotoId}`)" />
@@ -70,12 +70,11 @@ export default {
   name: 'TaskB',
   data() {
     return {
-      test: '123',
+      questionInfo: [],
       oldMap: '',
       oldLayer: '',
       newMap: '',
       newLayer: '',
-      zoomInLevel: 17,
     };
   },
   components: {
@@ -87,28 +86,35 @@ export default {
     NoExpansion,
     DividerIconBrown,
   },
+
   props: {
     identifyHasIllegalFactory: Function,
     landUsage: String,
     tutorialInfo: Object,
     isTaskCompleted: Boolean,
     whichQuestion: Number,
-    questionInfo: Object,
+    paramsOfMaps: Object,
   },
   inject: ['isGamePage'],
   mounted() {
     if (this.isGamePage()) {
+      const data = JSON.parse(localStorage.getItem('SpotDiffData'));
+      this.questionInfo = data[this.whichQuestion - 1];
       this.newMap = L.map('newMap', {
         zoomControl: false,
         attributionControl: false,
+        touchZoom: false,
         dragging: false,
         doubleClickZoom: false,
         scrollWheelZoom: false,
         keyboard: false,
       });
-      this.newMap.setView([this.questionInfo.latitude, this.questionInfo.longitude], 17);
+      this.newMap.setView(
+        [this.questionInfo.latitude, this.questionInfo.longitude],
+        this.paramsOfMaps.zoomInLevel,
+      );
       this.newLayer = L.tileLayer(
-        'https://data.csrsr.ncu.edu.tw/SP/SP2020NC_3857/{z}/{x}/{y}.png',
+        `https://data.csrsr.ncu.edu.tw/SP/SP${this.paramsOfMaps.yearNew}NC_3857/{z}/{x}/{y}.png`,
         {
           opacity: 1,
         },
@@ -116,6 +122,7 @@ export default {
       this.oldMap = L.map('oldMap', {
         zoomControl: false,
         attributionControl: false,
+        touchZoom: false,
         dragging: false,
         doubleClickZoom: false,
         scrollWheelZoom: false,
@@ -123,10 +130,10 @@ export default {
       });
       this.oldMap.setView(
         [this.questionInfo.latitude, this.questionInfo.longitude],
-        this.zoomInLevel,
+        this.paramsOfMaps.zoomInLevel,
       );
       this.oldLayer = L.tileLayer(
-        'https://data.csrsr.ncu.edu.tw/SP/SP2017NC_3857/{z}/{x}/{y}.png',
+        `https://data.csrsr.ncu.edu.tw/SP/SP${this.paramsOfMaps.yearOld}NC_3857/{z}/{x}/{y}.png`,
         {
           opacity: 1,
         },
@@ -147,7 +154,6 @@ export default {
     position: absolute;
     left: 11px;
     bottom: 7px;
-    font-family: Roboto;
     font-style: normal;
     font-weight: normal;
     font-size: 13px;
