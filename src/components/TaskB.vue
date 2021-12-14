@@ -103,6 +103,7 @@ export default {
       this.newMap = L.map('newMap', {
         zoomControl: false,
         attributionControl: false,
+        touchZoom: false,
         dragging: false,
         doubleClickZoom: false,
         scrollWheelZoom: false,
@@ -121,6 +122,7 @@ export default {
       this.oldMap = L.map('oldMap', {
         zoomControl: false,
         attributionControl: false,
+        touchZoom: false,
         dragging: false,
         doubleClickZoom: false,
         scrollWheelZoom: false,

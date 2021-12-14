@@ -130,6 +130,7 @@ export default {
           this.oldMap = L.map('oldMap', {
             zoomControl: false,
             attributionControl: false,
+            touchZoom: false,
             dragging: false,
             doubleClickZoom: false,
             scrollWheelZoom: false,
