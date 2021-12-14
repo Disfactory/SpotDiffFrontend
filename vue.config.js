@@ -11,16 +11,16 @@ module.exports = {
       .use('vue-svg-loader')
       .loader('vue-svg-loader');
   },
-  devServer: {
-    proxy: {
-      '/factories': {
-        target: 'https://api.disfactory.tw/api/',
-        pathRewite: { '^/factories': '' },
-        ws: true,
-        changeOrigin: true,
-      },
-    },
-  },
+  //   devServer: {
+  //     proxy: {
+  //       '/factories': {
+  //         target: 'https://api.disfactory.tw/api/',
+  //         pathRewite: { '^/factories': '' },
+  //         ws: true,
+  //         changeOrigin: true,
+  //       },
+  //     },
+  //   },
 };
 // target: 'http://api.disfactory.tw/api/',
 // target: 'https://data.ntpc.gov.tw/api/',
