@@ -25,6 +25,11 @@ const routes = [
 
     component: () => import('../views/EndingPage.vue'),
   },
+  {
+    path: '/thank-page',
+    name: 'Thank-Page',
+    component: () => import('../views/ThankPage.vue'),
+  },
 ];
 
 const router = createRouter({
