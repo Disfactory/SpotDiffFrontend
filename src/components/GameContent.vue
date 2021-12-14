@@ -1,4 +1,5 @@
 <template>
+  <span class="start-point" ref="start"></span>
   <div v-for="(item, key) in whichQuestion" :key="key">
     <div class="content" v-if="whichQuestion === item">
       <TaskA
@@ -38,6 +39,9 @@ export default {
     };
   },
   methods: {
+    scrollToTop() {
+      this.$refs.start.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+    },
     identifyLandUsage(landUsage) {
       const data = JSON.parse(localStorage.getItem('SpotDiffData'));
       data[this.whichQuestion - 1].landUsage = landUsage;
@@ -67,6 +71,10 @@ export default {
   watch: {
     whichQuestion() {
       this.isTaskACompleted = false;
+      this.scrollToTop();
+    },
+    isTaskACompleted() {
+      this.scrollToTop();
     },
   },
   computed: {
@@ -100,6 +108,11 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.start-point {
+  visibility: hidden;
+  margin-top: -100px;
+  margin-bottom: 100px;
+}
 .content {
   width: 375px;
   padding-bottom: 46px;

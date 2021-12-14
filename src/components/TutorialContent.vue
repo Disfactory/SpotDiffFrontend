@@ -1,6 +1,7 @@
 <template>
+  <span class="start-point" ref="start"></span>
   <div v-for="(item, key) in whichStage" :key="key">
-    <div class="content" v-if="whichStage === item && item % 2 === 1">
+    <div refs="content" class="content" v-if="whichStage === item && item % 2 === 1">
       <TaskA
         :is-task-completed="isTaskCompleted"
         :tutorial-info="this.tutorialInfo"
@@ -26,6 +27,7 @@
           </div>
         </template>
       </BrownCard>
+      <span class="test" ref="card"></span>
     </div>
     <div class="content" v-if="whichStage === item && item % 2 === 0">
       <TaskB
@@ -34,6 +36,7 @@
         :land-usage="this.landUsage"
         :identify-has-Illegal-factory="identifyHasIllegalFactory"
       />
+
       <BrownCard :next-question="goToNextStage" class="card-answer answerB" v-if="isTaskCompleted">
         <template v-slot:icon>
           <HasBuildingWithShadow v-if="whichStage === 2" class="card-icon" />
@@ -50,6 +53,7 @@
         </template>
       </BrownCard>
     </div>
+    <span class="end-point" ref="end"></span>
   </div>
 </template>
 
@@ -114,10 +118,22 @@ export default {
     identifyHasIllegalFactory() {
       this.isTaskCompleted = true;
     },
+    scrollToBottom() {
+      this.$refs.end.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+    },
+    scrollToTop() {
+      this.$refs.start.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+    },
   },
   watch: {
     whichStage() {
       this.isTaskCompleted = false;
+      this.scrollToTop();
+    },
+    isTaskCompleted() {
+      if (this.isTaskCompleted) {
+        this.scrollToBottom();
+      }
     },
   },
   computed: {
@@ -145,9 +161,18 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.start-point {
+  visibility: hidden;
+  margin-top: -100px;
+  margin-bottom: 100px;
+}
+.end-point {
+  margin-top: -200px;
+  margin-bottom: 80px;
+}
 .content {
   width: 375px;
-  padding-bottom: 46px;
+  margin-bottom: 80px;
   padding-right: 21px;
   padding-left: 21px;
   display: flex;

@@ -1,8 +1,8 @@
 import { createApp } from 'vue';
+import VueScrollTo from 'vue-scrollto';
 import App from './App.vue';
 import router from './router';
 import store from './store';
-
 /* eslint-disable */
 
 const app = createApp(App);
@@ -63,4 +63,5 @@ window.addEventListener('load', function() {
 app
   .use(store)
   .use(router)
+  .directive('scroll-to', VueScrollTo)
   .mount('#app');

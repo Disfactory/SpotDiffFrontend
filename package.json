@@ -16,6 +16,7 @@
 		"vue": "^3.0.0",
 		"vue-loader": "^16.5.0",
 		"vue-router": "^4.0.0-0",
+		"vue-scrollto": "^2.20.0",
 		"vuex": "^4.0.0-0"
 	},
 	"devDependencies": {

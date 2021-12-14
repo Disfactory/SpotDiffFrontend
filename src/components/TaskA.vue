@@ -17,7 +17,7 @@
         {{ `${tutorialInfo.cityName}・${tutorialInfo.townName}` }}
       </div>
       <div v-else class="address">
-        {{ `${questionInfo.cityName}・${questionInfo.townName}` }}
+        <!-- {{ `${questionInfo.cityName}・${questionInfo.townName}` }} -->
       </div>
       <PhotoYear2017 class="photo-year" />
       <img v-if="!isGamePage()" :src="require(`@/assets/img/${tutorialInfo.olderPhotoId}`)" />
@@ -181,7 +181,6 @@ export default {
     position: absolute;
     left: 11px;
     bottom: 7px;
-    font-family: Roboto;
     font-style: normal;
     font-weight: normal;
     font-size: 13px;
