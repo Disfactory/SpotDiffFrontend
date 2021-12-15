@@ -79,9 +79,7 @@ export default {
       const location = await axios.get(`${process.env.VUE_APP_SPOTDIFF_API_URL}/location`);
       const allFactoryData = [];
       async function getCoordinate(factory) {
-        const url = process.env.NODE_ENV === 'development'
-          ? `/factories/${factory.factory_id}`
-          : `${process.env.VUE_APP_DISFACTORY_API_URL}${factory.factory_id}`;
+        const url = `${process.env.VUE_APP_DISFACTORY_API_URL}/factories/${factory.factory_id}`;
         const res = await axios.get(url);
         const obj = {};
         obj.latitude = res.data.lat;
