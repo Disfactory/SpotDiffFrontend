@@ -73,19 +73,27 @@ export default {
     paramsOfMaps: Object,
   },
   methods: {
+    test() {
+      const data = JSON.parse(localStorage.getItem('SpotDiffData'));
+      const res = data.filter((item) => !item.hasIllegalFactory);
+      console.log(res);
+    },
     // use factoryId data to get factory coordinate
     // write factory coordinate into local storage
     async getFactoriesData() {
       const location = await axios.get(`${process.env.VUE_APP_SPOTDIFF_API_URL}/location`);
       const allFactoryData = [];
       async function getCoordinate(factory) {
-        const url = `${process.env.VUE_APP_DISFACTORY_API_URL}/factories/${factory.factory_id}`;
+        const url = `${process.env.VUE_APP_DISFACTORY_API_RUL || ''}/factories/${
+          factory.factory_id
+        }`;
         const res = await axios.get(url);
         const obj = {};
         obj.latitude = res.data.lat;
         obj.longitude = res.data.lng;
         obj.locationId = factory.location_id;
         allFactoryData.push(obj);
+        console.log(res.data);
       }
       await location.data.reduce(async (_prev, next) => {
         const prev = await Promise.resolve(_prev);
@@ -112,16 +120,44 @@ export default {
         latitude: this.questionInfo.latitude,
         longitude: this.questionInfo.longitude,
       };
+
       const offsetBotRight = { x: widthMeter / 2, y: -heightMeter / 2 };
       const offsetTopLeft = { x: -widthMeter / 2, y: heightMeter / 2 };
+      //   const data = JSON.parse(localStorage.getItem('SpotDiffData'));
+      // data[this.whichQuestion - 1].left_top_lat =
+      // haversineOffset(center, offsetTopLeft).lat;
+      // data[this.whichQuestion - 1].left_top_lng =
+      // haversineOffset(center, offsetTopLeft).lng;
+      // data[this.whichQuestion - 1].bottom_right_lat =
+      // haversineOffset(center, offsetBotRight).lat;
+      // data[this.whichQuestion - 1].bottom_right_lng =
+      // haversineOffset(center, offsetBotRight).lng;
+      // code for testing start
       const data = JSON.parse(localStorage.getItem('SpotDiffData'));
-      data[this.whichQuestion - 1].left_top_lat = haversineOffset(center, offsetTopLeft).lat;
-      data[this.whichQuestion - 1].left_top_lng = haversineOffset(center, offsetTopLeft).lng;
-      data[this.whichQuestion - 1].bottom_right_lat = haversineOffset(center, offsetBotRight).lat;
-      data[this.whichQuestion - 1].bottom_right_lng = haversineOffset(center, offsetBotRight).lng;
+      const doneTime = JSON.parse(localStorage.getItem('SpotDiffDataDoneTime'));
+
+      data[doneTime * 5 + this.whichQuestion - 1].left_top_lat = haversineOffset(
+        center,
+        offsetTopLeft,
+      ).lat;
+      data[doneTime * 5 + this.whichQuestion - 1].left_top_lng = haversineOffset(
+        center,
+        offsetTopLeft,
+      ).lng;
+      data[doneTime * 5 + this.whichQuestion - 1].bottom_right_lat = haversineOffset(
+        center,
+        offsetBotRight,
+      ).lat;
+      data[doneTime * 5 + this.whichQuestion - 1].bottom_right_lng = haversineOffset(
+        center,
+        offsetBotRight,
+      ).lng;
+      // code for testing end
+
       localStorage.setItem('SpotDiffData', JSON.stringify(data));
     },
   },
+
   inject: ['isGamePage'],
   watch: {
     questionInfo: {
@@ -158,9 +194,20 @@ export default {
         if (localStorage.getItem('SpotDiffData') === null) {
           this.isLoading = true;
           await this.getFactoriesData();
+          localStorage.setItem('SpotDiffDataDoneTime', 0);
         }
+        // const data = JSON.parse(localStorage.getItem('SpotDiffData'));
+        // this.questionInfo = data[this.whichQuestion - 1];
+
+        // In testing phase, we will get 15 set of data in '/location' of spotdiff-test-api,
+        // User would have to answer 5 set of data per time, and if all set hasn't not answer
+        // yet, the data we store in localStorage will not be cleared.
+        // code for testing start
         const data = JSON.parse(localStorage.getItem('SpotDiffData'));
-        this.questionInfo = data[this.whichQuestion - 1];
+        const doneTime = JSON.parse(localStorage.getItem('SpotDiffDataDoneTime'));
+        this.questionInfo = data[doneTime * 5 + this.whichQuestion - 1];
+        // code for testing end
+
         this.storeBoundingBoxLatLng();
         console.log('game page');
       }

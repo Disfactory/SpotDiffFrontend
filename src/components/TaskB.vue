@@ -98,8 +98,18 @@ export default {
   inject: ['isGamePage'],
   mounted() {
     if (this.isGamePage()) {
+      //  const data = JSON.parse(localStorage.getItem('SpotDiffData'));
+      //   this.questionInfo = data[this.whichQuestion - 1];
+
+      // In testing phase, we will get 15 set of data in '/location' of spotdiff-test-api,
+      // User would have to answer 5 set of data per time, and if all set hasn't not answer
+      // yet, the data we store in localStorage will not be cleared.
+      // code for testing start:
       const data = JSON.parse(localStorage.getItem('SpotDiffData'));
-      this.questionInfo = data[this.whichQuestion - 1];
+      const doneTime = JSON.parse(localStorage.getItem('SpotDiffDataDoneTime'));
+      this.questionInfo = data[doneTime * 5 + this.whichQuestion - 1];
+      // code for testing end
+
       this.newMap = L.map('newMap', {
         zoomControl: false,
         attributionControl: false,
