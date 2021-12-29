@@ -191,7 +191,10 @@ export default {
     try {
       // get factory id from database 'location'
       if (this.isGamePage()) {
-        if (localStorage.getItem('SpotDiffData') === null || localStorage.getItem.length !== 15) {
+        if (
+          localStorage.getItem('SpotDiffData') === null
+          || localStorage.getItem('SpotDiffData').length !== 15
+        ) {
           this.isLoading = true;
           await this.getFactoriesData();
           localStorage.setItem('SpotDiffDataDoneTime', 0);
