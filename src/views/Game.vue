@@ -55,7 +55,21 @@ export default {
     },
     sendAnswer() {
       this.$router.push('ending');
-      localStorage.removeItem('SpotDiffData');
+      //   localStorage.removeItem('SpotDiffData');
+
+      // In testing phase, we will get 15 set of data in '/location' of spotdiff-test-api,
+      // User would have to answer 5 set of data per time, and if all set hasn't not answer
+      // yet, the data we store in localStorage will not be cleared.
+      // code for testing start
+      let doneTime = JSON.parse(localStorage.getItem('SpotDiffDataDoneTime'));
+      if (doneTime === 2) {
+        localStorage.removeItem('SpotDiffDataDoneTime');
+        localStorage.removeItem('SpotDiffData');
+      } else {
+        doneTime += 1;
+        localStorage.setItem('SpotDiffDataDoneTime', doneTime);
+      }
+      // code for testing end
     },
   },
   watch: {

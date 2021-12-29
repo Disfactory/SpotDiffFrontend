@@ -14,7 +14,7 @@ module.exports = {
   devServer: {
     proxy: {
       '/factories': {
-        target: process.env.VUE_APP_DISFACTORY_API_URL,
+        target: 'https://api.disfactory.tw/api/',
         pathRewite: { '^/factories': '' },
         ws: true,
         changeOrigin: true,
