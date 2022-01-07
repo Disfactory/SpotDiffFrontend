@@ -73,11 +73,6 @@ export default {
     paramsOfMaps: Object,
   },
   methods: {
-    test() {
-      const data = JSON.parse(localStorage.getItem('SpotDiffData'));
-      const res = data.filter((item) => !item.hasIllegalFactory);
-      console.log(res);
-    },
     // use factoryId data to get factory coordinate
     // write factory coordinate into local storage
     async getFactoriesData() {
@@ -193,7 +188,7 @@ export default {
       if (this.isGamePage()) {
         if (
           localStorage.getItem('SpotDiffData') === null
-          || localStorage.getItem('SpotDiffData').length !== 15
+          || JSON.parse(localStorage.getItem('SpotDiffData')).length !== 15
         ) {
           this.isLoading = true;
           await this.getFactoriesData();
