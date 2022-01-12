@@ -42,18 +42,21 @@ export default {
     scrollToTop() {
       this.$refs.start.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
     },
-    identifyLandUsage(landUsage) {
+    storeCurrentQuestionData(key, value) {
       //   const data = JSON.parse(localStorage.getItem('SpotDiffData'));
       //   data[this.whichQuestion - 1].landUsage = landUsage;
-      // In testing phase, we will get 15 set of data in '/location' of spotdiff-test-api,
-      // User would have to answer 5 set of data per time, and if all set hasn't not answer
-      // yet, the data we store in localStorage will not be cleared.
-      // code for testing start:
+      //   In testing phase, we will get 15 set of data in '/location' of spotdiff-test-api,
+      //   User would have to answer 5 set of data per time, and if all set hasn't not answer
+      //   yet, the data we store in localStorage will not be cleared.
+      ///  code for testing start:
       const data = JSON.parse(localStorage.getItem('SpotDiffData'));
       const doneTime = JSON.parse(localStorage.getItem('SpotDiffDataDoneTime'));
-      data[doneTime * 5 + this.whichQuestion - 1].landUsage = landUsage;
-      // cod for testing end
+      data[doneTime * 5 + this.whichQuestion - 1][key] = value;
+      ///  code for testing end
       localStorage.setItem('SpotDiffData', JSON.stringify(data));
+    },
+    identifyLandUsage(landUsage) {
+      this.storeCurrentQuestionData('landUsage', landUsage);
       if (landUsage === 'unknown') {
         this.identifyHasIllegalFactory('unknown');
       } else {
@@ -62,33 +65,14 @@ export default {
     },
 
     identifyHasIllegalFactory(hasIllegalFactory) {
-      //   const data = JSON.parse(localStorage.getItem('SpotDiffData'));
-      //   data[this.whichQuestion - 1].hasIllegalFactory = hasIllegalFactory;
-
-      // code for testing start
-      const data = JSON.parse(localStorage.getItem('SpotDiffData'));
-      const doneTime = JSON.parse(localStorage.getItem('SpotDiffDataDoneTime'));
-      data[doneTime * 5 + this.whichQuestion - 1].hasIllegalFactory = hasIllegalFactory;
-      // code for testing end
-
+      this.storeCurrentQuestionData('hasIllegalFactory', hasIllegalFactory);
       this.StoreParamsOfMaps();
-      localStorage.setItem('SpotDiffData', JSON.stringify(data));
       this.goToNextStage();
     },
     StoreParamsOfMaps() {
-      //   const data = JSON.parse(localStorage.getItem('SpotDiffData'));
-      //   data[this.whichQuestion - 1].yearOld = this.paramsOfMaps.yearOld;
-      //   data[this.whichQuestion - 1].yearNew = this.paramsOfMaps.yearNew;
-      //   data[this.whichQuestion - 1].zoomInLevel = this.paramsOfMaps.zoomInLevel;
-      // code for testing start:
-      const data = JSON.parse(localStorage.getItem('SpotDiffData'));
-      const doneTime = JSON.parse(localStorage.getItem('SpotDiffDataDoneTime'));
-      data[doneTime * 5 + this.whichQuestion - 1].yearOld = this.paramsOfMaps.yearOld;
-      data[doneTime * 5 + this.whichQuestion - 1].yearNew = this.paramsOfMaps.yearNew;
-      data[doneTime * 5 + this.whichQuestion - 1].zoomInLevel = this.paramsOfMaps.zoomInLevel;
-      // code for testing end
-
-      localStorage.setItem('SpotDiffData', JSON.stringify(data));
+      this.storeCurrentQuestionData('yearOld', this.paramsOfMaps.yearOld);
+      this.storeCurrentQuestionData('yearNew', this.paramsOfMaps.yearNew);
+      this.storeCurrentQuestionData('zoomInLevel', this.paramsOfMaps.zoomInLevel);
     },
   },
   watch: {
@@ -101,15 +85,13 @@ export default {
     },
   },
   computed: {
-    landUsage() {
-      //   const data = JSON.parse(localStorage.getItem('SpotDiffData'));
-      //   return data[this.whichQuestion - 1].landUsage;
-      // code for testing start:
+    currentQuestionData() {
       const data = JSON.parse(localStorage.getItem('SpotDiffData'));
       const doneTime = JSON.parse(localStorage.getItem('SpotDiffDataDoneTime'));
-      return data[doneTime * 5 + this.whichQuestion - 1].landUsage;
-
-      // code for testing end
+      return data[doneTime * 5 + this.whichQuestion - 1];
+    },
+    landUsage() {
+      return this.currentQuestionData.landUsage;
     },
     paramsOfMaps() {
       return {
