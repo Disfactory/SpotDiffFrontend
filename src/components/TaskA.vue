@@ -205,7 +205,6 @@ export default {
         const doneTime = JSON.parse(localStorage.getItem('SpotDiffDataDoneTime'));
         this.questionInfo = data[doneTime * 5 + this.whichQuestion - 1];
         // code for testing end
-
         this.storeBoundingBoxLatLng();
         console.log('game page');
       }
