@@ -1,17 +1,19 @@
 <template>
   <div class="footer">
-    <button class="about-us">關於此專案</button>
+    <About />
     <p>&#169; 地球公民基金會</p>
   </div>
 </template>
 
 <script>
+import About from './About.vue';
+
 export default {
   name: 'TheFooter',
+  components: { About },
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
 .footer {
   width: 100%;
@@ -27,16 +29,6 @@ export default {
   line-height: 18px;
   letter-spacing: 0px;
   text-align: left;
-  .about-us {
-    background: inherit;
-    font-weight: 400;
-    font-size: 13px;
-    margin-left: 13px;
-    padding: 0px;
-    &:hover {
-      font-weight: 600;
-    }
-  }
   p {
     margin-right: 17px;
   }
