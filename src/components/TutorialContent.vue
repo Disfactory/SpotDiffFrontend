@@ -1,84 +1,44 @@
 <template>
-  <span class="start-point" ref="start"></span>
   <div v-for="(item, key) in whichStage" :key="key">
-    <div refs="content" class="content" v-if="whichStage === item && item % 2 === 1">
-      <TaskA
-        :is-task-completed="isTaskCompleted"
+    <span class="start-point" ref="start"></span>
+    <div class="content" ref="content" v-if="whichStage === item && item % 2 === 1">
+      <TutorialTaskA
         :tutorial-info="this.tutorialInfo"
+        :tutorial-land-usage="landUsageZhName"
+        :which-stage="whichStage"
+        :is-task-completed="isTaskCompleted"
         :identify-land-usage="identifyLandUsage"
       />
-      <BrownCard :next-question="goToNextStage" class="card-answer" v-if="isTaskCompleted">
-        <template v-slot:icon>
-          <LandWithShadow v-if="whichStage === 1" class="card-icon" />
-          <FactoryWithShadow v-else class="card-icon" />
-        </template>
-        <template v-slot:answer>
-          <div v-if="whichStage === 1">
-            <p class="card-text text-strong ">答案：農地</p>
-            <p class="card-text">
-              每塊地的形狀不一，若是農地，不一定會是綠色，但是會呈現均值的平面感。
-            </p>
-          </div>
-          <div v-else>
-            <p class="card-text text-strong ">答案：建物</p>
-            <p class="card-text">
-              若是建物，會有陰影、突起物、非均值的感覺。
-            </p>
-          </div>
-        </template>
-      </BrownCard>
-      <span class="test" ref="card"></span>
+      <span class="end-point" ref="end"></span>
     </div>
-    <div class="content" v-if="whichStage === item && item % 2 === 0">
-      <TaskB
+    <div class="content" ref="content" v-if="whichStage === item && item % 2 === 0">
+      <span class="start-point" ref="start"></span>
+      <TutorialTaskB
+        :tutorial-info="tutorialInfo"
+        :tutorial-land-usage="landUsageZhName"
         :is-task-completed="isTaskCompleted"
-        :tutorial-info="this.tutorialInfo"
-        :land-usage="this.landUsage"
+        :which-stage="whichStage"
+        :has-illegal-factory="hasIllegalFactory"
         :identify-has-Illegal-factory="identifyHasIllegalFactory"
       />
-
-      <BrownCard :next-question="goToNextStage" class="card-answer answerB" v-if="isTaskCompleted">
-        <template v-slot:icon>
-          <HasBuildingWithShadow v-if="whichStage === 2" class="card-icon" />
-          <HasExpansionWithShadow class="card-icon" v-else />
-        </template>
-        <template v-slot:answer>
-          <div v-if="whichStage === 2">
-            <p class="card-text text-strong ">答案：有建物</p>
-          </div>
-          <div v-else>
-            <p class="card-text text-strong ">答案：有擴建</p>
-            <p class="card-text">有擴建，跟以前比白色建築物會增加。</p>
-          </div>
-        </template>
-      </BrownCard>
+      <span class="end-point" ref="end"></span>
     </div>
-    <span class="end-point" ref="end"></span>
   </div>
 </template>
 
 <script>
-import BrownCard from './BrownCard.vue';
-import LandWithShadow from '../assets/svg-icon/land-with-shadow.svg';
-import FactoryWithShadow from '../assets/svg-icon/factory-with-shadow.svg';
-import HasBuildingWithShadow from '../assets/svg-icon/has-building-with-shadow.svg';
-import HasExpansionWithShadow from '../assets/svg-icon/has-expansion-with-shadow.svg';
-import TaskA from './TaskA.vue';
-import TaskB from './TaskB.vue';
+import TutorialTaskA from './TutorialTaskA.vue';
+import TutorialTaskB from './TutorialTaskB.vue';
 
 export default {
   name: 'TutorialContent',
   components: {
-    BrownCard,
-    TaskA,
-    TaskB,
-    LandWithShadow,
-    FactoryWithShadow,
-    HasBuildingWithShadow,
-    HasExpansionWithShadow,
+    TutorialTaskA,
+    TutorialTaskB,
   },
   data() {
     return {
+      contentHeight: 0,
       questionData: [
         {
           questionInfo: {
@@ -88,8 +48,8 @@ export default {
             newerPhotoId: 'tutorial1-2020.png',
           },
           tutorialAnswer: {
-            landUsage: 'farm-land',
-            hasIllegalFactory: true,
+            landUsage: '',
+            hasIllegalFactory: '',
           },
         },
         {
@@ -100,8 +60,8 @@ export default {
             newerPhotoId: 'tutorial2-2020.png',
           },
           tutorialAnswer: {
-            landUsage: 'building-land',
-            hasIllegalFactory: true,
+            landUsage: '',
+            hasIllegalFactory: '',
           },
         },
       ],
@@ -109,107 +69,90 @@ export default {
     };
   },
   methods: {
+    calculateHeight() {
+      this.contentHeight = this.$refs.content.clientHeight;
+    },
     sendAnswer() {
       this.hasAnswered = true;
     },
-    identifyLandUsage() {
+    identifyLandUsage(landUsage) {
+      this.questionData[this.whichData].tutorialAnswer.landUsage = landUsage;
       this.isTaskCompleted = true;
     },
-    identifyHasIllegalFactory() {
+    identifyHasIllegalFactory(hasIllegalFactory) {
+      this.questionData[this.whichData].tutorialAnswer.hasIllegalFactory = hasIllegalFactory;
       this.isTaskCompleted = true;
-    },
-    scrollToBottom() {
-      this.$refs.end.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
-    },
-    scrollToTop() {
-      this.$refs.start.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
     },
   },
   watch: {
     whichStage() {
       this.isTaskCompleted = false;
-      this.scrollToTop();
-    },
-    isTaskCompleted() {
-      if (this.isTaskCompleted) {
-        this.scrollToBottom();
-      }
     },
   },
   computed: {
+    landUsageZhName() {
+      let landUsageZhName = '';
+      if (this.landUsage === 'farm-land') {
+        landUsageZhName = '農地';
+      } else if (this.landUsage === 'building-land') {
+        landUsageZhName = '建地';
+      } else {
+        landUsageZhName = '不知道';
+      }
+      return landUsageZhName;
+    },
+
+    whichData() {
+      return (this.whichStage % 2 === 0 ? this.whichStage : this.whichStage + 1) / 2 - 1;
+    },
     tutorialInfo() {
-      return this.questionData[
-        (this.whichStage % 2 === 0 ? this.whichStage : this.whichStage + 1) / 2 - 1
-      ].questionInfo;
+      return this.questionData[this.whichData].questionInfo;
     },
     landUsage() {
-      return this.questionData[
-        (this.whichStage % 2 === 0 ? this.whichStage : this.whichStage + 1) / 2 - 1
-      ].tutorialAnswer.landUsage;
+      return this.questionData[this.whichData].tutorialAnswer.landUsage;
+    },
+    hasIllegalFactory() {
+      return this.questionData[this.whichData].tutorialAnswer.hasIllegalFactory;
     },
     infoOfCurrentStage() {
       return {
-        address: this.address[
-          (this.whichStage % 2 === 0 ? this.whichStage : this.whichStage + 1) / 2 - 1
-        ],
+        address: this.address[this.whichData],
         images: this.images[this.whichStage - 1],
       };
     },
   },
-  props: ['whichStage', 'goToNextStage'],
+  props: ['whichStage'],
+  updated() {
+    if (this.isTaskCompleted) {
+      this.$refs.end.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+    } else {
+      this.$refs.start.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+    }
+  },
 };
 </script>
 
 <style scoped lang="scss">
 .start-point {
   visibility: hidden;
-  margin-top: -100px;
-  margin-bottom: 100px;
+  height: 0px;
+  width: 0px;
 }
 .end-point {
-  margin-top: -200px;
-  margin-bottom: 80px;
+  visibility: hidden;
+  height: 0px;
+  width: 0px;
 }
 .content {
   width: 375px;
-  margin-bottom: 80px;
-  padding-right: 21px;
-  padding-left: 21px;
+  margin-bottom: 30px;
+  padding-right: 12px;
+  padding-left: 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.card-answer {
-  margin-top: 41px;
-  .card-icon {
-    position: absolute;
-    left: calc(50vw - 187.5px + 21px);
-    top: -32px;
-  }
-  .card-text {
-    font-size: 17px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 25px;
-    letter-spacing: 0.5px;
-    text-align: left;
-    padding-top: 22px;
-    padding-bottom: 19px;
-  }
-  .text-strong {
-    text-align: center;
-    font-size: 25px;
-    padding-left: 42px;
-    padding-top: 0px;
-    padding-bottom: 0px;
-  }
-  &.answerB {
-    .text-strong {
-      padding-left: 67px;
-    }
-  }
-}
 .divider-icon-brown {
   margin-bottom: 23px;
   margin-left: 0px;
