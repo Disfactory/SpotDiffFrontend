@@ -149,16 +149,4 @@ export default {
 .modal-content-leave-from {
   opacity: 1;
 }
-
-.popup {
-  animation: example 1s linear 1s;
-}
-@keyframes example {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
 </style>

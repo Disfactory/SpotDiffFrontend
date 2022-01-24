@@ -1,42 +1,32 @@
 <template>
-  <div class="questionA">
-    <div class="question-text">
-      你覺得 2017 框內是
-      <br />
-      <span class="text-color-green">農地</span>還是<span class="text-color-blue">建築物</span>？
+  <div class="question-text">
+    這是2017年的空拍圖，你覺得在準心處的是<span class="text-color-green">農地</span>還是<span
+      class="text-color-blue"
+      >建築物</span
+    >呢？
+  </div>
+  <div class="identify-box border-color-blue ">
+    <InnerBoundingBox class="inner-bounding-box" />
+    <div class="address">
+      <!-- {{ `${questionInfo.cityName}・${questionInfo.townName}` }} -->
     </div>
-    <div
-      :class="{
-        'identify-box': true,
-        'border-color-brown': !isGamePage(),
-        'border-color-blue': isGamePage(),
-      }"
-    >
-      <InnerBoundingBox :class="{ 'inner-bounding-box': true, mask: isTaskCompleted }" />
-      <div v-if="!isGamePage()" class="address">
-        {{ `${tutorialInfo.cityName}・${tutorialInfo.townName}` }}
-      </div>
-      <div v-else class="address">
-        <!-- {{ `${questionInfo.cityName}・${questionInfo.townName}` }} -->
-      </div>
-      <PhotoYear2017 class="photo-year" />
-      <img v-if="!isGamePage()" :src="require(`@/assets/img/${tutorialInfo.olderPhotoId}`)" />
-      <div v-else id="oldMap" class="map"></div>
-    </div>
-    <div class="button-group" v-if="!isTaskCompleted">
-      <button @click="identifyLandUsage('farm-land')">
-        <ButtonLand />
-      </button>
-      <button @click="identifyLandUsage('building-land')"><ButtonFactory /></button>
-      <button @click="identifyLandUsage('unknown')"><ButtonUnknown /></button>
-    </div>
+    <PhotoYear2017 class="photo-year" />
+    <div id="oldMap" class="map"></div>
+  </div>
+
+  <div class="button-group">
+    <button @click="identifyLandUsage('farm-land')">
+      <ButtonLand />
+    </button>
+    <button @click="identifyLandUsage('building-land')"><ButtonFactory /></button>
+    <button @click="identifyLandUsage('unknown')"><ButtonUnknown /></button>
   </div>
   <LoadingPage v-if="isLoading" class="loading-page" />
 </template>
 
 <script>
 import axios from 'axios';
-
+import haversineOffset from 'haversine-offset';
 import ButtonLand from '../assets/svg-icon/button-land.svg';
 import ButtonFactory from '../assets/svg-icon/button-factory.svg';
 import ButtonUnknown from '../assets/svg-icon/button-unknown.svg';
@@ -44,8 +34,6 @@ import PhotoYear2017 from '../assets/svg-icon/2017.svg';
 import InnerBoundingBox from '../assets/svg-icon/inner-bounding-box.svg';
 import L from '../../node_modules/leaflet/dist/leaflet';
 import LoadingPage from './LoadingPage.vue';
-
-const haversineOffset = require('haversine-offset');
 
 export default {
   name: 'TaskA',
@@ -66,8 +54,6 @@ export default {
     LoadingPage,
   },
   props: {
-    isTaskCompleted: Boolean,
-    tutorialInfo: Object,
     identifyLandUsage: Function,
     whichQuestion: Number,
     paramsOfMaps: Object,
@@ -88,7 +74,6 @@ export default {
         obj.longitude = res.data.lng;
         obj.locationId = factory.location_id;
         allFactoryData.push(obj);
-        console.log(res.data);
       }
       await location.data.reduce(async (_prev, next) => {
         const prev = await Promise.resolve(_prev);
@@ -206,7 +191,6 @@ export default {
         this.questionInfo = data[doneTime * 5 + this.whichQuestion - 1];
         // code for testing end
         this.storeBoundingBoxLatLng();
-        console.log('game page');
       }
     } catch (e) {
       console.error(e);
@@ -216,6 +200,23 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.question-text {
+  color: #fbfdf0;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 35px;
+  letter-spacing: 0.5px;
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 20px;
+  .text-color-green {
+    color: #c7cc87;
+  }
+  .text-color-blue {
+    color: #82bdd1;
+  }
+}
 .identify-box {
   position: relative;
   margin-bottom: 17px;
@@ -239,12 +240,6 @@ export default {
     z-index: 10;
   }
 }
-.border-color-brown {
-  border-left: 4px solid #947451;
-  border-top: 4px solid #947451;
-  border-right: 4px solid #1a0f04;
-  border-bottom: 4px solid #1a0f04;
-}
 .border-color-blue {
   border-left: 4px solid #0f7ea1;
   border-top: 4px solid #0f7ea1;
@@ -261,7 +256,16 @@ export default {
     box-shadow: 0 0 0 10000px rgba(0, 0, 0, 0.27);
   }
 }
-
+.tutorial-answer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+  margin-top: 14px;
+  .tutorial-answer-icon {
+    margin-top: 12px;
+  }
+}
 .button-group {
   width: 100%;
   display: flex;
@@ -273,20 +277,34 @@ export default {
   }
 }
 
-.question-text {
-  color: #fbfdf0;
-  font-size: 24px;
-  font-weight: 500;
-  line-height: 35px;
-  letter-spacing: 0.5px;
-  text-align: center;
-  padding-top: 37px;
-  margin-bottom: 14px;
-  .text-color-green {
-    color: #c7cc87;
+.card-answer {
+  margin-top: 34px;
+  .card-icon {
+    position: absolute;
+    left: calc(50vw - 187.5px + 21px);
+    top: -32px;
   }
-  .text-color-blue {
-    color: #82bdd1;
+  .card-text {
+    font-size: 17px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 25px;
+    letter-spacing: 0.5px;
+    text-align: left;
+    padding-top: 22px;
+    padding-bottom: 19px;
+  }
+  .text-strong {
+    text-align: center;
+    font-size: 25px;
+    padding-left: 42px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+  }
+  &.answerB {
+    .text-strong {
+      padding-left: 67px;
+    }
   }
 }
 .map {

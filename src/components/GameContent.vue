@@ -1,14 +1,14 @@
 <template>
-  <span class="start-point" ref="start"></span>
   <div v-for="(item, key) in whichQuestion" :key="key">
+    <span class="start-point" ref="start"></span>
     <div class="content" v-if="whichQuestion === item">
-      <TaskA
+      <GameTaskA
         v-if="!isTaskACompleted"
         :which-question="whichQuestion"
         :identify-land-usage="identifyLandUsage"
         :params-of-maps="paramsOfMaps"
       />
-      <TaskB
+      <GameTaskB
         v-else
         :land-usage="landUsage"
         :which-question="whichQuestion"
@@ -21,14 +21,14 @@
 
 <script>
 import axios from 'axios';
-import TaskA from './TaskA.vue';
-import TaskB from './TaskB.vue';
+import GameTaskA from './GameTaskA.vue';
+import GameTaskB from './GameTaskB.vue';
 
 export default {
   name: 'TutorialContent',
   components: {
-    TaskA,
-    TaskB,
+    GameTaskA,
+    GameTaskB,
   },
   data() {
     return {
@@ -40,7 +40,7 @@ export default {
   },
   methods: {
     scrollToTop() {
-      this.$refs.start.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+      this.$refs.start.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
     },
     storeCurrentQuestionData(key, value) {
       //   const data = JSON.parse(localStorage.getItem('SpotDiffData'));
@@ -109,7 +109,6 @@ export default {
     try {
       await axios.patch(`${process.env.VUE_APP_SPOTDIFF_API_URL}/db`, {
         userId: this.userInfo.id,
-        createdTime: this.userInfo.createdTime,
       });
     } catch (e) {
       console.error(e);
@@ -121,52 +120,16 @@ export default {
 <style scoped lang="scss">
 .start-point {
   visibility: hidden;
-  margin-top: -100px;
-  margin-bottom: 100px;
+  height: 0px;
+  width: 0px;
 }
 .content {
   width: 375px;
   padding-bottom: 46px;
-  padding-right: 21px;
-  padding-left: 21px;
+  padding-right: 12px;
+  padding-left: 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.card-answer {
-  margin-top: 41px;
-  .card-icon {
-    position: absolute;
-    left: calc(50vw - 187.5px + 21px);
-    top: -32px;
-  }
-  .card-text {
-    font-size: 17px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 25px;
-    letter-spacing: 0.5px;
-    text-align: left;
-    padding-top: 22px;
-    padding-bottom: 19px;
-  }
-  .text-strong {
-    text-align: center;
-    font-size: 25px;
-    padding-left: 42px;
-    padding-top: 0px;
-    padding-bottom: 0px;
-  }
-  &.answerB {
-    .text-strong {
-      padding-left: 67px;
-    }
-  }
-}
-.divider-icon-brown {
-  margin-bottom: 23px;
-  margin-left: 0px;
-  margin-right: 0px;
 }
 </style>

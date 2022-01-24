@@ -3,11 +3,10 @@
     <TheHeader />
     <ProgressBar
       :which-stage="whichStage"
-      :go-to-next-stage="goToNextStage"
       :back-to-previous-stage="backToPreviousStage"
       :completed-stage="completedStage"
     />
-    <TutorialContent :which-stage="whichStage" :go-to-next-stage="goToNextStage" />
+    <TutorialContent :which-stage="whichStage" />
   </div>
 </template>
 
@@ -49,9 +48,8 @@ export default {
   },
   provide() {
     return {
-      goToNextPage: this.goToNextPage,
+      goToNextStage: this.goToNextStage,
     };
   },
 };
 </script>
-<style lang="scss" scoped></style>
