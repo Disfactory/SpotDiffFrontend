@@ -1,6 +1,6 @@
 <template>
-  <span class="start-point" ref="start"></span>
   <div v-for="(item, key) in whichQuestion" :key="key">
+    <span class="start-point" ref="start"></span>
     <div class="content" v-if="whichQuestion === item">
       <GameTaskA
         v-if="!isTaskACompleted"
@@ -40,7 +40,7 @@ export default {
   },
   methods: {
     scrollToTop() {
-      this.$refs.start.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+      this.$refs.start.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
     },
     storeCurrentQuestionData(key, value) {
       //   const data = JSON.parse(localStorage.getItem('SpotDiffData'));
@@ -109,7 +109,6 @@ export default {
     try {
       await axios.patch(`${process.env.VUE_APP_SPOTDIFF_API_URL}/db`, {
         userId: this.userInfo.id,
-        createdTime: this.userInfo.createdTime,
       });
     } catch (e) {
       console.error(e);
@@ -121,8 +120,8 @@ export default {
 <style scoped lang="scss">
 .start-point {
   visibility: hidden;
-  margin-top: -100px;
-  margin-bottom: 100px;
+  height: 0px;
+  width: 0px;
 }
 .content {
   width: 375px;
@@ -132,11 +131,5 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.divider-icon-brown {
-  margin-bottom: 23px;
-  margin-left: 0px;
-  margin-right: 0px;
 }
 </style>
