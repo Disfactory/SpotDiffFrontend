@@ -5,86 +5,35 @@
       >建築物</span
     >呢？
   </div>
-  <div
-    :class="{
-      'identify-box': true,
-      'border-color-brown': !isGamePage(),
-      'border-color-blue': isGamePage(),
-    }"
-  >
-    <InnerBoundingBox :class="{ 'inner-bounding-box': true, mask: isTaskCompleted }" />
-    <div v-if="!isGamePage()" class="address">
-      {{ `${tutorialInfo.cityName}・${tutorialInfo.townName}` }}
-    </div>
-    <div v-else class="address">
+  <div class="identify-box border-color-blue ">
+    <InnerBoundingBox class="inner-bounding-box" />
+    <div class="address">
       <!-- {{ `${questionInfo.cityName}・${questionInfo.townName}` }} -->
     </div>
     <PhotoYear2017 class="photo-year" />
-    <img v-if="!isGamePage()" :src="require(`@/assets/img/${tutorialInfo.olderPhotoId}`)" />
-    <div v-else id="oldMap" class="map"></div>
+    <div id="oldMap" class="map"></div>
   </div>
-  <div v-if="!isGamePage() && isTaskCompleted" class="tutorial-answer">
-    你選擇：{{ this.tutorialLandUsage }}
-    <div class="tutorial-answer-icon">
-      <CorrectAnswer
-        v-if="
-          (this.whichStageOfTutorial === 1 && this.tutorialLandUsage === '農地') ||
-            (this.whichStageOfTutorial === 3 && this.tutorialLandUsage === '建地')
-        "
-      />
-      <WrongAnswer v-else />
-    </div>
-  </div>
-  <div class="button-group" v-if="!isTaskCompleted">
+
+  <div class="button-group">
     <button @click="identifyLandUsage('farm-land')">
       <ButtonLand />
     </button>
     <button @click="identifyLandUsage('building-land')"><ButtonFactory /></button>
     <button @click="identifyLandUsage('unknown')"><ButtonUnknown /></button>
   </div>
-
-  <!-- 教學答案卡 -->
-  <BrownCard class="card-answer" v-if="isTaskCompleted">
-    <template v-slot:icon>
-      <LandWithShadow v-if="whichStageOfTutorial === 1" class="card-icon" />
-      <FactoryWithShadow v-else class="card-icon" />
-    </template>
-    <template v-slot:answer>
-      <div v-if="whichStageOfTutorial === 1">
-        <p class="card-text text-strong ">答案：農地</p>
-        <p class="card-text">
-          每塊地的形狀不一，若是農地，不一定會是綠色，但是會呈現均值的平面感。
-        </p>
-      </div>
-      <div v-else>
-        <p class="card-text text-strong ">答案：建物</p>
-        <p class="card-text">
-          若是建物，會有陰影、突起物、非均值的感覺。
-        </p>
-      </div>
-    </template>
-  </BrownCard>
-
   <LoadingPage v-if="isLoading" class="loading-page" />
 </template>
 
 <script>
 import axios from 'axios';
-
+import haversineOffset from 'haversine-offset';
 import ButtonLand from '../assets/svg-icon/button-land.svg';
 import ButtonFactory from '../assets/svg-icon/button-factory.svg';
 import ButtonUnknown from '../assets/svg-icon/button-unknown.svg';
-import CorrectAnswer from '../assets/svg-icon/correct-answer.svg';
-import WrongAnswer from '../assets/svg-icon/wrong-answer.svg';
 import PhotoYear2017 from '../assets/svg-icon/2017.svg';
 import InnerBoundingBox from '../assets/svg-icon/inner-bounding-box.svg';
-import LandWithShadow from '../assets/svg-icon/land-with-shadow.svg';
-import FactoryWithShadow from '../assets/svg-icon/factory-with-shadow.svg';
-import BrownCard from './BrownCard.vue';
 import L from '../../node_modules/leaflet/dist/leaflet';
 import LoadingPage from './LoadingPage.vue';
-
-const haversineOffset = require('haversine-offset');
 
 export default {
   name: 'TaskA',
@@ -100,23 +49,14 @@ export default {
     ButtonLand,
     ButtonFactory,
     ButtonUnknown,
-    CorrectAnswer,
-    WrongAnswer,
     PhotoYear2017,
     InnerBoundingBox,
-    LandWithShadow,
-    FactoryWithShadow,
     LoadingPage,
-    BrownCard,
   },
   props: {
-    isTaskCompleted: Boolean,
-    tutorialInfo: Object,
     identifyLandUsage: Function,
     whichQuestion: Number,
     paramsOfMaps: Object,
-    tutorialLandUsage: String,
-    whichStageOfTutorial: Number,
   },
   methods: {
     // use factoryId data to get factory coordinate
@@ -134,7 +74,6 @@ export default {
         obj.longitude = res.data.lng;
         obj.locationId = factory.location_id;
         allFactoryData.push(obj);
-        console.log(res.data);
       }
       await location.data.reduce(async (_prev, next) => {
         const prev = await Promise.resolve(_prev);
@@ -252,7 +191,6 @@ export default {
         this.questionInfo = data[doneTime * 5 + this.whichQuestion - 1];
         // code for testing end
         this.storeBoundingBoxLatLng();
-        console.log('game page');
       }
     } catch (e) {
       console.error(e);
@@ -301,12 +239,6 @@ export default {
     bottom: 0;
     z-index: 10;
   }
-}
-.border-color-brown {
-  border-left: 4px solid #947451;
-  border-top: 4px solid #947451;
-  border-right: 4px solid #1a0f04;
-  border-bottom: 4px solid #1a0f04;
 }
 .border-color-blue {
   border-left: 4px solid #0f7ea1;
