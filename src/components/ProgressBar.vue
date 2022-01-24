@@ -43,15 +43,7 @@
         <Status5BlueActive class="svg-icon" v-if="whichStage === 5" />
         <Status5BlueNormal class="svg-icon" v-else />
       </div>
-      <div
-        class="padding-box"
-        v-if="
-          !(
-            this.completedStage.some((item) => item === whichStage + 1) &&
-            whichStage !== (this.isGamePage() ? 5 : 4)
-          )
-        "
-      ></div>
+      <div class="padding-box" v-if="!this.isNextStageDone"></div>
     </div>
     <button
       :class="{
@@ -59,10 +51,7 @@
         'border-color-brown': !isGamePage(),
         'border-color-blue': isGamePage(),
       }"
-      v-if="
-        this.completedStage.some((item) => item === whichStage + 1) &&
-          whichStage !== (this.isGamePage() ? 5 : 4)
-      "
+      v-if="this.isNextStageDone"
       @click="goToNextStage"
     >
       <ArrowRight />
@@ -116,6 +105,14 @@ export default {
     Status3BlueNormal,
     Status4BlueNormal,
     Status5BlueNormal,
+  },
+  computed: {
+    isNextStageDone() {
+      return (
+        this.completedStage.some((item) => item === this.whichStage + 1)
+        && this.whichStage !== (this.isGamePage() ? 5 : 4)
+      );
+    },
   },
   props: ['whichStage', 'goToNextStage', 'backToPreviousStage', 'completedStage'],
   inject: ['isGamePage'],

@@ -127,43 +127,13 @@ export default {
 .content {
   width: 375px;
   padding-bottom: 46px;
-  padding-right: 21px;
-  padding-left: 21px;
+  padding-right: 12px;
+  padding-left: 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.card-answer {
-  margin-top: 41px;
-  .card-icon {
-    position: absolute;
-    left: calc(50vw - 187.5px + 21px);
-    top: -32px;
-  }
-  .card-text {
-    font-size: 17px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 25px;
-    letter-spacing: 0.5px;
-    text-align: left;
-    padding-top: 22px;
-    padding-bottom: 19px;
-  }
-  .text-strong {
-    text-align: center;
-    font-size: 25px;
-    padding-left: 42px;
-    padding-top: 0px;
-    padding-bottom: 0px;
-  }
-  &.answerB {
-    .text-strong {
-      padding-left: 67px;
-    }
-  }
-}
 .divider-icon-brown {
   margin-bottom: 23px;
   margin-left: 0px;
