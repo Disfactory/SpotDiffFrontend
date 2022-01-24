@@ -2,13 +2,13 @@
   <span class="start-point" ref="start"></span>
   <div v-for="(item, key) in whichQuestion" :key="key">
     <div class="content" v-if="whichQuestion === item">
-      <TaskA
+      <GameTaskA
         v-if="!isTaskACompleted"
         :which-question="whichQuestion"
         :identify-land-usage="identifyLandUsage"
         :params-of-maps="paramsOfMaps"
       />
-      <TaskB
+      <GameTaskB
         v-else
         :land-usage="landUsage"
         :which-question="whichQuestion"
@@ -21,14 +21,14 @@
 
 <script>
 import axios from 'axios';
-import TaskA from './TaskA.vue';
-import TaskB from './TaskB.vue';
+import GameTaskA from './GameTaskA.vue';
+import GameTaskB from './GameTaskB.vue';
 
 export default {
   name: 'TutorialContent',
   components: {
-    TaskA,
-    TaskB,
+    GameTaskA,
+    GameTaskB,
   },
   data() {
     return {
