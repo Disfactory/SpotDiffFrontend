@@ -12,7 +12,7 @@
   <div class="identify-box border-color-blue">
     <InnerBoundingBox class="inner-bounding-box" />
     <div class="address">
-      <!-- {{ `${questionInfo.cityName}・${questionInfo.townName}` }} -->
+      <!-- {{ factoryCoord.address }} -->
     </div>
     <PhotoYear2020 class="photo-year" />
     <div id="newMap" class="map"></div>
@@ -80,61 +80,55 @@ export default {
 
   props: {
     identifyHasIllegalFactory: Function,
-    landUsage: String,
     whichQuestion: Number,
     paramsOfMaps: Object,
+    factoryCoord: [Object, String],
+    landUsage: String,
+  },
+  methods: {
+    setMap() {
+      this.newMap = L.map('newMap', {
+        zoomControl: false,
+        attributionControl: false,
+        touchZoom: false,
+        dragging: false,
+        doubleClickZoom: false,
+        scrollWheelZoom: false,
+        keyboard: false,
+      });
+      this.newMap.setView(
+        [this.factoryCoord.latitude, this.factoryCoord.longitude],
+        this.paramsOfMaps.zoom_level,
+      );
+      this.newLayer = L.tileLayer(
+        `https://data.csrsr.ncu.edu.tw/SP/SP${this.paramsOfMaps.year_new}NC_3857/{z}/{x}/{y}.png`,
+        {
+          opacity: 1,
+        },
+      ).addTo(this.newMap);
+      this.oldMap = L.map('oldMap', {
+        zoomControl: false,
+        attributionControl: false,
+        touchZoom: false,
+        dragging: false,
+        doubleClickZoom: false,
+        scrollWheelZoom: false,
+        keyboard: false,
+      });
+      this.oldMap.setView(
+        [this.factoryCoord.latitude, this.factoryCoord.longitude],
+        this.paramsOfMaps.zoom_level,
+      );
+      this.oldLayer = L.tileLayer(
+        `https://data.csrsr.ncu.edu.tw/SP/SP${this.paramsOfMaps.year_old}NC_3857/{z}/{x}/{y}.png`,
+        {
+          opacity: 1,
+        },
+      ).addTo(this.oldMap);
+    },
   },
   mounted() {
-    //  const data = JSON.parse(localStorage.getItem('SpotDiffData'));
-    //   this.questionInfo = data[this.whichQuestion - 1];
-
-    // In testing phase, we will get 15 set of data in '/location' of spotdiff-test-api,
-    // User would have to answer 5 set of data per time, and if all set hasn't not answer
-    // yet, the data we store in localStorage will not be cleared.
-    // code for testing start:
-    const data = JSON.parse(localStorage.getItem('SpotDiffData'));
-    const doneTime = JSON.parse(localStorage.getItem('SpotDiffDataDoneTime'));
-    this.questionInfo = data[doneTime * 5 + this.whichQuestion - 1];
-    // code for testing end
-
-    this.newMap = L.map('newMap', {
-      zoomControl: false,
-      attributionControl: false,
-      touchZoom: false,
-      dragging: false,
-      doubleClickZoom: false,
-      scrollWheelZoom: false,
-      keyboard: false,
-    });
-    this.newMap.setView(
-      [this.questionInfo.latitude, this.questionInfo.longitude],
-      this.paramsOfMaps.zoomInLevel,
-    );
-    this.newLayer = L.tileLayer(
-      `https://data.csrsr.ncu.edu.tw/SP/SP${this.paramsOfMaps.yearNew}NC_3857/{z}/{x}/{y}.png`,
-      {
-        opacity: 1,
-      },
-    ).addTo(this.newMap);
-    this.oldMap = L.map('oldMap', {
-      zoomControl: false,
-      attributionControl: false,
-      touchZoom: false,
-      dragging: false,
-      doubleClickZoom: false,
-      scrollWheelZoom: false,
-      keyboard: false,
-    });
-    this.oldMap.setView(
-      [this.questionInfo.latitude, this.questionInfo.longitude],
-      this.paramsOfMaps.zoomInLevel,
-    );
-    this.oldLayer = L.tileLayer(
-      `https://data.csrsr.ncu.edu.tw/SP/SP${this.paramsOfMaps.yearOld}NC_3857/{z}/{x}/{y}.png`,
-      {
-        opacity: 1,
-      },
-    ).addTo(this.oldMap);
+    this.setMap();
   },
 };
 </script>

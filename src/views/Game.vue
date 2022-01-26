@@ -7,8 +7,14 @@
       :whichStage="whichStage"
       :completed-stage="completedStage"
     />
-
-    <GameContent :which-Question="whichStage" :go-to-next-stage="goToNextStage" />
+    <GameContent
+      :which-Question="whichStage"
+      :go-to-next-stage="goToNextStage"
+      :client-id="clientId"
+      :user-token="userToken"
+      :create-client-id="createClientId"
+      :get-user-token="getUserToken"
+    />
   </div>
   <div v-else class="container bg-skyBlue">
     <div class="checking-page">
@@ -21,12 +27,15 @@
       </div>
     </div>
   </div>
+  <LoadingPage v-if="isLoading" />
 </template>
 
 <script>
+import axios from 'axios';
 import TheHeader from '@/components/TheHeader.vue';
 import ProgressBar from '@/components/ProgressBar.vue';
 import GameContent from '@/components/GameContent.vue';
+import LoadingPage from '@/components/LoadingPage.vue';
 import IntroTitle from '../assets/svg-icon/intro-title.svg';
 import backToGamePage from '../assets/svg-icon/back-to-game-page.svg';
 import Farmer from '../assets/svg-icon/intro-animation/farmer.svg';
@@ -35,17 +44,65 @@ import sendAnswer from '../assets/svg-icon/send-answer.svg';
 export default {
   name: 'TheTutorial',
   data() {
-    return { whichStage: 1, completedStage: [1], isAllQuestionDone: false };
+    return {
+      whichStage: 1,
+      completedStage: [1],
+      isAllQuestionDone: false,
+      clientId: '',
+      userToken: '',
+      isLoading: false,
+    };
   },
   methods: {
-    async goToNextStage() {
+    createCustomClientId() {
+      let customClientId = sessionStorage.getItem('spotDiffClientId');
+      if (customClientId) {
+        this.clientId = customClientId;
+      } else {
+        customClientId = `custom.cid.${Math.random()
+          .toString(36)
+          .substring(2)}.${new Date().getTime()}`;
+        sessionStorage.setItem('spotDiffClientId', customClientId);
+        this.clientId = customClientId;
+      }
+    },
+    getGoogleClientId() {
+      window.ga('create', 'UA-154739393-1', 'auto');
+      window.ga((tracker) => {
+        this.clientId = `ga.cid.${tracker.get('clientId')}`;
+      });
+    },
+    async createClientId() {
+      if (window.ga) {
+        await axios('https://www.google-analytics.com/collect')
+          .then(() => {
+            this.getGoogleClientId();
+          })
+          .catch(() => {
+            this.createCustomClientId();
+          });
+      } else {
+        this.createCustomClientId();
+      }
+    },
+    async getUserToken() {
+      const userToken = await axios.post(
+        `${process.env.VUE_APP_SPOTDIFF_APP_URL || '/api'}/user/`,
+        {
+          client_id: this.clientId,
+        },
+      );
+      this.userToken = userToken.data.user_token;
+      console.log(this.userToken);
+    },
+
+    goToNextStage() {
       if (this.whichStage < 5) {
         this.whichStage += 1;
       } else {
         this.isAllQuestionDone = true;
       }
     },
-
     backToPreviousStage() {
       if (this.isAllQuestionDone) {
         this.isAllQuestionDone = false;
@@ -53,23 +110,42 @@ export default {
         this.whichStage -= 1;
       }
     },
-    sendAnswer() {
-      this.$router.push('ending');
-      //   localStorage.removeItem('SpotDiffData');
-
-      // In testing phase, we will get 15 set of data in '/location' of spotdiff-test-api,
-      // User would have to answer 5 set of data per time, and if all set hasn't not answer
-      // yet, the data we store in localStorage will not be cleared.
-      // code for testing start
-      let doneTime = JSON.parse(localStorage.getItem('SpotDiffDataDoneTime'));
-      if (doneTime === 2) {
-        localStorage.removeItem('SpotDiffDataDoneTime');
+    async sendAnswer() {
+      try {
+        this.isLoading = true;
+        await this.createClientId();
+        await this.getUserToken();
+        const data = JSON.parse(localStorage.getItem('SpotDiffData'));
+        data.forEach((factory) => {
+          /* eslint no-param-reassign: ["error", { "props": false }] */
+          if (factory.land_usage === 'buliding-land') {
+            factory.land_usage = 1;
+          } else if (factory.land_usage === 'farm-land') {
+            factory.land_usage = 2;
+          } else {
+            factory.land_usage = 0;
+          }
+          if (!factory.expansion) {
+            factory.expansion = 1;
+          } else if (factory.expansion) {
+            factory.expansion = 2;
+          } else {
+            factory.expansion = 0;
+          }
+          delete factory.latitude;
+          delete factory.longitude;
+          delete factory.address;
+        });
+        await axios.post(`${process.env.VUE_APP_SPOTDIFF_APP_URL || '/api'}/answer/`, {
+          user_token: this.userToken,
+          data,
+        });
         localStorage.removeItem('SpotDiffData');
-      } else {
-        doneTime += 1;
-        localStorage.setItem('SpotDiffDataDoneTime', doneTime);
+        this.isLoading = false;
+        this.$router.push('ending');
+      } catch (e) {
+        console.log(e);
       }
-      // code for testing end
     },
   },
   watch: {
@@ -83,6 +159,7 @@ export default {
     TheHeader,
     ProgressBar,
     GameContent,
+    LoadingPage,
     IntroTitle,
     backToGamePage,
     Farmer,

@@ -8,7 +8,7 @@
   <div class="identify-box border-color-blue ">
     <InnerBoundingBox class="inner-bounding-box" />
     <div class="address">
-      <!-- {{ `${questionInfo.cityName}・${questionInfo.townName}` }} -->
+      <!-- {{ factoryCoord.address }} -->
     </div>
     <PhotoYear2017 class="photo-year" />
     <div id="oldMap" class="map"></div>
@@ -21,19 +21,15 @@
     <button @click="identifyLandUsage('building-land')"><ButtonFactory /></button>
     <button @click="identifyLandUsage('unknown')"><ButtonUnknown /></button>
   </div>
-  <LoadingPage v-if="isLoading" class="loading-page" />
 </template>
 
 <script>
-import axios from 'axios';
-import haversineOffset from 'haversine-offset';
 import ButtonLand from '../assets/svg-icon/button-land.svg';
 import ButtonFactory from '../assets/svg-icon/button-factory.svg';
 import ButtonUnknown from '../assets/svg-icon/button-unknown.svg';
 import PhotoYear2017 from '../assets/svg-icon/2017.svg';
 import InnerBoundingBox from '../assets/svg-icon/inner-bounding-box.svg';
 import L from '../../node_modules/leaflet/dist/leaflet';
-import LoadingPage from './LoadingPage.vue';
 
 export default {
   name: 'TaskA',
@@ -42,7 +38,6 @@ export default {
       oldMap: '',
       oldLayer: '',
       questionInfo: '',
-      isLoading: false,
     };
   },
   components: {
@@ -51,149 +46,47 @@ export default {
     ButtonUnknown,
     PhotoYear2017,
     InnerBoundingBox,
-    LoadingPage,
   },
   props: {
     identifyLandUsage: Function,
     whichQuestion: Number,
     paramsOfMaps: Object,
+    factoryCoord: [Object, String],
   },
   methods: {
-    // use factoryId data to get factory coordinate
-    // write factory coordinate into local storage
-    async getFactoriesData() {
-      const location = await axios.get(`${process.env.VUE_APP_SPOTDIFF_API_URL}/location`);
-      const allFactoryData = [];
-      async function getCoordinate(factory) {
-        const url = `${process.env.VUE_APP_DISFACTORY_API_URL || ''}/factories/${
-          factory.factory_id
-        }`;
-        const res = await axios.get(url);
-        const obj = {};
-        obj.latitude = res.data.lat;
-        obj.longitude = res.data.lng;
-        obj.locationId = factory.location_id;
-        allFactoryData.push(obj);
-      }
-      await location.data.reduce(async (_prev, next) => {
-        const prev = await Promise.resolve(_prev);
-        if (prev !== 'DO_NOT_CALL') {
-          await getCoordinate(prev);
-        }
-        await getCoordinate(next);
-        return Promise.resolve('DO_NOT_CALL');
+    setMap() {
+      this.oldMap = L.map('oldMap', {
+        zoomControl: false,
+        attributionControl: false,
+        touchZoom: false,
+        dragging: false,
+        doubleClickZoom: false,
+        scrollWheelZoom: false,
+        keyboard: false,
       });
-      this.isLoading = false;
-      localStorage.setItem('SpotDiffData', JSON.stringify(allFactoryData));
-    },
-    storeBoundingBoxLatLng() {
-      // height and width of innerBoundingBox
-      const widthPx = 153; // pixels
-      const heightPx = 95; // pixels
-      // according to openstreet wiki(https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#Resolution_and_Scale),
-      // 1 pixel is equal to 1.1943meters in zoomin level 17.
-      const widthMeter = widthPx * 1.1943; // meters
-      const heightMeter = heightPx * 1.1943; // meters
-      // use package 'haversine-offset' to calculate coordinate of top-left, bottom-right corner.
-      // This package is base on haversine foumula.
-      const center = {
-        latitude: this.questionInfo.latitude,
-        longitude: this.questionInfo.longitude,
-      };
-
-      const offsetBotRight = { x: widthMeter / 2, y: -heightMeter / 2 };
-      const offsetTopLeft = { x: -widthMeter / 2, y: heightMeter / 2 };
-      //   const data = JSON.parse(localStorage.getItem('SpotDiffData'));
-      // data[this.whichQuestion - 1].left_top_lat =
-      // haversineOffset(center, offsetTopLeft).lat;
-      // data[this.whichQuestion - 1].left_top_lng =
-      // haversineOffset(center, offsetTopLeft).lng;
-      // data[this.whichQuestion - 1].bottom_right_lat =
-      // haversineOffset(center, offsetBotRight).lat;
-      // data[this.whichQuestion - 1].bottom_right_lng =
-      // haversineOffset(center, offsetBotRight).lng;
-      // code for testing start
-      const data = JSON.parse(localStorage.getItem('SpotDiffData'));
-      const doneTime = JSON.parse(localStorage.getItem('SpotDiffDataDoneTime'));
-
-      data[doneTime * 5 + this.whichQuestion - 1].left_top_lat = haversineOffset(
-        center,
-        offsetTopLeft,
-      ).lat;
-      data[doneTime * 5 + this.whichQuestion - 1].left_top_lng = haversineOffset(
-        center,
-        offsetTopLeft,
-      ).lng;
-      data[doneTime * 5 + this.whichQuestion - 1].bottom_right_lat = haversineOffset(
-        center,
-        offsetBotRight,
-      ).lat;
-      data[doneTime * 5 + this.whichQuestion - 1].bottom_right_lng = haversineOffset(
-        center,
-        offsetBotRight,
-      ).lng;
-      // code for testing end
-
-      localStorage.setItem('SpotDiffData', JSON.stringify(data));
+      this.oldMap.setView(
+        [this.factoryCoord.latitude, this.factoryCoord.longitude],
+        this.paramsOfMaps.zoom_level,
+      );
+      this.oldLayer = L.tileLayer(
+        `https://data.csrsr.ncu.edu.tw/SP/SP${this.paramsOfMaps.year_old}NC_3857/{z}/{x}/{y}.png`,
+        {
+          opacity: 1,
+        },
+      ).addTo(this.oldMap);
     },
   },
-
-  inject: ['isGamePage'],
   watch: {
-    questionInfo: {
+    factoryCoord: {
       deep: true,
       handler() {
-        if (this.isGamePage() && localStorage.getItem('SpotDiffData') !== null) {
-          this.oldMap = L.map('oldMap', {
-            zoomControl: false,
-            attributionControl: false,
-            touchZoom: false,
-            dragging: false,
-            doubleClickZoom: false,
-            scrollWheelZoom: false,
-            keyboard: false,
-          });
-          this.oldMap.setView(
-            [this.questionInfo.latitude, this.questionInfo.longitude],
-            this.paramsOfMaps.zoomInLevel,
-          );
-          this.oldLayer = L.tileLayer(
-            `https://data.csrsr.ncu.edu.tw/SP/SP${this.paramsOfMaps.yearOld}NC_3857/{z}/{x}/{y}.png`,
-            {
-              opacity: 1,
-            },
-          ).addTo(this.oldMap);
-        }
+        this.setMap();
       },
     },
   },
-  async mounted() {
-    try {
-      // get factory id from database 'location'
-      if (this.isGamePage()) {
-        if (
-          localStorage.getItem('SpotDiffData') === null
-          || JSON.parse(localStorage.getItem('SpotDiffData')).length !== 15
-        ) {
-          this.isLoading = true;
-          await this.getFactoriesData();
-          localStorage.setItem('SpotDiffDataDoneTime', 0);
-        }
-        // const data = JSON.parse(localStorage.getItem('SpotDiffData'));
-        // this.questionInfo = data[this.whichQuestion - 1];
-
-        // In testing phase, we will get 15 set of data in '/location' of spotdiff-test-api,
-        // User would have to answer 5 set of data per time, and if all set hasn't not answer
-        // yet, the data we store in localStorage will not be cleared.
-        // code for testing start
-        const data = JSON.parse(localStorage.getItem('SpotDiffData'));
-        const doneTime = JSON.parse(localStorage.getItem('SpotDiffDataDoneTime'));
-        this.questionInfo = data[doneTime * 5 + this.whichQuestion - 1];
-        // code for testing end
-        this.storeBoundingBoxLatLng();
-      }
-    } catch (e) {
-      console.error(e);
+  mounted() {
+    if (this.factoryCoord) {
+      this.setMap();
     }
   },
 };
@@ -315,11 +208,5 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1;
-}
-.loading-page {
-  position: fixed;
-  z-index: 999;
-  top: 0;
-  left: 0;
 }
 </style>

@@ -21,45 +21,6 @@ let clientId = '';
   m.parentNode.insertBefore(a, m);
 })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
-function getGoogleClientId() {
-  ga('create', 'UA-154739393-1', 'auto');
-
-  ga(function(tracker) {
-    clientId = tracker.get('clientId');
-  });
-  app.config.globalProperties.clientId = clientId;
-  console.log('success');
-  console.log(clientId);
-}
-function createCustomClientId() {
-  clientId =
-    'custom.cid.' +
-    Math.random()
-      .toString(36)
-      .substring(2) +
-    '.' +
-    new Date().getTime();
-  app.config.globalProperties.clientId = clientId;
-  console.log('fail');
-  console.log(clientId);
-}
-
-//If URL endpoint of GA data sending been blocked
-//If ga() been blocked
-window.addEventListener('load', function() {
-  if (window.ga) {
-    fetch('https://www.google-analytics.com/collect')
-      .then(() => {
-        getGoogleClientId();
-      })
-      .catch(() => {
-        createCustomClientId();
-      });
-  } else {
-    createCustomClientId();
-  }
-});
-
 app
   .use(store)
   .use(router)

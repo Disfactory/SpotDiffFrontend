@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="loading-page">
     <Loading class="loading-icon" />
     <p>Loading</p>
   </div>
@@ -15,7 +15,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-div {
+.loading-page {
+  position: fixed;
+  z-index: 999;
+  top: 0;
+  left: 0;
   padding-top: calc((100vh - 250px - 20px) / 2);
   padding-bottom: calc((100vh - 250px - 20px) / 2);
   background: rgba(0, 0, 0, 0.7);
