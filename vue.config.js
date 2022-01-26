@@ -15,7 +15,12 @@ module.exports = {
     proxy: {
       '/factories': {
         target: 'https://api.disfactory.tw/api/',
-        pathRewite: { '^/factories': '' },
+        ws: true,
+        changeOrigin: true,
+      },
+      '/api': {
+        target: 'https://staging.api.spot.disfactory.tw/',
+        pathRewrite: { '^/api': '' },
         ws: true,
         changeOrigin: true,
       },
