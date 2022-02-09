@@ -56,15 +56,13 @@ export default {
   methods: {
     createCustomClientId() {
       let customClientId = sessionStorage.getItem('spotDiffClientId');
-      if (customClientId) {
-        this.clientId = customClientId;
-      } else {
+      if (!customClientId) {
         customClientId = `custom.cid.${Math.random()
           .toString(36)
           .substring(2)}.${new Date().getTime()}`;
         sessionStorage.setItem('spotDiffClientId', customClientId);
-        this.clientId = customClientId;
       }
+      this.clientId = customClientId;
     },
     getGoogleClientId() {
       window.ga('create', 'UA-154739393-1', 'auto');
@@ -93,7 +91,6 @@ export default {
         },
       );
       this.userToken = userToken.data.user_token;
-      console.log(this.userToken);
     },
 
     goToNextStage() {
