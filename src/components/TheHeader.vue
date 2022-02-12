@@ -3,7 +3,7 @@
     <div class="title">
       <TheTitle />
     </div>
-    <div class="book">
+    <div class="tutorial-icon" v-if="isGamePage()">
       <BookMark />
     </div>
   </div>
@@ -24,7 +24,7 @@
   border-right: 2px solid #000000;
 }
 
-.book {
+.tutorial-icon {
   width: 50px;
   padding-top: 12px;
   padding-bottom: 12px;
@@ -43,5 +43,6 @@ import BookMark from '../assets/svg-icon/book.svg';
 export default {
   name: 'TheHeader',
   components: { TheTitle, BookMark },
+  inject: ['isGamePage'],
 };
 </script>
