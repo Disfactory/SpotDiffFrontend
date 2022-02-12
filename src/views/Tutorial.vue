@@ -24,6 +24,8 @@ export default {
     goToNextStage() {
       if (this.whichStage < 4) {
         this.whichStage += 1;
+      } else if (this.$route.name === 'blank') {
+        window.close();
       } else {
         this.$router.push('game');
       }
