@@ -1,7 +1,13 @@
 <template>
   <div class="footer">
     <About />
-    <p>&#169; 地球公民基金會</p>
+    <a
+      href="https://www.cet-taiwan.org/"
+      target="_blank"
+      rel="noreferrer noopener"
+      class="link-to-cet"
+      >&#169; 地球公民基金會</a
+    >
   </div>
 </template>
 
@@ -29,8 +35,14 @@ export default {
   line-height: 18px;
   letter-spacing: 0px;
   text-align: left;
-  p {
+  .link-to-cet {
+    cursor: pointer;
     margin-right: 17px;
+    text-decoration: none;
+    color: #b8b8b8;
+    &:hover {
+      font-weight: 600;
+    }
   }
 }
 </style>
