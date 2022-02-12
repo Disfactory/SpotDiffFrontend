@@ -75,7 +75,9 @@
       <p>🎉 我們就可以開始檢舉囉！</p>
     </div>
   </div>
-  <ContinueButton v-if="whichStage === 4 && isTaskCompleted" @click="goToNextStage" />
+  <button>
+    <ContinueButton v-if="whichStage === 4 && isTaskCompleted" @click="goToNextStage" />
+  </button>
 </template>
 
 <script>

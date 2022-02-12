@@ -3,9 +3,15 @@
     <div class="title">
       <TheTitle />
     </div>
-    <div class="tutorial-icon" v-if="isGamePage()">
+    <router-link
+      to="/tutorial/blank"
+      target="_blank"
+      rel="noreferrer noopener"
+      class="tutorial-icon"
+      v-if="isGamePage()"
+    >
       <BookMark />
-    </div>
+    </router-link>
   </div>
 </template>
 
@@ -25,6 +31,7 @@
 }
 
 .tutorial-icon {
+  cursor: pointer;
   width: 50px;
   padding-top: 12px;
   padding-bottom: 12px;
