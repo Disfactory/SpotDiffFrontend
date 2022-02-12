@@ -20,7 +20,13 @@
                 從這些變異點當中辨識出2016年後新增的部分，就可以補足地方民眾拍照檢舉缺少的資料，也能夠減少時行政流程、加速處理速度！
               </p>
 
-              <button class="know-more-button">了解更多</button>
+              <a
+                href="https://about.disfactory.tw/"
+                rel="noreferrer noopener"
+                target="_blank"
+                class="know-more-button"
+                >了解更多</a
+              >
             </div></transition
           >
         </div>
@@ -119,6 +125,11 @@ export default {
       text-align: center;
       letter-spacing: 2px;
       text-decoration-line: underline;
+      &:visited,
+      &:hover,
+      &:focus {
+        color: inherit;
+      }
     }
   }
 }
