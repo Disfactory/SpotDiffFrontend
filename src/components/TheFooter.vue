@@ -23,6 +23,7 @@ export default {
 <style lang="scss">
 .footer {
   width: 100%;
+  height: 31.5px;
   background: #1d1d1d;
   display: flex;
   justify-content: space-between;

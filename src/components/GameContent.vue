@@ -108,8 +108,8 @@ export default {
     },
     computeBoundingBoxLatLng() {
       // height and width of innerBoundingBox
-      const widthPx = 151; // pixels
-      const heightPx = 93; // pixels
+      const widthPx = 153; // pixels
+      const heightPx = 95; // pixels
       // according to openstreet wiki(https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#Resolution_and_Scale),
       // 1 pixel is equal to 1.1943meters in zoomin level 17.
       const widthMeter = widthPx * 1.1943; // meters

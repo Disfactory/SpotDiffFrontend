@@ -15,6 +15,17 @@
   </div>
 </template>
 
+<script>
+import TheTitle from '../assets/svg-icon/title.svg';
+import BookMark from '../assets/svg-icon/book.svg';
+
+export default {
+  name: 'TheHeader',
+  components: { TheTitle, BookMark },
+  inject: ['isGamePage'],
+};
+</script>
+
 <style scoped lang="scss">
 .header {
   width: 100%;
@@ -42,14 +53,3 @@
   border-right: 2px solid #000000;
 }
 </style>
-
-<script>
-import TheTitle from '../assets/svg-icon/title.svg';
-import BookMark from '../assets/svg-icon/book.svg';
-
-export default {
-  name: 'TheHeader',
-  components: { TheTitle, BookMark },
-  inject: ['isGamePage'],
-};
-</script>
