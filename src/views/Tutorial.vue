@@ -5,6 +5,7 @@
       <ProgressBar
         :which-stage="whichStage"
         :back-to-previous-stage="backToPreviousStage"
+        :go-to-next-stage="goToNextStage"
         :completed-stage="completedStage"
       />
       <TutorialContent :which-stage="whichStage" />
