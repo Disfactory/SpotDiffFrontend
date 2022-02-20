@@ -7,7 +7,6 @@
         <p class="personal-score">你已經辨識了5間工廠</p>
       </div>
 
-
       <div class="play-again-wrapper">
         <button @click="playAgain">
           <PlayAgain />
@@ -140,16 +139,16 @@ export default {
     animation-timing-function: ease;
   }
   @keyframes moveSearch {
-    0%   {
+    0% {
       transform: translate(0px, 0px);
     }
-    30%   {
+    30% {
       transform: translate(-20px, 50px);
     }
-    60%   {
+    60% {
       transform: translate(180px, 30px);
     }
-    100%   {
+    100% {
       transform: translate(0px, 0px);
     }
   }

@@ -28,7 +28,6 @@
           <img src="../assets/svg-icon/intro-animation/farmer.gif" class="farmer-icon" />
           <button class="btn" @click="sendAnswer"><sendAnswer /></button>
           <button class="btn" @click="backToPreviousStage"><backToGamePage /></button>
-          >>>>>>> main
         </div>
       </div>
     </div>
