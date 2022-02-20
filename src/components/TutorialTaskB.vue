@@ -165,8 +165,8 @@ export default {
   width: 100%;
   display: flex;
   justify-content: space-evenly;
-  margin-top: 20px;
-  margin-bottom: 34px;
+  margin-bottom: 40px;
+
   button:focus {
     transform: translateY(-20px);
     transition: transform 0.3s;
