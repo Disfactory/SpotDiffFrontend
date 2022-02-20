@@ -76,7 +76,8 @@ export default {
 
 <style scoped lang="scss">
 .intro {
-  width: 375px;
+  max-width: 768px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -85,7 +86,10 @@ export default {
   padding-bottom: 50px;
   padding-right: 21px;
   padding-left: 21px;
+  overflow-x: hidden;
+  border: 4px solid #95CDE9;
 }
+
 .intro-title {
   position: relative;
   .icon-search {
@@ -103,26 +107,27 @@ export default {
     margin-top: 15px;
   }
 }
+
 .changeOrder {
   flex-direction: column-reverse;
 }
 
 .introButton {
-  position: absolute;
-  bottom: 26px;
-  margin: 0 auto;
+  margin-top: 40px;
 }
 
 .card-text {
   font-size: 18px;
   font-style: normal;
-  font-weight: 500;
-  line-height: 26px;
+  line-height: 1.4;
   letter-spacing: 1px;
+
   &.text-strong {
     font-size: 26px;
     font-weight: 700;
-    line-height: 38px;
+    line-height: 1.5;
+    margin-top: 6px;
+    margin-bottom: 6px;
   }
 }
 .icon-search-enter-active {
@@ -135,6 +140,8 @@ export default {
 .icon-search-enter-from,
 .icon-search-leave-to {
   transform: translateX(189px);
-  opacity: 0;
+}
+.icon-search-leave-to {
+  opacity: 1;
 }
 </style>

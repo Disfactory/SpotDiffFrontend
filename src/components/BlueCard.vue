@@ -26,8 +26,8 @@ export default {
   width: 312px;
   border: 4px solid #061e29;
   background: #006788;
-  padding: 28px;
-  margin-top: 20px;
+  padding: 28px 28px 40px 28px;
+  margin-top: 24px;
 }
 .card-decoration {
   margin: 0 auto;

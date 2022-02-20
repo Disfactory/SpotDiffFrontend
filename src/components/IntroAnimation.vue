@@ -1,34 +1,23 @@
 <template>
   <div class="animationA" v-show="!isSecondIntro">
     <div class="dialog">
-      <transition name="dialog-box" v-show="isFirstAnimationShow">
-        <DialogBox class="dialog-box" />
-      </transition>
-      <transition name="factory" v-show="isFirstAnimationShow">
-        <Factory class="factory" />
-      </transition>
+      <DialogBox class="dialog-box" v-show="isFirstAnimationShow" />
+       <Factory class="factory" v-show="isFirstAnimationShow" />
     </div>
-    <transition name="question-mark" v-show="isFirstAnimationShow">
-      <QustionMark class="question-mark" />
-    </transition>
-    <transition name="farmer" v-show="isFirstAnimationShow">
-      <Farmer class="farmer" />
-    </transition>
+     <QustionMark class="question-mark" v-show="isFirstAnimationShow" />
+    <div class="farmer" v-show="isFirstAnimationShow">
+      <img src="@/assets/svg-icon/intro-animation/farmer.gif" />
+    </div>
     <Grace class="grace" />
   </div>
   <div class="animationB" v-show="isSecondIntro">
     <Farm class="farm" />
-    <transition name="alert1" v-show="isSecondAnimationShow">
-      <Alert class="alert1" />
-    </transition>
-    <transition name="alert2" v-show="isSecondAnimationShow">
-      <Alert class="alert2" />
-    </transition>
+    <Alert class="alert2" v-show="isSecondAnimationShow" />
+    <Alert class="alert1" v-show="isSecondAnimationShow" />
   </div>
 </template>
 
 <script>
-import Farmer from '@/assets/svg-icon/intro-animation/farmer.svg';
 import Grace from '@/assets/svg-icon/intro-animation/grace.svg';
 import QustionMark from '@/assets/svg-icon/intro-animation/question-mark.svg';
 import Factory from '@/assets/svg-icon/intro-animation/factory.svg';
@@ -45,7 +34,6 @@ export default {
     };
   },
   components: {
-    Farmer,
     Grace,
     QustionMark,
     Factory,
@@ -80,66 +68,56 @@ export default {
   }
   .farmer {
     position: absolute;
-    width: auto;
-    height: auto;
-    bottom: 6px;
+    bottom: 4px;
     left: 112px;
+    animation-name: farmer;
+    animation-duration: 3s;
+    img {
+      width: 89px;
+      height: 134px;
+    }
   }
   .dialog {
     position: relative;
-    .factory {
-      position: absolute;
-      left: 20px;
-      top: 7px;
-    }
     .dialog-box {
       position: absolute;
       left: 0;
       top: 0;
+      transform: scale(0);
+      animation-fill-mode: forwards;
+      animation-name: dialogBox;
+      animation-delay: 3s;
+      animation-duration: 0.3s;
+    }
+    .factory {
+      position: absolute;
+      left: 20px;
+      top: 13px;
+      transform: scale(0);
+      animation-fill-mode: forwards;
+      animation-name: factory;
+      animation-delay: 3.4s;
+      animation-duration: 0.3s;
     }
   }
   .question-mark {
     position: absolute;
     left: 215px;
     bottom: 106px;
-  }
-
-  .farmer-enter-active,
-  .farmer-leave-active {
-    transition: all 1.5s linear;
-  }
-  .farmer-enter-from {
-    transform: translateX(200%);
-    opacity: 0;
-  }
-  .dialog-box-enter-active,
-  .dialog-box-leave-active {
-    transition: all 1s 1.5s linear;
-  }
-  .dialog-box-enter-from {
-    opacity: 0;
-  }
-  .factory-enter-active,
-  .factory-leave-active {
-    transition: all 0.5s 3s linear;
-  }
-  .factory-enter-from {
-    opacity: 0;
-  }
-  .question-mark-enter-active,
-  .question-mark-leave-active {
-    transition: all 0.5s 3.5s linear;
-  }
-  .question-mark-enter-from {
-    transform: translateY(100%);
-    opacity: 0;
+    transform: scale(0);
+    animation-fill-mode: forwards;
+    animation-name: questionMark;
+    animation-delay: 5s;
+    animation-duration: 0.3s;
   }
 }
+
 .animationB {
   position: relative;
   width: 229px;
   height: 199px;
   margin-left: 46px;
+
   .farm {
     position: absolute;
     top: 50%;
@@ -150,25 +128,70 @@ export default {
     position: absolute;
     left: 138px;
     top: 35px;
+    animation-name: bounce2;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease;
   }
   .alert2 {
     position: absolute;
     left: 68px;
     top: 114px;
+    animation-name: bounce2;
+    animation-duration: 2s;
+    animation-delay: 1s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease;
   }
 
-  .alert1-enter-active,
-  .alert1-leave-active {
-    transition: all 1s linear;
-  }
-  .alert2-enter-active,
-  .alert2-leave-active {
-    transition: all 1s 1s linear;
-  }
+}
 
-  .alert1-enter-from,
-  .alert2-enter-from {
-    opacity: 0;
+@keyframes bounce2 {
+  0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+  40% {transform: translateY(-30px);}
+  60% {transform: translateY(-15px);}
+}
+
+@keyframes farmer {
+  0%   {
+    transform: translateX(450px);
+  }
+  30%   {
+    transform: translateX(150px);
+  }
+  50%   {
+    transform: translateX(150px);
+  }
+  100%   {
+    transform: translateX(0);
   }
 }
+
+@keyframes factory {
+  0%   {
+    transform: scale(0);
+  }
+  100%   {
+    transform: scale(100%);
+  }
+}
+
+@keyframes dialogBox {
+  0%   {
+    transform: scale(0);
+  }
+  100%   {
+    transform: scale(100%);
+  }
+}
+
+@keyframes questionMark {
+  0%   {
+    transform: scale(0);
+  }
+  100%   {
+    transform: scale(100%);
+  }
+}
+
 </style>
