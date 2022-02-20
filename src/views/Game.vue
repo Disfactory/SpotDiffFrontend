@@ -146,7 +146,7 @@ export default {
         this.isLoading = false;
         this.$router.push('ending');
       } catch (e) {
-        console.log(e);
+        console.log(e.response.data.message);
       }
     },
   },
@@ -173,7 +173,10 @@ export default {
 
 <style lang="scss" scoped>
 .border-blue {
-  border: 2px solid #cce9e9;
+  @media (min-width: 768px) {
+    border: 2px solid#4199B5;
+    box-shadow: 10px 10px#006788;
+  }
 }
 .checking-page {
   padding-top: 30px;

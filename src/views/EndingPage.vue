@@ -1,29 +1,27 @@
 <template>
   <div class="fill-full-background bg-skyBlue">
-    <div class="container bg-skyBlue border-blue">
-      <div class="ending-page">
-        <div class="title-icon"><IntroTitle /></div>
-        <div class="thank-text">
-          <p class="title">阿伯感謝你！</p>
-          <p class="personal-score">你已經辨識了5間工廠</p>
+    <div class="container bg-skyBlue border-blue ending-page">
+      <div class="title-icon"><IntroTitle /></div>
+      <div class="thank-text">
+        <p class="title">阿伯感謝你！</p>
+        <p class="personal-score">你已經辨識了5間工廠</p>
+      </div>
+      <button class="play-again" @click="playAgain">
+        <PlayAgain />
+      </button>
+      <div class="current-result">
+        <p>辨識45,849次</p>
+        <p>已經有1,394人次參與辨識，</p>
+        <p>還差4,5896間工廠</p>
+        <div class="result-bar"><ResultBar /></div>
+      </div>
+      <div class="button-group">
+        <div class="share">
+          <RiceLeft /> <button><Share /></button><RiceRight />
         </div>
-        <button class="play-again" @click="playAgain">
-          <PlayAgain />
+        <button>
+          <a href="https://www.google.com/" target="blank"><AttendDraw /></a>
         </button>
-        <div class="current-result">
-          <p>辨識45,849次</p>
-          <p>已經有1,394人次參與辨識，</p>
-          <p>還差4,5896間工廠</p>
-          <div class="result-bar"><ResultBar /></div>
-        </div>
-        <div class="button-group">
-          <div class="share">
-            <RiceLeft /> <button><Share /></button><RiceRight />
-          </div>
-          <button>
-            <a href="https://www.google.com/" target="blank"><AttendDraw /></a>
-          </button>
-        </div>
       </div>
     </div>
   </div>
@@ -59,12 +57,13 @@ export default {
 
 <style lang="scss" scoped>
 .border-blue {
-  border: 4px solid #95cde9;
+  @media (min-width: 768px) {
+    border: 4px solid #95cde9;
+  }
 }
 .ending-page {
-  height: calc(100vh - 39.5px);
   text-align: center;
-  padding: 24px 0 27.5px;
+  padding: 24px 0 63px;
   .title-icon {
     margin: 0 auto;
     display: block;

@@ -63,6 +63,9 @@ export default {
   overflow-x: hidden;
 }
 .border-brown {
-  border: 2px solid #947451;
+  @media (min-width: 768px) {
+    border: 2px solid #947451;
+    box-shadow: 10px 10px#65431D;
+  }
 }
 </style>
