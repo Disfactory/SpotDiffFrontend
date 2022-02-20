@@ -43,7 +43,7 @@
       <div v-if="whichStage === 1">
         <p class="card-text text-strong ">答案：農地</p>
         <p class="card-text">
-          每塊地的形狀不一，若是農地，不一定會是綠色，但是會呈現均值的平面感。
+          每塊地的形狀不一，若是農地，不一定會是綠色，但是會呈現均質的平面感。
         </p>
       </div>
       <div v-else>

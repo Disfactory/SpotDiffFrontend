@@ -1,29 +1,34 @@
 <template>
-  <div v-if="!isAllQuestionDone" class="container bg-darkBlue">
-    <TheHeader />
-    <ProgressBar
-      :go-to-next-stage="goToNextStage"
-      :back-to-previous-stage="backToPreviousStage"
-      :whichStage="whichStage"
-      :completed-stage="completedStage"
-    />
-    <GameContent
-      :which-Question="whichStage"
-      :go-to-next-stage="goToNextStage"
-      :client-id="clientId"
-      :user-token="userToken"
-      :create-client-id="createClientId"
-      :get-user-token="getUserToken"
-    />
-  </div>
-  <div v-else class="container bg-skyBlue">
-    <div class="checking-page">
-      <div class="title-icon"><IntroTitle /></div>
-      <p class="check-text">你確定要送出資料了嗎？</p>
-      <div class="button-group">
-        <img src="../assets/svg-icon/intro-animation/farmer.gif"  class="farmer-icon" />
-        <button class="btn" @click="sendAnswer"><sendAnswer /></button>
-        <button class="btn" @click="backToPreviousStage"><backToGamePage /></button>
+  <div
+    class="fill-full-background"
+    :class="{ 'bg-skyBlue': isAllQuestionDone, 'bg-darkBlue': !isAllQuestionDone }"
+  >
+    <div v-if="!isAllQuestionDone" class="container border-blue">
+      <TheHeader />
+      <ProgressBar
+        :go-to-next-stage="goToNextStage"
+        :back-to-previous-stage="backToPreviousStage"
+        :whichStage="whichStage"
+        :completed-stage="completedStage"
+      />
+      <GameContent
+        :which-Question="whichStage"
+        :go-to-next-stage="goToNextStage"
+        :client-id="clientId"
+        :user-token="userToken"
+        :create-client-id="createClientId"
+        :get-user-token="getUserToken"
+      />
+    </div>
+    <div v-else class="container bg-skyBlue">
+      <div class="checking-page">
+        <div class="title-icon"><IntroTitle /></div>
+        <p class="check-text">你確定要送出資料了嗎？</p>
+        <div class="button-group">
+          <img src="../assets/svg-icon/intro-animation/farmer.gif" class="farmer-icon" />
+          <button class="btn" @click="sendAnswer"><sendAnswer /></button>
+          <button class="btn" @click="backToPreviousStage"><backToGamePage /></button>
+        </div>
       </div>
     </div>
   </div>
@@ -140,7 +145,7 @@ export default {
         this.isLoading = false;
         this.$router.push('ending');
       } catch (e) {
-        console.log(e);
+        console.log(e.response.data.message);
       }
     },
   },
@@ -165,6 +170,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.border-blue {
+  @media (min-width: 768px) {
+    border: 2px solid#4199B5;
+    box-shadow: 10px 10px#006788;
+  }
+}
 .checking-page {
   padding-top: 30px;
   height: 100%;

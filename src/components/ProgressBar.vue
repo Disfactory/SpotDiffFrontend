@@ -127,7 +127,6 @@ export default {
 .next-stage,
 .padding-box {
   min-width: 50px;
-  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-skyBlue"><TheIntro /></div>
+  <div class="fill-full-background bg-skyBlue"><TheIntro /></div>
 </template>
 
 <script>

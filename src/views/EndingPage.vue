@@ -1,10 +1,10 @@
 <template>
-  <div class="container bg-skyBlue">
-    <div class="ending-page">
+  <div class="fill-full-background bg-skyBlue">
+    <div class="container bg-skyBlue border-blue ending-page">
       <div class="title-icon"><IntroTitle /></div>
       <div class="thank-text">
         <p class="title">阿伯感謝你！</p>
-        <p>你已經辨識了5間工廠</p>
+        <p class="personal-score">你已經辨識了5間工廠</p>
       </div>
 
       <div class="play-again-wrapper">
@@ -63,16 +63,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.border-blue {
+  @media (min-width: 768px) {
+    border: 4px solid #95cde9;
+  }
+}
 .ending-page {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 30px 0 8.2vh;
+  text-align: center;
+  padding: 24px 0 63px;
   .title-icon {
+    margin: 0 auto;
     display: block;
-    margin-bottom: 20px;
+    margin-bottom: 44px;
   }
   .thank-text {
     font-size: 20px;
@@ -88,15 +90,24 @@ export default {
       line-height: 41px;
       margin-bottom: 14px;
     }
+    .personal-score {
+      margin-bottom: 28px;
+    }
+  }
+  .play-again {
+    margin-bottom: 36px;
   }
   .current-result {
-    color: #e79800;
-    font-size: 19px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 30px;
-    letter-spacing: 0.86px;
-    text-align: center;
+    margin-bottom: 80px;
+    p {
+      color: #e79800;
+      font-size: 19px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 30px;
+      letter-spacing: 0.86px;
+      text-align: center;
+    }
     .result-bar {
       margin-top: 20px;
     }
@@ -128,16 +139,16 @@ export default {
     animation-timing-function: ease;
   }
   @keyframes moveSearch {
-    0%   {
+    0% {
       transform: translate(0px, 0px);
     }
-    30%   {
+    30% {
       transform: translate(-20px, 50px);
     }
-    60%   {
+    60% {
       transform: translate(180px, 30px);
     }
-    100%   {
+    100% {
       transform: translate(0px, 0px);
     }
   }

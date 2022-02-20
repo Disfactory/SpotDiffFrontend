@@ -1,12 +1,14 @@
 <template>
-  <div class="container bg-darkBrown">
-    <TheHeader />
-    <ProgressBar
-      :which-stage="whichStage"
-      :back-to-previous-stage="backToPreviousStage"
-      :completed-stage="completedStage"
-    />
-    <TutorialContent :which-stage="whichStage" />
+  <div class="fill-full-background bg-darkBrown">
+    <div class="container tutorial-container border-brown">
+      <TheHeader />
+      <ProgressBar
+        :which-stage="whichStage"
+        :back-to-previous-stage="backToPreviousStage"
+        :completed-stage="completedStage"
+      />
+      <TutorialContent :which-stage="whichStage" />
+    </div>
   </div>
 </template>
 
@@ -55,3 +57,15 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.tutorial-container {
+  overflow-x: hidden;
+}
+.border-brown {
+  @media (min-width: 768px) {
+    border: 2px solid #947451;
+    box-shadow: 10px 10px#65431D;
+  }
+}
+</style>
