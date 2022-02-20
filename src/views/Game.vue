@@ -20,14 +20,15 @@
         :get-user-token="getUserToken"
       />
     </div>
-    <div v-else class=" fill-full-background container bg-skyBlue">
+    <div v-else class="container bg-skyBlue">
       <div class="checking-page">
         <div class="title-icon"><IntroTitle /></div>
         <p class="check-text">你確定要送出資料了嗎？</p>
         <div class="button-group">
-          <Farmer class="farmer-icon" />
+          <img src="../assets/svg-icon/intro-animation/farmer.gif" class="farmer-icon" />
           <button class="btn" @click="sendAnswer"><sendAnswer /></button>
           <button class="btn" @click="backToPreviousStage"><backToGamePage /></button>
+          >>>>>>> main
         </div>
       </div>
     </div>
@@ -43,7 +44,6 @@ import GameContent from '@/components/GameContent.vue';
 import LoadingPage from '@/components/LoadingPage.vue';
 import IntroTitle from '../assets/svg-icon/intro-title.svg';
 import backToGamePage from '../assets/svg-icon/back-to-game-page.svg';
-import Farmer from '../assets/svg-icon/intro-animation/farmer.svg';
 import sendAnswer from '../assets/svg-icon/send-answer.svg';
 
 export default {
@@ -164,7 +164,6 @@ export default {
     LoadingPage,
     IntroTitle,
     backToGamePage,
-    Farmer,
     sendAnswer,
   },
   inject: ['isGamePage'],
@@ -208,6 +207,10 @@ export default {
     .btn {
       margin-bottom: 7.2vh;
     }
+  }
+  .farmer-icon {
+    width: 89px;
+    height: 134px;
   }
 }
 </style>

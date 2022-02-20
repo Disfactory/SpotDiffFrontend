@@ -6,20 +6,26 @@
         <p class="title">阿伯感謝你！</p>
         <p class="personal-score">你已經辨識了5間工廠</p>
       </div>
-      <button class="play-again" @click="playAgain">
-        <PlayAgain />
-      </button>
+
+
+      <div class="play-again-wrapper">
+        <button @click="playAgain">
+          <PlayAgain />
+        </button>
+        <Search class="search-icon" />
+      </div>
+
       <div class="current-result">
-        <p>辨識45,849次</p>
-        <p>已經有1,394人次參與辨識，</p>
-        <p>還差4,5896間工廠</p>
+        <p>辨識 45,849 次</p>
+        <p>已經有 1,394 人次參與辨識，</p>
+        <p>還差 4,5896 間工廠</p>
         <div class="result-bar"><ResultBar /></div>
       </div>
       <div class="button-group">
         <div class="share">
-          <RiceLeft /> <button><Share /></button><RiceRight />
+          <RiceLeft /> <button class="btn-share"><Share /></button><RiceRight />
         </div>
-        <button>
+        <button class="btn-form">
           <a href="https://www.google.com/" target="blank"><AttendDraw /></a>
         </button>
       </div>
@@ -35,6 +41,7 @@ import Share from '../assets/svg-icon/share.svg';
 import AttendDraw from '../assets/svg-icon/attend-draw.svg';
 import RiceLeft from '../assets/svg-icon/rice-left.svg';
 import RiceRight from '../assets/svg-icon/rice-right.svg';
+import Search from '../assets/svg-icon/search-ending.svg';
 
 export default {
   name: 'EndingPage',
@@ -46,6 +53,7 @@ export default {
     ResultBar,
     RiceLeft,
     RiceRight,
+    Search,
   },
   methods: {
     playAgain() {
@@ -107,8 +115,42 @@ export default {
   }
   .button-group {
     margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     .share {
       margin-bottom: 20px;
+    }
+  }
+  .btn-share {
+    margin-left: 16px;
+    margin-right: 16px;
+  }
+
+  .play-again-wrapper {
+    position: relative;
+  }
+  .search-icon {
+    position: absolute;
+    left: -20px;
+    top: -22px;
+    animation-name: moveSearch;
+    animation-duration: 3s;
+    animation-iteration-count: 2;
+    animation-timing-function: ease;
+  }
+  @keyframes moveSearch {
+    0%   {
+      transform: translate(0px, 0px);
+    }
+    30%   {
+      transform: translate(-20px, 50px);
+    }
+    60%   {
+      transform: translate(180px, 30px);
+    }
+    100%   {
+      transform: translate(0px, 0px);
     }
   }
 }
