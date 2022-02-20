@@ -46,7 +46,7 @@ import backToGamePage from '../assets/svg-icon/back-to-game-page.svg';
 import sendAnswer from '../assets/svg-icon/send-answer.svg';
 
 export default {
-  name: 'TheTutorial',
+  name: 'TheGame',
   data() {
     return {
       whichStage: 1,
