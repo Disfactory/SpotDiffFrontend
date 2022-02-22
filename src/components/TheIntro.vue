@@ -1,42 +1,40 @@
 <template>
-  <div class="container">
-    <div class="intro">
-      <div class="intro-title">
-        <IntroTitle />
-        <transition appear name="icon-search" @after-enter="afterEnter">
-          <Search v-if="showSearchIcon" class="icon-search" />
-        </transition>
-      </div>
-      <div v-bind:class="{ main: true, changeOrder: isSecondIntro }">
-        <div class="animation">
-          <IntroAnimation :is-second-intro="isSecondIntro" />
-        </div>
-        <BlueCard>
-          <slot>
-            <span v-if="!isSecondIntro"
-              ><p class="card-text">田間阿伯發現隔壁蓋起新工廠卻束手無策，</p>
-              <p class="card-text text-strong">動動手指幫助他吧！</p>
-            </span>
-            <span v-else>
-              <p class="card-text text-strong">怎麼幫他？</p>
-              <p class="card-text">只要你能找出農地上的新增建物，我們就能去檢舉拆除！</p>
-            </span>
-          </slot>
-        </BlueCard>
-      </div>
-      <button
-        class="introButton"
-        v-if="!isSecondIntro"
-        @click.prevent="isSecondIntro = !isSecondIntro"
-      >
-        <HowToHelp />
-      </button>
-      <button class="introButton">
-        <router-link v-if="isSecondIntro" to="/tutorial">
-          <StartToPlay />
-        </router-link>
-      </button>
+  <div class="container container-border-sky-blue intro">
+    <div class="intro-title">
+      <IntroTitle />
+      <transition appear name="icon-search" @after-enter="afterEnter">
+        <Search v-if="showSearchIcon" class="icon-search" />
+      </transition>
     </div>
+    <div v-bind:class="{ main: true, 'change-order': isSecondIntro }">
+      <div class="animation">
+        <IntroAnimation :is-second-intro="isSecondIntro" />
+      </div>
+      <BlueCard>
+        <slot>
+          <span v-if="!isSecondIntro"
+            ><p class="card-text">田間阿伯發現隔壁蓋起新工廠卻束手無策，</p>
+            <p class="card-text text-strong">動動手指幫助他吧！</p>
+          </span>
+          <span v-else>
+            <p class="card-text text-strong">怎麼幫他？</p>
+            <p class="card-text">只要你能找出農地上的新增建物，我們就能去檢舉拆除！</p>
+          </span>
+        </slot>
+      </BlueCard>
+    </div>
+    <button
+      class="intro-button"
+      v-if="!isSecondIntro"
+      @click.prevent="isSecondIntro = !isSecondIntro"
+    >
+      <HowToHelp />
+    </button>
+    <button v-if="isSecondIntro" class="intro-button intro-button--margin-bottom-more">
+      <router-link to="/tutorial">
+        <StartToPlay />
+      </router-link>
+    </button>
   </div>
 </template>
 
@@ -82,12 +80,8 @@ export default {
   flex-direction: column;
   align-items: center;
   position: relative;
-  padding-top: 20px;
-  padding-bottom: 50px;
-  padding-right: 21px;
-  padding-left: 21px;
+  padding: 20px 21px 50px;
   overflow-x: hidden;
-  border: 4px solid #95CDE9;
 }
 
 .intro-title {
@@ -108,12 +102,15 @@ export default {
   }
 }
 
-.changeOrder {
+.change-order {
   flex-direction: column-reverse;
 }
 
-.introButton {
-  margin-top: 40px;
+.intro-button {
+  margin: 40px 0 40px;
+  &--margin-bottom-more {
+    margin: 40px 0 40px;
+  }
 }
 
 .card-text {

@@ -2,9 +2,9 @@
   <div class="animationA" v-show="!isSecondIntro">
     <div class="dialog">
       <DialogBox class="dialog-box" v-show="isFirstAnimationShow" />
-       <Factory class="factory" v-show="isFirstAnimationShow" />
+      <Factory class="factory" v-show="isFirstAnimationShow" />
     </div>
-     <QustionMark class="question-mark" v-show="isFirstAnimationShow" />
+    <QustionMark class="question-mark" v-show="isFirstAnimationShow" />
     <div class="farmer" v-show="isFirstAnimationShow">
       <img src="@/assets/svg-icon/intro-animation/farmer.gif" />
     </div>
@@ -114,9 +114,9 @@ export default {
 
 .animationB {
   position: relative;
+  margin: 31px 0 0 46px;
   width: 229px;
   height: 199px;
-  margin-left: 46px;
 
   .farm {
     position: absolute;
@@ -143,55 +143,63 @@ export default {
     animation-iteration-count: infinite;
     animation-timing-function: ease;
   }
-
 }
 
 @keyframes bounce2 {
-  0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-  40% {transform: translateY(-30px);}
-  60% {transform: translateY(-15px);}
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-30px);
+  }
+  60% {
+    transform: translateY(-15px);
+  }
 }
 
 @keyframes farmer {
-  0%   {
+  0% {
     transform: translateX(450px);
   }
-  30%   {
+  30% {
     transform: translateX(150px);
   }
-  50%   {
+  50% {
     transform: translateX(150px);
   }
-  100%   {
+  100% {
     transform: translateX(0);
   }
 }
 
 @keyframes factory {
-  0%   {
+  0% {
     transform: scale(0);
   }
-  100%   {
+  100% {
     transform: scale(100%);
   }
 }
 
 @keyframes dialogBox {
-  0%   {
+  0% {
     transform: scale(0);
   }
-  100%   {
+  100% {
     transform: scale(100%);
   }
 }
 
 @keyframes questionMark {
-  0%   {
+  0% {
     transform: scale(0);
   }
-  100%   {
+  100% {
     transform: scale(100%);
   }
 }
-
 </style>

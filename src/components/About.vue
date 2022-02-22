@@ -3,10 +3,10 @@
   <teleport to="body">
     <transition name="modal" @after-enter="afterEnter">
       <div class="modal" v-if="isModalOpen">
-        <div @click.self="isModalOpen = false" class="modal-shadow">
+        <div @click.self="closeModal" class="modal-shadow">
           <transition name="modal-content">
             <div class="modal-content" v-if="isShowModalContent">
-              <button class="close-button" @click="isModalOpen = false"><CloseButton /></button>
+              <button class="close-button" @click="closeModal"><CloseButton /></button>
               <h1>
                 農地保衛，需要你出一份力
               </h1>
@@ -46,6 +46,10 @@ export default {
   methods: {
     afterEnter() {
       this.isShowModalContent = true;
+    },
+    closeModal() {
+      this.isShowModalContent = false;
+      this.isModalOpen = false;
     },
   },
   components: { CloseButton },
@@ -136,7 +140,7 @@ export default {
 
 .modal-enter-active,
 .modal-leave-active {
-  transition: opacity 1s;
+  transition: opacity 0.5s;
 }
 .modal-enter-from,
 .modal-leave-to {
@@ -149,7 +153,7 @@ export default {
 }
 .modal-content-enter-active,
 .modal-content-leave-active {
-  transition: opacity 2s;
+  transition: opacity 1s;
 }
 .modal-content-enter-from,
 .modal-content-leave-to {

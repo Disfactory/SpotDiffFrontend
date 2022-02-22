@@ -27,6 +27,25 @@ button {
   align-items: center;
   margin: 0 auto;
   max-width: 770px;
+  @media (min-width: 768px) {
+    &-border-blue {
+      border-width: 0px 2px 2px;
+      border-style: solid;
+      border-color: #4199b5;
+      box-shadow: 10px 10px#006788;
+    }
+    &-border-sky-blue {
+      border-width: 4px;
+      border-style: solid;
+      border-color: #95cde9;
+    }
+    &-border-brown {
+      border-width: 0px 2px 2px;
+      border-style: solid;
+      border-color: #947451;
+      box-shadow: 10px 10px#65431D;
+    }
+  }
 }
 .fill-full-background {
   overflow: auto;

@@ -52,7 +52,10 @@
       </div>
     </template>
   </BrownCard>
-  <div class="previous-answer-box" v-if="!this.isTaskCompleted || whichStage !== 2">
+  <div
+    class="identify-box identify-box--previous-answer"
+    v-if="!this.isTaskCompleted || whichStage !== 2"
+  >
     <div class="previous-answer-caption">
       <span v-if="whichStage === 2 && !this.isTaskCompleted">在2017年的空拍圖中，準心處是農地</span>
       <div v-else>
@@ -60,9 +63,10 @@
         <span v-else>比較一下2017年發現的建物吧～</span>
       </div>
     </div>
-    <div class="previous-answer-img border-color-brown">
+    <div class=" previous-answer-img border-color-brown">
       <InnerBoundingBox class="inner-bounding-box mask" />
       <img :src="require(`@/assets/img//${tutorialInfo.olderPhotoId}`)" />
+      <PhotoYear2017 class="photo-year" />
     </div>
   </div>
   <div v-if="isTaskCompleted" class="congrats">
@@ -84,6 +88,7 @@
 import BrownCard from './BrownCard.vue';
 import FactoryWithShadow from '../assets/svg-icon/factory-with-shadow.svg';
 import PhotoYear2020 from '../assets/svg-icon/2020.svg';
+import PhotoYear2017 from '../assets/svg-icon/2017.svg';
 import InnerBoundingBox from '../assets/svg-icon/inner-bounding-box.svg';
 import HasBuilding from '../assets/svg-icon/has-building.svg';
 import NoBuilding from '../assets/svg-icon/no-building.svg';
@@ -97,6 +102,7 @@ export default {
   name: 'TutorialTaskB',
   components: {
     PhotoYear2020,
+    PhotoYear2017,
     InnerBoundingBox,
     HasBuilding,
     NoBuilding,
@@ -124,10 +130,13 @@ export default {
 <style scoped lang="scss">
 .identify-box {
   position: relative;
-  margin-bottom: 17px;
   overflow: hidden;
-  width: 333px;
-  height: 208px;
+  margin-bottom: 17px;
+  &--previous-answer {
+    height: fit-content;
+    margin-bottom: 0;
+  }
+
   .address {
     position: absolute;
     left: 11px;
@@ -142,7 +151,7 @@ export default {
     position: absolute;
     right: 0;
     bottom: 0;
-    z-index: 10;
+    z-index: 100;
   }
 }
 .border-color-brown {
@@ -236,6 +245,7 @@ export default {
     }
   }
 }
+
 .previous-answer-img {
   overflow: hidden;
   position: relative;

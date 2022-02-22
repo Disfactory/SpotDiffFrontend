@@ -33,14 +33,15 @@
   </div>
   <DividerIcon class="divider-icon" />
 
-  <div class="previous-answer-box">
+  <div class="identify-box identify-box--previous-answer">
     <div class="previous-answer-caption">
       <span v-if="landUsage === 'farm-land'">在2017年的空拍圖中，準心處是農地</span>
       <span v-else-if="landUsage === 'building-land'">在2017年的空拍圖中，準心處是建地</span>
       <span v-else>不知道</span>
     </div>
-    <div class=" identify-box border-color-blue">
+    <div class="previous-answer-img border-color-blue">
       <InnerBoundingBox class="inner-bounding-box mask" />
+      <PhotoYear2017 class="photo-year" />
       <div id="oldMap" class="map"></div>
     </div>
   </div>
@@ -48,6 +49,7 @@
 
 <script>
 import PhotoYear2020 from '../assets/svg-icon/2020.svg';
+import PhotoYear2017 from '../assets/svg-icon/2017.svg';
 import InnerBoundingBox from '../assets/svg-icon/inner-bounding-box.svg';
 import HasBuilding from '../assets/svg-icon/has-building.svg';
 import NoBuilding from '../assets/svg-icon/no-building.svg';
@@ -70,6 +72,7 @@ export default {
   },
   components: {
     PhotoYear2020,
+    PhotoYear2017,
     InnerBoundingBox,
     HasBuilding,
     NoBuilding,
@@ -140,6 +143,10 @@ export default {
   overflow: hidden;
   width: 333px;
   height: 208px;
+  &--previous-answer {
+    height: fit-content;
+    margin-bottom: 0;
+  }
   .address {
     position: absolute;
     left: 11px;
