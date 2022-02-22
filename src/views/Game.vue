@@ -3,7 +3,7 @@
     class="fill-full-background"
     :class="{ 'bg-skyBlue': isAllQuestionDone, 'bg-darkBlue': !isAllQuestionDone }"
   >
-    <div v-if="!isAllQuestionDone" class="container border-blue">
+    <div v-if="!isAllQuestionDone" class="container container-border-blue">
       <TheHeader />
       <ProgressBar
         :go-to-next-stage="goToNextStage"
@@ -20,7 +20,7 @@
         :get-user-token="getUserToken"
       />
     </div>
-    <div v-else class="container bg-skyBlue">
+    <div v-else class="container bg-skyBlue container-border-sky-blue">
       <div class="checking-page">
         <div class="title-icon"><IntroTitle /></div>
         <p class="check-text">你確定要送出資料了嗎？</p>
@@ -170,14 +170,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.border-blue {
-  @media (min-width: 768px) {
-    border: 2px solid#4199B5;
-    box-shadow: 10px 10px#006788;
-  }
-}
 .checking-page {
-  padding-top: 30px;
+  padding: 20px 21px 50px;
+
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -185,11 +180,11 @@ export default {
   justify-content: space-between;
   .title-icon {
     display: block;
-    margin-bottom: 20px;
+    margin-bottom: 63px;
   }
   .check-text {
     font-size: 26px;
-    margin-bottom: 5vh;
+    margin-bottom: 36px;
     font-style: normal;
     font-weight: 600;
     line-height: 36px;
@@ -202,9 +197,9 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-bottom: 18.2vh;
+    margin-bottom: 94px;
     .btn {
-      margin-bottom: 7.2vh;
+      margin-bottom: 54px;
     }
   }
   .farmer-icon {

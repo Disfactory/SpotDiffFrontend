@@ -1,6 +1,6 @@
 <template>
   <div class="fill-full-background bg-darkBrown">
-    <div class="container tutorial-container border-brown">
+    <div class="container tutorial-container container-border-brown">
       <TheHeader />
       <ProgressBar
         :which-stage="whichStage"
@@ -62,11 +62,5 @@ export default {
 <style lang="scss" scoped>
 .tutorial-container {
   overflow-x: hidden;
-}
-.border-brown {
-  @media (min-width: 768px) {
-    border: 2px solid #947451;
-    box-shadow: 10px 10px#65431D;
-  }
 }
 </style>

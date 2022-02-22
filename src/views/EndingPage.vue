@@ -1,6 +1,6 @@
 <template>
   <div class="fill-full-background bg-skyBlue">
-    <div class="container bg-skyBlue border-blue ending-page">
+    <div class="container container-border-sky-blue ending-page">
       <div class="title-icon"><IntroTitle /></div>
       <div class="thank-text">
         <p class="title">阿伯感謝你！</p>
@@ -63,14 +63,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.border-blue {
-  @media (min-width: 768px) {
-    border: 4px solid #95cde9;
-  }
-}
 .ending-page {
   text-align: center;
-  padding: 24px 0 63px;
+  padding: 20px 0 63px;
   .title-icon {
     margin: 0 auto;
     display: block;
@@ -94,11 +89,11 @@ export default {
       margin-bottom: 28px;
     }
   }
-  .play-again {
-    margin-bottom: 36px;
+  .play-again-wrapper {
+    margin-bottom: 40px;
   }
   .current-result {
-    margin-bottom: 80px;
+    margin-bottom: 48px;
     p {
       color: #e79800;
       font-size: 19px;
