@@ -4,7 +4,7 @@
     <span v-if="landUsage === 'farm-land'">
       在準心處有<span class="text-color-blue">建物</span>嗎？</span
     >
-    <span v-if="landUsage === 'building-land'">
+    <span v-if="landUsage === 'building-land' || landUsage ==='unknown'">
       剛剛在準心處的建物有<span class="text-color-blue">擴建</span>嗎？
     </span>
   </div>
@@ -24,10 +24,12 @@
     <button v-if="landUsage === 'farm-land'" @click="identifyHasIllegalFactory(false)">
       <NoBuilding />
     </button>
-    <button v-if="landUsage === 'building-land'" @click="identifyHasIllegalFactory(true)">
+    <button v-if="landUsage === 'building-land' || landUsage ==='unknown'"
+    @click="identifyHasIllegalFactory(true)">
       <HasExpansion />
     </button>
-    <button v-if="landUsage === 'building-land'" @click="identifyHasIllegalFactory(false)">
+    <button v-if="landUsage === 'building-land' || landUsage ==='unknown'"
+    @click="identifyHasIllegalFactory(false)">
       <NoExpansion />
     </button>
   </div>
@@ -35,9 +37,8 @@
 
   <div class="identify-box identify-box--previous-answer">
     <div class="previous-answer-caption">
-      <span v-if="landUsage === 'farm-land'">在2017年的空拍圖中，準心處是農地</span>
-      <span v-else-if="landUsage === 'building-land'">在2017年的空拍圖中，準心處是建地</span>
-      <span v-else>不知道</span>
+      <span>在2017年的空拍圖中，準心處是{{this.landUsageChineseName}}</span>
+
     </div>
     <div class="previous-answer-img border-color-blue">
       <InnerBoundingBox class="inner-bounding-box mask" />
@@ -80,7 +81,17 @@ export default {
     NoExpansion,
     DividerIcon,
   },
-
+  computed: {
+    landUsageChineseName() {
+      let chineseName = '';
+      if (this.landUsage === 'farm-land') {
+        chineseName = '農地';
+      } else if (this.landUsage === 'building-land') {
+        chineseName = '建地';
+      } else { chineseName = '不知道'; }
+      return chineseName;
+    },
+  },
   props: {
     identifyHasIllegalFactory: Function,
     whichQuestion: Number,
