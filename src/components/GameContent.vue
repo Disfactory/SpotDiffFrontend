@@ -94,11 +94,12 @@ export default {
     },
     identifyLandUsage(landUsage) {
       this.currentQuestionData.userAnswer.landUsage = landUsage;
-      if (landUsage === 'unknown') {
-        this.identifyHasIllegalFactory('unknown');
-      } else {
-        this.isTaskACompleted = true;
-      }
+      // if (landUsage === 'unknown') {
+      //   this.identifyHasIllegalFactory('unknown');
+      // } else {
+      //   this.isTaskACompleted = true;
+      // }
+      this.isTaskACompleted = true;
     },
     identifyHasIllegalFactory(hasIllegalFactory) {
       this.currentQuestionData.userAnswer.hasIllegalFactory = hasIllegalFactory;
