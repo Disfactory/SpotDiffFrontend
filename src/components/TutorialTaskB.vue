@@ -11,7 +11,14 @@
       {{ `${tutorialInfo.cityName}・${tutorialInfo.townName}` }}
     </div>
     <PhotoYear2020 class="photo-year" />
-    <img :src="require(`@/assets/img/${tutorialInfo.newerPhotoId}`)" />
+    <picture v-if="this.whichStage === 2">
+      <source srcset="../assets/img/tutorial1-2020.webp" type="image/webp" />
+      <img src="../assets/img/tutorial1-2020.png" alt="" />
+    </picture>
+    <picture v-if="this.whichStage === 4">
+      <source srcset="../assets/img/tutorial2-2020.webp" type="image/webp" />
+      <img src="../assets/img/tutorial2-2020.png" alt="" />
+    </picture>
   </div>
   <div class="button-group" v-if="!isTaskCompleted">
     <button v-if="whichStage === 2" @click="identifyHasIllegalFactory(true)">
@@ -65,7 +72,14 @@
     </div>
     <div class=" previous-answer-img border-color-brown">
       <InnerBoundingBox class="inner-bounding-box mask" />
-      <img :src="require(`@/assets/img//${tutorialInfo.olderPhotoId}`)" />
+      <picture v-if="this.whichStage === 2">
+        <source srcset="../assets/img/tutorial1-2017.webp" type="image/webp" />
+        <img src="../assets/img/tutorial1-2017.png" alt="" />
+      </picture>
+      <picture v-if="this.whichStage === 4">
+        <source srcset="../assets/img/tutorial2-2017.webp" type="image/webp" />
+        <img src="../assets/img/tutorial2-2017.png" alt="" />
+      </picture>
       <PhotoYear2017 class="photo-year" />
     </div>
   </div>
