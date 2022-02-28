@@ -11,7 +11,14 @@
       {{ `${tutorialInfo.cityName}・${tutorialInfo.townName}` }}
     </div>
     <PhotoYear2017 class="photo-year" />
-    <img :src="require(`@/assets/img/${tutorialInfo.olderPhotoId}`)" />
+    <picture v-if="this.whichStage === 1">
+      <source srcset="../assets/img/tutorial1-2017.webp" type="image/webp" />
+      <img src="../assets/img/tutorial1-2017.png" alt="" />
+    </picture>
+    <picture v-if="this.whichStage === 3">
+      <source srcset="../assets/img/tutorial2-2017.webp" type="image/webp" />
+      <img src="../assets/img/tutorial2-2017.png" alt="" />
+    </picture>
   </div>
   <div v-if="isTaskCompleted" class="tutorial-answer">
     你選擇：{{ this.tutorialLandUsage }}
