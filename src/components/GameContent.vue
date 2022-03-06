@@ -56,7 +56,7 @@ export default {
           this.userToken
         }&size=5&gold_standard_size=1`,
       );
-      const allFactoriesData = [];
+      const locationData = location.data.data;
       async function getCoordinate(factory) {
         const url = `${process.env.VUE_APP_DISFACTORY_API_URL || ''}/factories/${
           factory.factory_id
@@ -68,17 +68,10 @@ export default {
           location_id: factory.id,
           address: res.data.townname,
         };
-        allFactoriesData.push(obj);
+        return obj;
       }
-      const locationData = location.data.data;
-      await locationData.reduce(async (_prev, next) => {
-        const prev = await Promise.resolve(_prev);
-        if (prev !== 'DO_NOT_CALL') {
-          await getCoordinate(prev);
-        }
-        await getCoordinate(next);
-        return Promise.resolve('DO_NOT_CALL');
-      });
+      const allFactoriesData = await Promise.all(locationData.map((data) => getCoordinate(data)));
+
       localStorage.setItem('SpotDiffData', JSON.stringify(allFactoriesData));
     },
     getFactoryCoord() {
