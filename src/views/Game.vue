@@ -11,14 +11,7 @@
         :whichStage="whichStage"
         :completed-stage="completedStage"
       />
-      <GameContent
-        :which-Question="whichStage"
-        :go-to-next-stage="goToNextStage"
-        :client-id="clientId"
-        :user-token="userToken"
-        :create-client-id="createClientId"
-        :get-user-token="getUserToken"
-      />
+      <GameContent :which-Question="whichStage" :go-to-next-stage="goToNextStage" />
     </div>
     <div v-else class="container bg-skyBlue container-border-sky-blue">
       <div class="checking-page">
@@ -37,6 +30,7 @@
 
 <script>
 import axios from 'axios';
+import { mapActions, mapState } from 'vuex';
 import TheHeader from '@/components/TheHeader.vue';
 import ProgressBar from '@/components/ProgressBar.vue';
 import GameContent from '@/components/GameContent.vue';
@@ -52,51 +46,12 @@ export default {
       whichStage: 1,
       completedStage: [1],
       isAllQuestionDone: false,
-      clientId: '',
-      userToken: '',
+
       isLoading: false,
     };
   },
   methods: {
-    createCustomClientId() {
-      let customClientId = sessionStorage.getItem('spotDiffClientId');
-      if (!customClientId) {
-        customClientId = `custom.cid.${Math.random()
-          .toString(36)
-          .substring(2)}.${new Date().getTime()}`;
-        sessionStorage.setItem('spotDiffClientId', customClientId);
-      }
-      this.clientId = customClientId;
-    },
-    getGoogleClientId() {
-      window.ga('create', 'UA-154739393-1', 'auto');
-      window.ga((tracker) => {
-        this.clientId = `ga.cid.${tracker.get('clientId')}`;
-      });
-    },
-    async createClientId() {
-      if (window.ga) {
-        await axios('https://www.google-analytics.com/collect')
-          .then(() => {
-            this.getGoogleClientId();
-          })
-          .catch(() => {
-            this.createCustomClientId();
-          });
-      } else {
-        this.createCustomClientId();
-      }
-    },
-    async getUserToken() {
-      const userToken = await axios.post(
-        `${process.env.VUE_APP_SPOTDIFF_APP_URL || '/api'}/user/`,
-        {
-          client_id: this.clientId,
-        },
-      );
-      this.userToken = userToken.data.user_token;
-    },
-
+    ...mapActions(['createClientId', 'getUserToken']),
     goToNextStage() {
       if (this.whichStage < 5) {
         this.whichStage += 1;
@@ -148,6 +103,9 @@ export default {
         console.log(e.response.data.message);
       }
     },
+  },
+  computed: {
+    ...mapState(['userToken', 'clientId']),
   },
   watch: {
     whichStage() {
