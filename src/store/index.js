@@ -6,8 +6,10 @@ export default createStore({
     return {
       userToken: '',
       clientId: '',
+      statusData: {},
     };
   },
+
   mutations: {
     createCustomClientId(state) {
       let customClientId = sessionStorage.getItem('spotDiffClientId');
@@ -33,6 +35,10 @@ export default createStore({
       state.userToken = userToken;
       console.log(state.userToken);
     },
+    setStatusData(state, statusData) {
+      state.statusData = statusData;
+      console.log(state.statusData);
+    },
   },
   actions: {
     async createClientId({ commit }) {
@@ -56,6 +62,22 @@ export default createStore({
         },
       );
       commit('setUserToken', userToken.data.user_token);
+    },
+    async getStatusData({ commit, state }) {
+      const res = await axios.get(
+        `${process.env.VUE_APP_SPOTDIFF_APP_URL || '/api'}/status?user_token=${state.userToken}`,
+      );
+      const getNumWithCommas = (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      const statusData = res.data;
+      const answerCount = getNumWithCommas(statusData.answer_count);
+      const individualDoneCount = getNumWithCommas(statusData.individual_done_count);
+      const locationIsUndoneCount = getNumWithCommas(
+        (5000 - statusData.location_is_done_count),
+      );
+      const userCount = getNumWithCommas(statusData.user_count);
+      commit('setStatusData', {
+        answerCount, individualDoneCount, locationIsUndoneCount, userCount,
+      });
     },
   },
   modules: {},

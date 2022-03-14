@@ -51,7 +51,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['createClientId', 'getUserToken']),
+    ...mapActions(['createClientId', 'getUserToken', 'getStatusData']),
     goToNextStage() {
       if (this.whichStage < 5) {
         this.whichStage += 1;
@@ -97,6 +97,7 @@ export default {
           data,
         });
         localStorage.removeItem('SpotDiffData');
+        await this.getStatusData();
         this.isLoading = false;
         this.$router.push('ending');
       } catch (e) {
