@@ -25,6 +25,7 @@
 <script>
 import axios from 'axios';
 import haversineOffset from 'haversine-offset';
+import { mapActions, mapState } from 'vuex';
 import GameTaskA from './GameTaskA.vue';
 import GameTaskB from './GameTaskB.vue';
 import LoadingPage from './LoadingPage.vue';
@@ -50,6 +51,8 @@ export default {
     };
   },
   methods: {
+    ...mapActions(['createClientId', 'getUserToken']),
+
     async getFactoriesData() {
       const location = await axios.get(
         `${process.env.VUE_APP_SPOTDIFF_APP_URL || '/api'}/location?user_token=${
@@ -152,6 +155,8 @@ export default {
     },
   },
   computed: {
+    ...mapState(['userToken', 'clientId']),
+
     storedQuestionData() {
       return {};
     },
@@ -179,10 +184,6 @@ export default {
   props: {
     whichQuestion: Number,
     goToNextStage: Function,
-    createClientId: Function,
-    getUserToken: Function,
-    clientId: String,
-    userToken: String,
   },
   async created() {
     try {
