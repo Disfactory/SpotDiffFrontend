@@ -20,24 +20,18 @@ export default createStore({
         sessionStorage.setItem('spotDiffClientId', customClientId);
       }
       state.clientId = customClientId;
-      console.log('fail');
-      console.log(state.clientId);
     },
     getGoogleClientId(state) {
       window.ga('create', 'UA-154739393-1', 'auto');
       window.ga((tracker) => {
         state.clientId = `ga.cid.${tracker.get('clientId')}`;
       });
-      console.log('success');
-      console.log(state.clientId);
     },
     setUserToken(state, userToken) {
       state.userToken = userToken;
-      console.log(state.userToken);
     },
     setStatusData(state, statusData) {
       state.statusData = statusData;
-      console.log(state.statusData);
     },
   },
   actions: {
