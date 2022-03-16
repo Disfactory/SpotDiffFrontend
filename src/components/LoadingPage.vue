@@ -1,7 +1,6 @@
 <template>
   <div class="loading-page">
     <Loading class="loading-icon" />
-    <p>Loading</p>
   </div>
 </template>
 
