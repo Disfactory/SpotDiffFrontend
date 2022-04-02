@@ -86,7 +86,9 @@ export default {
       };
     },
     scrollToTop() {
-      this.$refs.start.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+      if (this.$refs.start.scrollIntoView) {
+        this.$refs.start.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+      }
     },
     identifyLandUsage(landUsage) {
       this.currentQuestionData.userAnswer.landUsage = landUsage;
