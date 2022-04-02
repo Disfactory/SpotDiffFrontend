@@ -123,9 +123,9 @@ export default {
   },
   props: ['whichStage'],
   updated() {
-    if (this.isTaskCompleted) {
+    if (this.isTaskCompleted && this.$refs.end.scrollIntoView) {
       this.$refs.end.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
-    } else {
+    } else if (!this.isTaskCompleted && this.$refs.start.scrollIntoView) {
       this.$refs.start.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
     }
   },
