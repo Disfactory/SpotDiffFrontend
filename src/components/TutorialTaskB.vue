@@ -11,7 +11,7 @@
     <div class="address">
       {{ `${tutorialInfo.cityName}・${tutorialInfo.townName}` }}
     </div>
-    <PhotoYearBefore class="photo-year" />
+    <PhotoYearAfter class="photo-year" />
     <picture v-if="this.whichStage === 2" :class="{ 'visibility-hidden': !shouldShowAfterPhoto }">
       <source srcset="../assets/img/tutorial1-2020.webp" type="image/webp" />
       <img src="../assets/img/tutorial1-2020.png" alt="" />
@@ -35,7 +35,7 @@
       <source srcset="../assets/img/tutorial2-2017.webp" type="image/webp" />
       <img src="../assets/img/tutorial2-2017.png" alt="" />
     </picture>
-    <PhotoYearAfter class="photo-year" />
+    <PhotoYearBefore class="photo-year" />
   </div>
 
   <ToggleSwitcher :should-show-after-photo="shouldShowAfterPhoto" :changePhoto="changePhoto" />
