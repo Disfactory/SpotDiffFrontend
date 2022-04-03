@@ -16,7 +16,10 @@
     <div v-else class="container bg-skyBlue container-border-sky-blue">
       <div class="checking-page">
         <div class="title-icon"><IntroTitle /></div>
-        <p class="check-text">你確定要送出資料了嗎？</p>
+        <div class="check-text">
+          <p>你確定要送出資料了嗎？</p>
+          <p class="check-text--little-font">阿伯很期待 &gt; &lt;</p>
+        </div>
         <div class="button-group">
           <img src="../assets/svg-icon/intro-animation/farmer.gif" class="farmer-icon" />
           <button class="btn" @click="sendAnswer"><sendAnswer /></button>
@@ -142,14 +145,23 @@ export default {
     margin-bottom: 63px;
   }
   .check-text {
+    margin-bottom: 25px;
     font-size: 26px;
-    margin-bottom: 36px;
     font-style: normal;
     font-weight: 600;
     line-height: 36px;
     letter-spacing: 0.5px;
     text-align: center;
     color: #2b4754;
+    p {
+      margin-bottom: 11px;
+    }
+    &--little-font {
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 26px;
+      letter-spacing: 0.85px;
+    }
   }
   .button-group {
     display: flex;

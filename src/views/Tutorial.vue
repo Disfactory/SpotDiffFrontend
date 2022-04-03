@@ -1,7 +1,6 @@
 <template>
   <div class="fill-full-background bg-darkBrown">
     <div class="container tutorial-container container-border-brown">
-      <TheHeader />
       <ProgressBar
         :which-stage="whichStage"
         :back-to-previous-stage="backToPreviousStage"
@@ -14,7 +13,6 @@
 </template>
 
 <script>
-import TheHeader from '@/components/TheHeader.vue';
 import ProgressBar from '@/components/ProgressBar.vue';
 import TutorialContent from '@/components/TutorialContent.vue';
 
@@ -47,7 +45,6 @@ export default {
     },
   },
   components: {
-    TheHeader,
     ProgressBar,
     TutorialContent,
   },

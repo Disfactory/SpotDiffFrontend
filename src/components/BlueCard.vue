@@ -1,5 +1,5 @@
 <template>
-  <div class="card-body ">
+  <div :class="['card-body', { 'card-body--less-padding': isSecondIntro }]">
     <CardDecorationLeft class="card-decoration left-decoration" />
     <CardDecorationRight class="card-decoration right-decoration" />
     <slot></slot>
@@ -16,6 +16,7 @@ export default {
     CardDecorationLeft,
     CardDecorationRight,
   },
+  props: ['isSecondIntro'],
 };
 </script>
 <style lang="scss" scoped>
@@ -26,8 +27,11 @@ export default {
   width: 312px;
   border: 4px solid #061e29;
   background: #006788;
-  padding: 28px 28px 40px 28px;
+  padding: 30px;
   margin-top: 24px;
+  &--less-padding {
+    padding: 21px 15px 28px 24px;
+  }
 }
 .card-decoration {
   margin: 0 auto;

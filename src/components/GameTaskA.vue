@@ -1,16 +1,17 @@
 <template>
   <div class="question-text">
-    這是2017年的空拍圖，你覺得在準心處的是<span class="text-color-green">農地</span>還是<span
-      class="text-color-blue"
-      >建築物</span
-    >呢？
+    <p>
+      這是空拍圖，準心所在的位置
+      <br />
+      是<span class="text-color-green">農地</span>還是<span class="text-color-blue">建物</span>呢？
+    </p>
   </div>
-  <div class="identify-box border-color-blue ">
+  <div class="identify-box border-color-blue">
     <InnerBoundingBox class="inner-bounding-box" />
     <div class="address">
       <!-- {{ factoryCoord.address }} -->
     </div>
-    <PhotoYear2017 class="photo-year" />
+    <PhotoYearAfter class="photo-year" />
     <div id="oldMap" class="map"></div>
   </div>
 
@@ -27,7 +28,7 @@
 import ButtonLand from '../assets/svg-icon/button-land.svg';
 import ButtonFactory from '../assets/svg-icon/button-factory.svg';
 import ButtonUnknown from '../assets/svg-icon/button-unknown.svg';
-import PhotoYear2017 from '../assets/svg-icon/2017.svg';
+import PhotoYearAfter from '../assets/svg-icon/after.svg';
 import InnerBoundingBox from '../assets/svg-icon/inner-bounding-box.svg';
 import L from '../../node_modules/leaflet/dist/leaflet';
 
@@ -44,7 +45,7 @@ export default {
     ButtonLand,
     ButtonFactory,
     ButtonUnknown,
-    PhotoYear2017,
+    PhotoYearAfter,
     InnerBoundingBox,
   },
   props: {
