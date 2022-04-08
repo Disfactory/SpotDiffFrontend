@@ -1,16 +1,18 @@
 <template>
-  <div class="question-text">
-    這是2017年的空拍圖，你覺得在準心處的是<span class="text-color-green">農地</span>還是<span
-      class="text-color-blue"
-      >建築物</span
-    >呢？
+  <div :class="['question-text', { 'question-text--less-margin': this.whichStage === 3 }]">
+    <p v-if="this.whichStage === 3" class="question-text--small-size">再練習一題！</p>
+    <p>
+      這是空拍圖，準心所在的位置
+      <br />
+      是<span class="text-color-green">農地</span>還是<span class="text-color-blue">建物</span>呢？
+    </p>
   </div>
   <div class="identify-box border-color-brown">
     <InnerBoundingBox :class="{ 'inner-bounding-box': true, mask: isTaskCompleted }" />
     <div class="address">
       {{ `${tutorialInfo.cityName}・${tutorialInfo.townName}` }}
     </div>
-    <PhotoYear2017 class="photo-year" />
+    <Before class="photo-year" />
     <picture v-if="this.whichStage === 1">
       <source srcset="../assets/img/tutorial1-2017.webp" type="image/webp" />
       <img src="../assets/img/tutorial1-2017.png" alt="" />
@@ -26,7 +28,7 @@
       <CorrectAnswer
         v-if="
           (this.whichStage === 1 && this.tutorialLandUsage === '農地') ||
-            (this.whichStage === 3 && this.tutorialLandUsage === '建地')
+          (this.whichStage === 3 && this.tutorialLandUsage === '建地')
         "
       />
       <WrongAnswer v-else />
@@ -41,23 +43,21 @@
   </div>
 
   <!-- 教學答案卡 -->
-  <BrownCard class="card-answer" v-if="isTaskCompleted">
+  <BrownCard class="card-answer" v-if="isTaskCompleted" :whichStage="whichStage">
     <template v-slot:icon>
       <LandWithShadow v-if="whichStage === 1" class="card-icon" />
       <FactoryWithShadow v-else class="card-icon" />
     </template>
     <template v-slot:answer>
       <div v-if="whichStage === 1">
-        <p class="card-text text-strong ">答案：農地</p>
+        <p class="card-text text-strong">答案：農地</p>
         <p class="card-text">
           每塊地的形狀不一，若是農地，不一定會是綠色，但是會呈現均質的平面感。
         </p>
       </div>
       <div v-else>
-        <p class="card-text text-strong ">答案：建物</p>
-        <p class="card-text">
-          若是建物，會有陰影、突起物、非均值的感覺。
-        </p>
+        <p class="card-text text-strong">答案：建物</p>
+        <p class="card-text">若是建物，會有陰影、突起物、非均值的感覺。</p>
       </div>
     </template>
   </BrownCard>
@@ -69,7 +69,7 @@ import ButtonFactory from '../assets/svg-icon/button-factory.svg';
 import ButtonUnknown from '../assets/svg-icon/button-unknown.svg';
 import CorrectAnswer from '../assets/svg-icon/correct-answer.svg';
 import WrongAnswer from '../assets/svg-icon/wrong-answer.svg';
-import PhotoYear2017 from '../assets/svg-icon/2017.svg';
+import Before from '../assets/svg-icon/before.svg';
 import InnerBoundingBox from '../assets/svg-icon/inner-bounding-box.svg';
 import LandWithShadow from '../assets/svg-icon/land-with-shadow.svg';
 import FactoryWithShadow from '../assets/svg-icon/factory-with-shadow.svg';
@@ -83,7 +83,7 @@ export default {
     ButtonUnknown,
     CorrectAnswer,
     WrongAnswer,
-    PhotoYear2017,
+    Before,
     InnerBoundingBox,
     LandWithShadow,
     FactoryWithShadow,
@@ -111,6 +111,17 @@ export default {
   text-align: center;
   margin-top: 30px;
   margin-bottom: 20px;
+  &--less-margin {
+    margin-top: 5px;
+  }
+  &--small-size {
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 25px;
+    letter-spacing: 0.5px;
+    text-align: center;
+    color: #ffedb2;
+  }
   .text-color-green {
     color: #c7cc87;
   }
@@ -168,7 +179,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   text-align: left;
-  margin-top: 14px;
+
   .tutorial-answer-icon {
     margin-top: 12px;
   }

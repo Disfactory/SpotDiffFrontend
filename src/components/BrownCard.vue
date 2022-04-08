@@ -5,7 +5,7 @@
     <slot name="icon"></slot>
     <slot name="answer"></slot>
     <button @click="goToNextStage" class="continue-button">
-      <ContinueButton v-if="whichStage !== 4" />
+      <ContinueButton v-if="this.whichStage === 1 || this.whichStage === 3" />
     </button>
   </div>
 </template>

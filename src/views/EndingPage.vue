@@ -4,7 +4,7 @@
       <div class="title-icon"><IntroTitle /></div>
       <div class="thank-text">
         <p class="title">阿伯感謝你！</p>
-        <p class="personal-score">你已經辨識了5間工廠</p>
+        <p class="personal-score">你已經辨識了 {{statusData.individualDoneCount || 0}} 間工廠</p>
       </div>
 
       <div class="play-again-wrapper">
@@ -14,33 +14,39 @@
         <Search class="search-icon" />
       </div>
 
-      <div class="current-result">
-        <p>辨識 45,849 次</p>
-        <p>已經有 1,394 人次參與辨識，</p>
-        <p>還差 4,5896 間工廠</p>
-        <div class="result-bar"><ResultBar /></div>
+      <div class="invite-text">
+       <p>你的答案可以拿來當作檢舉違章的證據，邀請你的朋友一起來玩？</p>
       </div>
+      <!-- <div class="current-result">
+        <p>辨識 {{statusData.answerCount || 0 }} 次</p>
+        <p>已經有 {{statusData.userCount || 0 }} 人次參與辨識，</p>
+        <p>還差 {{statusData.locationIsUndoneCount || '5,000'}} 間工廠</p>
+        <div class="result-bar"><ResultBar /></div>
+      </div> -->
       <div class="button-group">
         <div class="share">
           <RiceLeft /> <button class="btn-share"><Share /></button><RiceRight />
         </div>
         <button class="btn-form">
-          <a href="https://www.google.com/" target="blank"><AttendDraw /></a>
+         <About :isEndingPage='isEndingPage'/>
         </button>
       </div>
     </div>
+  <LoadingPage v-if="isLoading" />
   </div>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
 import IntroTitle from '../assets/svg-icon/intro-title.svg';
 import PlayAgain from '../assets/svg-icon/play-again.svg';
-import ResultBar from '../assets/svg-icon/result-bar.svg';
+// import ResultBar from '../assets/svg-icon/result-bar.svg';
 import Share from '../assets/svg-icon/share.svg';
-import AttendDraw from '../assets/svg-icon/attend-draw.svg';
+import About from '../components/About.vue';
 import RiceLeft from '../assets/svg-icon/rice-left.svg';
 import RiceRight from '../assets/svg-icon/rice-right.svg';
 import Search from '../assets/svg-icon/search-ending.svg';
+import LoadingPage from '@/components/LoadingPage.vue';
 
 export default {
   name: 'EndingPage',
@@ -48,16 +54,44 @@ export default {
     IntroTitle,
     PlayAgain,
     Share,
-    AttendDraw,
-    ResultBar,
+    About,
+    // ResultBar,
     RiceLeft,
     RiceRight,
     Search,
+    LoadingPage,
+  },
+  data() {
+    return {
+      isLoading: false,
+      isEndingPage: true,
+    };
+  },
+  computed: {
+    ...mapState(['userToken', 'statusData']),
+    isStatusDataEmpty() {
+      return Object.values(this.statusData).length === 0;
+    },
   },
   methods: {
+    ...mapActions(['getUserToken', 'createClientId', 'getStatusData']),
     playAgain() {
       this.$router.push('game');
     },
+
+  },
+  async mounted() {
+    try {
+      if (this.isStatusDataEmpty) {
+        this.isLoading = true;
+        await this.createClientId();
+        await this.getUserToken();
+        await this.getStatusData();
+        this.isLoading = false;
+      }
+    } catch (error) {
+      console.log(error);
+    }
   },
 };
 </script>
@@ -67,9 +101,8 @@ export default {
   text-align: center;
   padding: 20px 0 63px;
   .title-icon {
-    margin: 0 auto;
+    margin: 0 auto 44px;
     display: block;
-    margin-bottom: 44px;
   }
   .thank-text {
     font-size: 20px;
@@ -90,7 +123,16 @@ export default {
     }
   }
   .play-again-wrapper {
-    margin-bottom: 40px;
+    margin-bottom: 37px;
+  }
+  .invite-text {
+    color: #4A5613;
+    width: 232px;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 29px;
+    letter-spacing: 0.8550000190734863px;
+    text-align: center;
   }
   .current-result {
     margin-bottom: 48px;

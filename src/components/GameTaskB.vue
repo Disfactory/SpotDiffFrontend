@@ -1,12 +1,9 @@
 <template>
   <div class="question-text">
-    這是2020年的空拍圖，你覺得 <br />
-    <span v-if="landUsage === 'farm-land'">
-      在準心處有<span class="text-color-blue">建物</span>嗎？</span
-    >
-    <span v-if="landUsage === 'building-land' || landUsage ==='unknown'">
-      剛剛在準心處的建物有<span class="text-color-blue">擴建</span>嗎？
-    </span>
+    承上，你覺得 after 準心所在的 <br />位置上有<span class="text-color-blue">{{
+      landUsage === 'farm-land' ? '建物' : '擴建'
+    }}</span
+    >嗎？
   </div>
 
   <div class="identify-box border-color-blue">
@@ -14,9 +11,12 @@
     <div class="address">
       <!-- {{ factoryCoord.address }} -->
     </div>
-    <PhotoYear2020 class="photo-year" />
-    <div id="newMap" class="map"></div>
+    <PhotoYearAfter v-if="shouldShowAfterPhoto" class="photo-year" />
+    <PhotoYearBefore v-else class="photo-year" />
+    <div id="newMap" :class="['map', { 'hidden-map': !shouldShowAfterPhoto }]"></div>
+    <div id="oldMap" :class="['map', { 'hidden-map': shouldShowAfterPhoto }]"></div>
   </div>
+  <ToggleSwitcher :should-show-after-photo="shouldShowAfterPhoto" :changePhoto="changePhoto" />
   <div class="button-group">
     <button v-if="landUsage === 'farm-land'" @click="identifyHasIllegalFactory(true)">
       <HasBuilding />
@@ -24,40 +24,32 @@
     <button v-if="landUsage === 'farm-land'" @click="identifyHasIllegalFactory(false)">
       <NoBuilding />
     </button>
-    <button v-if="landUsage === 'building-land' || landUsage ==='unknown'"
-    @click="identifyHasIllegalFactory(true)">
+    <button
+      v-if="landUsage === 'building-land' || landUsage === 'unknown'"
+      @click="identifyHasIllegalFactory(true)"
+    >
       <HasExpansion />
     </button>
-    <button v-if="landUsage === 'building-land' || landUsage ==='unknown'"
-    @click="identifyHasIllegalFactory(false)">
+    <button
+      v-if="landUsage === 'building-land' || landUsage === 'unknown'"
+      @click="identifyHasIllegalFactory(false)"
+    >
       <NoExpansion />
     </button>
   </div>
   <DividerIcon class="divider-icon" />
-
-  <div class="identify-box identify-box--previous-answer">
-    <div class="previous-answer-caption">
-      <span>在2017年的空拍圖中，準心處是{{this.landUsageChineseName}}</span>
-
-    </div>
-    <div class="previous-answer-img border-color-blue">
-      <InnerBoundingBox class="inner-bounding-box mask" />
-      <PhotoYear2017 class="photo-year" />
-      <div id="oldMap" class="map"></div>
-    </div>
-  </div>
 </template>
 
 <script>
-import PhotoYear2020 from '../assets/svg-icon/2020.svg';
-import PhotoYear2017 from '../assets/svg-icon/2017.svg';
+import PhotoYearAfter from '../assets/svg-icon/after.svg';
+import PhotoYearBefore from '../assets/svg-icon/before.svg';
 import InnerBoundingBox from '../assets/svg-icon/inner-bounding-box.svg';
 import HasBuilding from '../assets/svg-icon/has-building.svg';
 import NoBuilding from '../assets/svg-icon/no-building.svg';
 import DividerIcon from '../assets/svg-icon/divider-icon.svg';
 import HasExpansion from '../assets/svg-icon/has-expansion.svg';
 import NoExpansion from '../assets/svg-icon/no-expansion.svg';
-
+import ToggleSwitcher from './ToggleSwitcher.vue';
 import L from '../../node_modules/leaflet/dist/leaflet';
 
 export default {
@@ -69,11 +61,13 @@ export default {
       oldLayer: '',
       newMap: '',
       newLayer: '',
+      shouldShowAfterPhoto: true,
     };
   },
   components: {
-    PhotoYear2020,
-    PhotoYear2017,
+    ToggleSwitcher,
+    PhotoYearAfter,
+    PhotoYearBefore,
     InnerBoundingBox,
     HasBuilding,
     NoBuilding,
@@ -88,7 +82,9 @@ export default {
         chineseName = '農地';
       } else if (this.landUsage === 'building-land') {
         chineseName = '建地';
-      } else { chineseName = '不知道'; }
+      } else {
+        chineseName = '不知道';
+      }
       return chineseName;
     },
   },
@@ -100,6 +96,11 @@ export default {
     landUsage: String,
   },
   methods: {
+    changePhoto() {
+      setTimeout(() => {
+        this.shouldShowAfterPhoto = !this.shouldShowAfterPhoto;
+      }, 200);
+    },
     setMap() {
       this.newMap = L.map('newMap', {
         zoomControl: false,
@@ -150,7 +151,6 @@ export default {
 <style scoped lang="scss">
 .identify-box {
   position: relative;
-  margin-bottom: 17px;
   overflow: hidden;
   width: 333px;
   height: 208px;
@@ -297,5 +297,8 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1;
+}
+.hidden-map {
+  visibility: hidden;
 }
 </style>

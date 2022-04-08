@@ -11,19 +11,15 @@
         :whichStage="whichStage"
         :completed-stage="completedStage"
       />
-      <GameContent
-        :which-Question="whichStage"
-        :go-to-next-stage="goToNextStage"
-        :client-id="clientId"
-        :user-token="userToken"
-        :create-client-id="createClientId"
-        :get-user-token="getUserToken"
-      />
+      <GameContent :which-Question="whichStage" :go-to-next-stage="goToNextStage" />
     </div>
     <div v-else class="container bg-skyBlue container-border-sky-blue">
       <div class="checking-page">
         <div class="title-icon"><IntroTitle /></div>
-        <p class="check-text">你確定要送出資料了嗎？</p>
+        <div class="check-text">
+          <p>你確定要送出資料了嗎？</p>
+          <p class="check-text--little-font">阿伯很期待 &gt; &lt;</p>
+        </div>
         <div class="button-group">
           <img src="../assets/svg-icon/intro-animation/farmer.gif" class="farmer-icon" />
           <button class="btn" @click="sendAnswer"><sendAnswer /></button>
@@ -37,6 +33,7 @@
 
 <script>
 import axios from 'axios';
+import { mapActions, mapState } from 'vuex';
 import TheHeader from '@/components/TheHeader.vue';
 import ProgressBar from '@/components/ProgressBar.vue';
 import GameContent from '@/components/GameContent.vue';
@@ -52,51 +49,12 @@ export default {
       whichStage: 1,
       completedStage: [1],
       isAllQuestionDone: false,
-      clientId: '',
-      userToken: '',
+
       isLoading: false,
     };
   },
   methods: {
-    createCustomClientId() {
-      let customClientId = sessionStorage.getItem('spotDiffClientId');
-      if (!customClientId) {
-        customClientId = `custom.cid.${Math.random()
-          .toString(36)
-          .substring(2)}.${new Date().getTime()}`;
-        sessionStorage.setItem('spotDiffClientId', customClientId);
-      }
-      this.clientId = customClientId;
-    },
-    getGoogleClientId() {
-      window.ga('create', 'UA-154739393-1', 'auto');
-      window.ga((tracker) => {
-        this.clientId = `ga.cid.${tracker.get('clientId')}`;
-      });
-    },
-    async createClientId() {
-      if (window.ga) {
-        await axios('https://www.google-analytics.com/collect')
-          .then(() => {
-            this.getGoogleClientId();
-          })
-          .catch(() => {
-            this.createCustomClientId();
-          });
-      } else {
-        this.createCustomClientId();
-      }
-    },
-    async getUserToken() {
-      const userToken = await axios.post(
-        `${process.env.VUE_APP_SPOTDIFF_APP_URL || '/api'}/user/`,
-        {
-          client_id: this.clientId,
-        },
-      );
-      this.userToken = userToken.data.user_token;
-    },
-
+    ...mapActions(['createClientId', 'getUserToken', 'getStatusData']),
     goToNextStage() {
       if (this.whichStage < 5) {
         this.whichStage += 1;
@@ -142,12 +100,16 @@ export default {
           data,
         });
         localStorage.removeItem('SpotDiffData');
+        await this.getStatusData();
         this.isLoading = false;
         this.$router.push('ending');
       } catch (e) {
         console.log(e.response.data.message);
       }
     },
+  },
+  computed: {
+    ...mapState(['userToken', 'clientId']),
   },
   watch: {
     whichStage() {
@@ -183,14 +145,23 @@ export default {
     margin-bottom: 63px;
   }
   .check-text {
+    margin-bottom: 25px;
     font-size: 26px;
-    margin-bottom: 36px;
     font-style: normal;
     font-weight: 600;
     line-height: 36px;
     letter-spacing: 0.5px;
     text-align: center;
     color: #2b4754;
+    p {
+      margin-bottom: 11px;
+    }
+    &--little-font {
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 26px;
+      letter-spacing: 0.85px;
+    }
   }
   .button-group {
     display: flex;

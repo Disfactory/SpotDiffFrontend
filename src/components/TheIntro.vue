@@ -10,7 +10,7 @@
       <div class="animation">
         <IntroAnimation :is-second-intro="isSecondIntro" />
       </div>
-      <BlueCard>
+      <BlueCard :is-second-intro="isSecondIntro">
         <slot>
           <span v-if="!isSecondIntro"
             ><p class="card-text">田間阿伯發現隔壁蓋起新工廠卻束手無策，</p>
@@ -18,11 +18,17 @@
           </span>
           <span v-else>
             <p class="card-text text-strong">怎麼幫他？</p>
-            <p class="card-text">只要你能找出農地上的新增建物，我們就能去檢舉拆除！</p>
+            <p class="card-text">
+              邀請你辨識空拍圖片，找出以前是農地、現在是建物的點，我們就能向政府提出檢舉！
+            </p>
           </span>
         </slot>
       </BlueCard>
     </div>
+    <div class="introduction" v-if="isSecondIntro">
+      <p>在開始辨識之前，我們需要先試玩一次教學，教你正確辨識空拍圖</p>
+    </div>
+
     <button
       class="intro-button"
       v-if="!isSecondIntro"
@@ -30,9 +36,9 @@
     >
       <HowToHelp />
     </button>
-    <button v-if="isSecondIntro" class="intro-button intro-button--margin-bottom-more">
+    <button v-if="isSecondIntro" class="intro-button intro-button--less-margin">
       <router-link to="/tutorial">
-        <StartToPlay />
+        <GoToTutorial />
       </router-link>
     </button>
   </div>
@@ -42,7 +48,7 @@
 import IntroTitle from '../assets/svg-icon/intro-title.svg';
 import Search from '../assets/svg-icon/search.svg';
 import HowToHelp from '../assets/svg-icon/how-to-help.svg';
-import StartToPlay from '../assets/svg-icon/start-to-play.svg';
+import GoToTutorial from '../assets/svg-icon/go-to-tutorial.svg';
 import BlueCard from './BlueCard.vue';
 import IntroAnimation from './IntroAnimation.vue';
 
@@ -58,7 +64,7 @@ export default {
     IntroTitle,
     Search,
     HowToHelp,
-    StartToPlay,
+    GoToTutorial,
     BlueCard,
     IntroAnimation,
   },
@@ -108,8 +114,8 @@ export default {
 
 .intro-button {
   margin: 40px 0 40px;
-  &--margin-bottom-more {
-    margin: 40px 0 40px;
+  &--less-margin {
+    margin: 20px 0 ;
   }
 }
 
@@ -127,6 +133,18 @@ export default {
     margin-bottom: 6px;
   }
 }
+
+.introduction {
+  width: 273px;
+  color: #006788;
+  font-weight: 500;
+  margin-top: 20px;
+  letter-spacing: 1px;
+  text-align: center;
+  line-height: 25px;
+  font-size: 17px;
+}
+//animation of search icon in title
 .icon-search-enter-active {
   transition: opacity 0.5s ease-out, transform 1.5s 0.5s ease-out;
 }

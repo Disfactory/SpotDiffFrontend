@@ -1,25 +1,45 @@
 <template>
   <div class="question-text">
-    這是2020年的空拍圖，你覺得 <br />
-    <span v-if="whichStage === 2"> 在準心處有<span class="text-color-blue">建物</span>嗎？</span>
-    <span v-else> 剛剛在準心處的建物有<span class="text-color-blue">擴建</span>嗎？ </span>
+    承上，你覺得 after 準心所在的 <br />位置上有<span class="text-color-blue">{{
+      whichStage === 2 ? '建物' : '擴建'
+    }}</span
+    >嗎？
   </div>
-
-  <div class="identify-box border-color-brown ">
-    <InnerBoundingBox :class="{ 'inner-bounding-box': true, mask: isTaskCompleted }" />
+  <!-- after -->
+  <div :class="['identify-box', { 'border-color-brown': shouldShowAfterPhoto }]">
+    <InnerBoundingBox class="inner-bounding-box mask" />
     <div class="address">
       {{ `${tutorialInfo.cityName}・${tutorialInfo.townName}` }}
     </div>
-    <PhotoYear2020 class="photo-year" />
-    <picture v-if="this.whichStage === 2">
+    <PhotoYearAfter class="photo-year" />
+    <picture v-if="this.whichStage === 2" :class="{ 'visibility-hidden': !shouldShowAfterPhoto }">
       <source srcset="../assets/img/tutorial1-2020.webp" type="image/webp" />
       <img src="../assets/img/tutorial1-2020.png" alt="" />
     </picture>
-    <picture v-if="this.whichStage === 4">
+    <picture v-if="this.whichStage === 4" :class="{ 'visibility-hidden': !shouldShowAfterPhoto }">
       <source srcset="../assets/img/tutorial2-2020.webp" type="image/webp" />
       <img src="../assets/img/tutorial2-2020.png" alt="" />
     </picture>
   </div>
+  <!-- before -->
+  <div :class="['identify-box', { 'border-color-brown': !shouldShowAfterPhoto }]">
+    <InnerBoundingBox class="inner-bounding-box mask" />
+    <div class="address">
+      {{ `${tutorialInfo.cityName}・${tutorialInfo.townName}` }}
+    </div>
+    <picture v-if="this.whichStage === 2" :class="{ 'visibility-hidden': shouldShowAfterPhoto }">
+      <source srcset="../assets/img/tutorial1-2017.webp" type="image/webp" />
+      <img src="../assets/img/tutorial1-2017.png" alt="" />
+    </picture>
+    <picture v-if="this.whichStage === 4" :class="{ 'visibility-hidden': shouldShowAfterPhoto }">
+      <source srcset="../assets/img/tutorial2-2017.webp" type="image/webp" />
+      <img src="../assets/img/tutorial2-2017.png" alt="" />
+    </picture>
+    <PhotoYearBefore class="photo-year" />
+  </div>
+
+  <ToggleSwitcher :should-show-after-photo="shouldShowAfterPhoto" :changePhoto="changePhoto" />
+
   <div class="button-group" v-if="!isTaskCompleted">
     <button v-if="whichStage === 2" @click="identifyHasIllegalFactory(true)">
       <HasBuilding />
@@ -54,55 +74,32 @@
         <p class="card-text">若是建物，會有陰影、突起物、非均值的感覺。</p>
       </div>
       <div v-else>
-        <p class="card-text text-strong ">答案：有擴建</p>
+        <p class="card-text text-strong">答案：有擴建</p>
         <p class="card-text">有擴建，跟以前比白色建築物會增加。</p>
       </div>
     </template>
   </BrownCard>
-  <div
-    class="identify-box identify-box--previous-answer"
-    v-if="!this.isTaskCompleted || whichStage !== 2"
-  >
-    <div class="previous-answer-caption">
-      <span v-if="whichStage === 2 && !this.isTaskCompleted">在2017年的空拍圖中，準心處是農地</span>
-      <div v-else>
-        <span v-if="!this.isTaskCompleted">在2017年的空拍圖中，準心處是建地</span>
-        <span v-else>比較一下2017年發現的建物吧～</span>
-      </div>
-    </div>
-    <div class=" previous-answer-img border-color-brown">
-      <InnerBoundingBox class="inner-bounding-box mask" />
-      <picture v-if="this.whichStage === 2">
-        <source srcset="../assets/img/tutorial1-2017.webp" type="image/webp" />
-        <img src="../assets/img/tutorial1-2017.png" alt="" />
-      </picture>
-      <picture v-if="this.whichStage === 4">
-        <source srcset="../assets/img/tutorial2-2017.webp" type="image/webp" />
-        <img src="../assets/img/tutorial2-2017.png" alt="" />
-      </picture>
-      <PhotoYear2017 class="photo-year" />
-    </div>
-  </div>
+
   <div v-if="isTaskCompleted" class="congrats">
     <div v-if="whichStage === 2">
       <p>很好！我們已經知道農地上</p>
       <p>跑出違建工廠的樣子了！🏭</p>
     </div>
-    <div v-else>
+    <div v-else class="congrats">
       <p>🎉 學會操作之後，</p>
       <p>🎉 我們就可以開始檢舉囉！</p>
     </div>
   </div>
   <button>
-    <ContinueButton v-if="whichStage === 4 && isTaskCompleted" @click="goToNextStage" />
+    <ContinueButton v-if="isTaskCompleted" @click="goToNextStage" />
   </button>
 </template>
 
 <script>
 import BrownCard from './BrownCard.vue';
 import FactoryWithShadow from '../assets/svg-icon/factory-with-shadow.svg';
-import PhotoYear2020 from '../assets/svg-icon/2020.svg';
-import PhotoYear2017 from '../assets/svg-icon/2017.svg';
+import PhotoYearAfter from '../assets/svg-icon/after.svg';
+import PhotoYearBefore from '../assets/svg-icon/before.svg';
 import InnerBoundingBox from '../assets/svg-icon/inner-bounding-box.svg';
 import HasBuilding from '../assets/svg-icon/has-building.svg';
 import NoBuilding from '../assets/svg-icon/no-building.svg';
@@ -111,12 +108,16 @@ import NoExpansion from '../assets/svg-icon/no-expansion.svg';
 import CorrectAnswer from '../assets/svg-icon/correct-answer.svg';
 import WrongAnswer from '../assets/svg-icon/wrong-answer.svg';
 import ContinueButton from '../assets/svg-icon/continue-button.svg';
+import ToggleSwitcher from './ToggleSwitcher.vue';
 
 export default {
   name: 'TutorialTaskB',
+  data() {
+    return { shouldShowAfterPhoto: true };
+  },
   components: {
-    PhotoYear2020,
-    PhotoYear2017,
+    PhotoYearAfter,
+    PhotoYearBefore,
     InnerBoundingBox,
     HasBuilding,
     NoBuilding,
@@ -127,6 +128,14 @@ export default {
     FactoryWithShadow,
     ContinueButton,
     BrownCard,
+    ToggleSwitcher,
+  },
+  methods: {
+    changePhoto() {
+      setTimeout(() => {
+        this.shouldShowAfterPhoto = !this.shouldShowAfterPhoto;
+      }, 200);
+    },
   },
   inject: ['goToNextStage'],
   props: {
@@ -145,7 +154,7 @@ export default {
 .identify-box {
   position: relative;
   overflow: hidden;
-  margin-bottom: 17px;
+
   &--previous-answer {
     height: fit-content;
     margin-bottom: 0;
@@ -168,6 +177,9 @@ export default {
     z-index: 100;
   }
 }
+.visibility-hidden {
+  display: none;
+}
 .border-color-brown {
   border-left: 4px solid #947451;
   border-top: 4px solid #947451;
@@ -188,7 +200,7 @@ export default {
   width: 100%;
   display: flex;
   justify-content: space-evenly;
-  margin-bottom: 40px;
+  margin: 40px 0;
 
   button:focus {
     transform: translateY(-20px);
@@ -284,7 +296,7 @@ export default {
 }
 
 .congrats {
-  margin: 20px 30px;
+  margin: 20px 0;
   font-style: normal;
   font-weight: normal;
   font-size: 21px;

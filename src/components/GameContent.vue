@@ -25,6 +25,7 @@
 <script>
 import axios from 'axios';
 import haversineOffset from 'haversine-offset';
+import { mapActions, mapState } from 'vuex';
 import GameTaskA from './GameTaskA.vue';
 import GameTaskB from './GameTaskB.vue';
 import LoadingPage from './LoadingPage.vue';
@@ -50,13 +51,15 @@ export default {
     };
   },
   methods: {
+    ...mapActions(['createClientId', 'getUserToken']),
+
     async getFactoriesData() {
       const location = await axios.get(
         `${process.env.VUE_APP_SPOTDIFF_APP_URL || '/api'}/location?user_token=${
           this.userToken
         }&size=5&gold_standard_size=1`,
       );
-      const allFactoriesData = [];
+      const locationData = location.data.data;
       async function getCoordinate(factory) {
         const url = `${process.env.VUE_APP_DISFACTORY_API_URL || ''}/factories/${
           factory.factory_id
@@ -68,17 +71,10 @@ export default {
           location_id: factory.id,
           address: res.data.townname,
         };
-        allFactoriesData.push(obj);
+        return obj;
       }
-      const locationData = location.data.data;
-      await locationData.reduce(async (_prev, next) => {
-        const prev = await Promise.resolve(_prev);
-        if (prev !== 'DO_NOT_CALL') {
-          await getCoordinate(prev);
-        }
-        await getCoordinate(next);
-        return Promise.resolve('DO_NOT_CALL');
-      });
+      const allFactoriesData = await Promise.all(locationData.map((data) => getCoordinate(data)));
+
       localStorage.setItem('SpotDiffData', JSON.stringify(allFactoriesData));
     },
     getFactoryCoord() {
@@ -90,7 +86,9 @@ export default {
       };
     },
     scrollToTop() {
-      this.$refs.start.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+      if (this.$refs.start.scrollIntoView) {
+        this.$refs.start.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+      }
     },
     identifyLandUsage(landUsage) {
       this.currentQuestionData.userAnswer.landUsage = landUsage;
@@ -159,6 +157,8 @@ export default {
     },
   },
   computed: {
+    ...mapState(['userToken', 'clientId']),
+
     storedQuestionData() {
       return {};
     },
@@ -186,10 +186,6 @@ export default {
   props: {
     whichQuestion: Number,
     goToNextStage: Function,
-    createClientId: Function,
-    getUserToken: Function,
-    clientId: String,
-    userToken: String,
   },
   async created() {
     try {

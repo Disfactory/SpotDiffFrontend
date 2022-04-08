@@ -65,6 +65,7 @@ export default {
     position: absolute;
     bottom: 0;
     left: 85px;
+
   }
   .farmer {
     position: absolute;
@@ -114,10 +115,10 @@ export default {
 
 .animationB {
   position: relative;
-  margin: 31px 0 0 46px;
+  margin: -38px 0 0 46px;
   width: 229px;
   height: 199px;
-
+  z-index: 10;
   .farm {
     position: absolute;
     top: 50%;

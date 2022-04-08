@@ -1,5 +1,6 @@
 <template>
-  <button @click="isModalOpen = true" class="about-us">關於此專案</button>
+  <button v-if='isEndingPage' @click="isModalOpen= true" ><AboutButton/></button>
+  <button v-else @click="isModalOpen = true" class="about-us">關於此專案</button>
   <teleport to="body">
     <transition name="modal" @after-enter="afterEnter">
       <div class="modal" v-if="isModalOpen">
@@ -37,11 +38,18 @@
 
 <script>
 import CloseButton from '../assets/svg-icon/button-close.svg';
+import AboutButton from '../assets/svg-icon/about-button.svg';
 
 export default {
   name: 'About',
   data() {
     return { isModalOpen: false, isShowModalContent: false };
+  },
+  props: {
+    isEndingPage: {
+      type: Boolean,
+      default: false,
+    },
   },
   methods: {
     afterEnter() {
@@ -52,7 +60,7 @@ export default {
       this.isModalOpen = false;
     },
   },
-  components: { CloseButton },
+  components: { CloseButton, AboutButton },
 };
 </script>
 
