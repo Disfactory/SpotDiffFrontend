@@ -115,7 +115,7 @@ export default {
 .intro-button {
   margin: 40px 0 40px;
   &--less-margin {
-    margin: 28px 0 20px;
+    margin: 20px 0 ;
   }
 }
 
@@ -138,7 +138,7 @@ export default {
   width: 273px;
   color: #006788;
   font-weight: 500;
-  margin-top: 30px;
+  margin-top: 20px;
   letter-spacing: 1px;
   text-align: center;
   line-height: 25px;
