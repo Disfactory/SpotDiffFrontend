@@ -9,7 +9,7 @@
   <div class="identify-box border-color-blue">
     <InnerBoundingBox class="inner-bounding-box" />
     <div class="address">
-      <!-- {{ factoryCoord.address }} -->
+      {{formattedAddress}}
     </div>
     <PhotoYearAfter class="photo-year" />
     <div id="oldMap" class="map"></div>
@@ -40,6 +40,25 @@ export default {
       oldLayer: '',
       questionInfo: '',
     };
+  },
+  computed: {
+    formattedAddress() {
+      const { address } = this.factoryCoord;
+      let formattedAddress = address;
+      if (address?.startsWith('臺灣省')) {
+        formattedAddress = address.replace('臺灣省', '');
+      }
+      const townshipCode = ['鄉', '鎮', '市', '區'];
+      if (address?.endsWith('村') || address?.endsWith('里')) {
+        townshipCode.forEach((township) => {
+          const index = address.lastIndexOf(township);
+          if (index !== -1) {
+            formattedAddress = address.slice(0, index + 1);
+          }
+        });
+      }
+      return formattedAddress;
+    },
   },
   components: {
     ButtonLand,
