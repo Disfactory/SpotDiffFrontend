@@ -11,7 +11,7 @@
     <div class="address">
       {{formattedAddress}}
     </div>
-    <PhotoYearAfter class="photo-year" />
+    <PhotoYearBefore class="photo-year" />
     <div id="oldMap" class="map"></div>
   </div>
 
@@ -28,7 +28,7 @@
 import ButtonLand from '../assets/svg-icon/button-land.svg';
 import ButtonFactory from '../assets/svg-icon/button-factory.svg';
 import ButtonUnknown from '../assets/svg-icon/button-unknown.svg';
-import PhotoYearAfter from '../assets/svg-icon/after.svg';
+import PhotoYearBefore from '../assets/svg-icon/before.svg';
 import InnerBoundingBox from '../assets/svg-icon/inner-bounding-box.svg';
 import L from '../../node_modules/leaflet/dist/leaflet';
 
@@ -64,7 +64,7 @@ export default {
     ButtonLand,
     ButtonFactory,
     ButtonUnknown,
-    PhotoYearAfter,
+    PhotoYearBefore,
     InnerBoundingBox,
   },
   props: {
