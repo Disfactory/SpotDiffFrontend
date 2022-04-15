@@ -7,7 +7,6 @@
         :which-question="whichQuestion"
         :identify-land-usage="identifyLandUsage"
         :params-of-maps="paramsOfMaps"
-        :factory-coord="currentQuestionData.factoryCoord"
       />
       <GameTaskB
         v-else
@@ -15,7 +14,6 @@
         :params-of-maps="paramsOfMaps"
         :land-usage="landUsage"
         :identify-has-Illegal-factory="identifyHasIllegalFactory"
-        :factory-coord="currentQuestionData.factoryCoord"
       />
     </div>
   </div>
@@ -23,7 +21,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import haversineOffset from 'haversine-offset';
 import { mapActions, mapState } from 'vuex';
 import GameTaskA from './GameTaskA.vue';
@@ -53,45 +50,18 @@ export default {
   methods: {
     ...mapActions(['createClientId', 'getUserToken']),
 
-    async getFactoriesData() {
-      const location = await axios.get(
-        `${process.env.VUE_APP_SPOTDIFF_APP_URL || '/api'}/location?user_token=${
-          this.userToken
-        }&size=5&gold_standard_size=1`,
-      );
-      const locationData = location.data.data;
-      async function getCoordinate(factory) {
-        const url = `${process.env.VUE_APP_DISFACTORY_API_URL || ''}/factories/${
-          factory.factory_id
-        }`;
-        const res = await axios.get(url);
-        const obj = {
-          latitude: res.data.lat,
-          longitude: res.data.lng,
-          location_id: factory.id,
-          address: res.data.townname,
-        };
-        return obj;
-      }
-      const allFactoriesData = await Promise.all(locationData.map((data) => getCoordinate(data)));
+    getFactoriesData() {
 
-      localStorage.setItem('SpotDiffData', JSON.stringify(allFactoriesData));
     },
     getFactoryCoord() {
-      const data = JSON.parse(localStorage.getItem('SpotDiffData'));
-      this.currentQuestionData.factoryCoord = {
-        latitude: data[this.whichQuestion - 1].latitude,
-        longitude: data[this.whichQuestion - 1].longitude,
-        address: data[this.whichQuestion - 1].address,
-      };
+
     },
     scrollToTop() {
       if (this.$refs.start.scrollIntoView) {
         this.$refs.start.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
       }
     },
-    identifyLandUsage(landUsage) {
-      this.currentQuestionData.userAnswer.landUsage = landUsage;
+    identifyLandUsage() {
       // if (landUsage === 'unknown') {
       //   this.identifyHasIllegalFactory('unknown');
       // } else {
@@ -99,11 +69,12 @@ export default {
       // }
       this.isTaskACompleted = true;
     },
-    identifyHasIllegalFactory(hasIllegalFactory) {
-      this.currentQuestionData.userAnswer.hasIllegalFactory = hasIllegalFactory;
-      this.computeBoundingBoxLatLng();
-      this.storeQuestionData();
-      this.goToNextStage();
+    identifyHasIllegalFactory() {
+      // this.computeBoundingBoxLatLng();
+      // this.storeQuestionData();
+      setTimeout(() => { this.$router.push('/'); }, 100);
+
+      // this.goToNextStage();
     },
     computeBoundingBoxLatLng() {
       // height and width of innerBoundingBox

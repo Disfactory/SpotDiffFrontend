@@ -1,5 +1,6 @@
 <template>
   <div class="question-text">
+
     <p>
       這是空拍圖，準心所在的位置
       <br />
@@ -9,7 +10,7 @@
   <div class="identify-box border-color-blue">
     <InnerBoundingBox class="inner-bounding-box" />
     <div class="address">
-      {{formattedAddress}}
+      <!-- {{formattedAddress}} -->
     </div>
     <PhotoYearBefore class="photo-year" />
     <div id="oldMap" class="map"></div>
@@ -25,6 +26,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import ButtonLand from '../assets/svg-icon/button-land.svg';
 import ButtonFactory from '../assets/svg-icon/button-factory.svg';
 import ButtonUnknown from '../assets/svg-icon/button-unknown.svg';
@@ -42,23 +44,24 @@ export default {
     };
   },
   computed: {
-    formattedAddress() {
-      const { address } = this.factoryCoord;
-      let formattedAddress = address;
-      if (address?.startsWith('臺灣省')) {
-        formattedAddress = address.replace('臺灣省', '');
-      }
-      const townshipCode = ['鄉', '鎮', '市', '區'];
-      if (address?.endsWith('村') || address?.endsWith('里')) {
-        townshipCode.forEach((township) => {
-          const index = address.lastIndexOf(township);
-          if (index !== -1) {
-            formattedAddress = address.slice(0, index + 1);
-          }
-        });
-      }
-      return formattedAddress;
-    },
+    ...mapState(['latitude', 'longitude']),
+    // formattedAddress() {
+    //   const { address } = this.factoryCoord;
+    //   let formattedAddress = address;
+    //   if (address?.startsWith('臺灣省')) {
+    //     formattedAddress = address.replace('臺灣省', '');
+    //   }
+    //   const townshipCode = ['鄉', '鎮', '市', '區'];
+    //   if (address?.endsWith('村') || address?.endsWith('里')) {
+    //     townshipCode.forEach((township) => {
+    //       const index = address.lastIndexOf(township);
+    //       if (index !== -1) {
+    //         formattedAddress = address.slice(0, index + 1);
+    //       }
+    //     });
+    //   }
+    //   return formattedAddress;
+    // },
   },
   components: {
     ButtonLand,
@@ -73,6 +76,16 @@ export default {
     paramsOfMaps: Object,
     factoryCoord: [Object, String],
   },
+  watch: {
+    latitude: {
+      deep: true,
+      handler() {
+        if (this.latitude) {
+          this.setMap();
+        }
+      },
+    },
+  },
   methods: {
     setMap() {
       this.oldMap = L.map('oldMap', {
@@ -85,7 +98,7 @@ export default {
         keyboard: false,
       });
       this.oldMap.setView(
-        [this.factoryCoord.latitude, this.factoryCoord.longitude],
+        [this.latitude, this.longitude],
         this.paramsOfMaps.zoom_level,
       );
       this.oldLayer = L.tileLayer(
@@ -96,18 +109,13 @@ export default {
       ).addTo(this.oldMap);
     },
   },
-  watch: {
-    factoryCoord: {
-      deep: true,
-      handler() {
-        this.setMap();
-      },
-    },
-  },
+
   mounted() {
-    if (this.factoryCoord) {
+    if (this.latitude) {
       this.setMap();
     }
+    console.log('latitude:', this.latitude);
+    console.log('longitude:', this.longitude);
   },
 };
 </script>

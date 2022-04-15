@@ -7,6 +7,8 @@ export default createStore({
       userToken: '',
       clientId: '',
       statusData: {},
+      longitude: 0,
+      latitude: 0,
     };
   },
 
@@ -32,6 +34,12 @@ export default createStore({
     },
     setStatusData(state, statusData) {
       state.statusData = statusData;
+    },
+    setLongitude(state, longitude) {
+      state.longitude = longitude;
+    },
+    setLatitude(state, latitude) {
+      state.latitude = latitude;
     },
   },
   actions: {

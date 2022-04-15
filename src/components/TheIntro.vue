@@ -1,84 +1,53 @@
 <template>
-  <div class="container container-border-sky-blue intro">
-    <div class="intro-title">
-      <IntroTitle />
-      <transition appear name="icon-search" @after-enter="afterEnter">
-        <Search v-if="showSearchIcon" class="icon-search" />
-      </transition>
-    </div>
-    <div v-bind:class="{ main: true, 'change-order': isSecondIntro }">
-      <div class="animation">
-        <IntroAnimation :is-second-intro="isSecondIntro" />
-      </div>
-      <BlueCard :is-second-intro="isSecondIntro">
-        <slot>
-          <span v-if="!isSecondIntro"
-            ><p class="card-text">田間阿伯發現隔壁蓋起新工廠卻束手無策，</p>
-            <p class="card-text text-strong">動動手指幫助他吧！</p>
-          </span>
-          <span v-else>
-            <p class="card-text text-strong">怎麼幫他？</p>
-            <p class="card-text">
-              邀請你辨識空拍圖片，找出以前是農地、現在是建物的點，我們就能向政府提出檢舉！
-            </p>
-          </span>
-        </slot>
-      </BlueCard>
-    </div>
-    <div class="introduction" v-if="isSecondIntro">
-      <p>在開始辨識之前，我們需要先試玩一次教學，教你正確辨識空拍圖</p>
-    </div>
-
-    <button
-      class="intro-button"
-      v-if="!isSecondIntro"
-      @click.prevent="isSecondIntro = !isSecondIntro"
-    >
-      <HowToHelp />
-    </button>
-    <button v-if="isSecondIntro" class="intro-button intro-button--less-margin">
-      <router-link to="/tutorial">
-        <GoToTutorial />
-      </router-link>
-    </button>
-  </div>
+  <h1>請輸入經緯度</h1>
+  <label for="longitude">經度</label>
+  <input name='longitude' type="text"  v-model='longitude' placeholder="經度 longitude">
+  <label for="longitude">緯度</label>
+  <input   name='longitude' type="text" v-model='latitude'  placeholder="緯度 latitude">
+  <button  @click="goToGame">Go!</button>
 </template>
 
 <script>
-import IntroTitle from '../assets/svg-icon/intro-title.svg';
-import Search from '../assets/svg-icon/search.svg';
-import HowToHelp from '../assets/svg-icon/how-to-help.svg';
-import GoToTutorial from '../assets/svg-icon/go-to-tutorial.svg';
-import BlueCard from './BlueCard.vue';
-import IntroAnimation from './IntroAnimation.vue';
+import { mapMutations } from 'vuex';
 
 export default {
+
   name: 'TheIntro',
   data() {
     return {
       isSecondIntro: false,
       showSearchIcon: true,
+      longitude: 121.0,
+      latitude: 23.5,
     };
   },
   components: {
-    IntroTitle,
-    Search,
-    HowToHelp,
-    GoToTutorial,
-    BlueCard,
-    IntroAnimation,
+
   },
   methods: {
-    afterEnter() {
-      setTimeout(() => {
-        this.showSearchIcon = false;
-      }, 1000);
+    ...mapMutations([
+      'setLongitude', 'setLatitude',
+    ]),
+    goToGame() {
+      this.setLongitude(this.longitude);
+      this.setLatitude(this.latitude);
+      this.$router.push('/game');
     },
   },
 };
 </script>
 
 <style scoped lang="scss">
+
+h1, label{
+  margin: 0 auto;
+  color:black
+}
+button{
+  border: gray 1px solid;
+  padding:2px;
+  color:black
+}
 .intro {
   max-width: 768px;
   width: 100%;
