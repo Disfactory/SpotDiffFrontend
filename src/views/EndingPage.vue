@@ -25,7 +25,7 @@
       </div> -->
       <div class="button-group">
         <div class="share">
-          <RiceLeft /> <button class="btn-share"><Share /></button><RiceRight />
+          <RiceLeft /> <button class="btn-share" @click='shareImage'><Share /></button><RiceRight />
         </div>
         <button class="btn-form">
          <About :isEndingPage='isEndingPage'/>
@@ -77,6 +77,26 @@ export default {
     ...mapActions(['getUserToken', 'createClientId', 'getStatusData']),
     playAgain() {
       this.$router.push('game');
+    },
+    async shareImage() {
+      if (navigator.share) {
+        const response = await fetch('https://4.bp.blogspot.com/-Y3wVC48PhNY/XDVeuqNzvAI/AAAAAAAAB_g/w-FYFpnTi_stZ_6KO_OiK5qtGnpI83nDACLcBGAs/s1600/07.jpg');
+        const blob = await response.blob();
+        const filesArray = [
+          new File(
+            [blob],
+            'meme.jpg',
+            {
+              type: 'image/jpeg',
+              lastModified: new Date().getTime(),
+            },
+          ),
+        ];
+        const shareData = {
+          files: filesArray,
+        };
+        navigator.share(shareData);
+      } else { console.log('no navigator share'); }
     },
 
   },
