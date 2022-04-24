@@ -4,7 +4,7 @@
       <div class="title-icon"><IntroTitle /></div>
       <div class="thank-text">
         <p class="title">阿伯感謝你！</p>
-        <p class="personal-score">你已經辨識了 {{statusData.individualDoneCount || 0}} 間工廠</p>
+        <p class="personal-score">你已經辨識了 {{ statusData.individualDoneCount || 0 }} 間工廠</p>
       </div>
 
       <div class="play-again-wrapper">
@@ -15,7 +15,7 @@
       </div>
 
       <div class="invite-text">
-       <p>你的答案可以拿來當作檢舉違章的證據，邀請你的朋友一起來玩？</p>
+        <p>你的答案可以拿來當作檢舉違章的證據，邀請你的朋友一起來玩？</p>
       </div>
       <!-- <div class="current-result">
         <p>辨識 {{statusData.answerCount || 0 }} 次</p>
@@ -25,19 +25,21 @@
       </div> -->
       <div class="button-group">
         <div class="share">
-          <RiceLeft /> <button class="btn-share" @click='shareImage'><Share /></button><RiceRight />
+          <RiceLeft /> <button class="btn-share" @click="share"><Share /></button><RiceRight />
+          <p :class="{ 'share--copy-success': hasCopySuccess }">已複製連結！</p>
         </div>
         <button class="btn-form">
-         <About :isEndingPage='isEndingPage'/>
+          <About :isEndingPage="isEndingPage" />
         </button>
       </div>
     </div>
-  <LoadingPage v-if="isLoading" />
+    <LoadingPage v-if="isLoading" />
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex';
+import LoadingPage from '@/components/LoadingPage.vue';
 import IntroTitle from '../assets/svg-icon/intro-title.svg';
 import PlayAgain from '../assets/svg-icon/play-again.svg';
 // import ResultBar from '../assets/svg-icon/result-bar.svg';
@@ -46,7 +48,8 @@ import About from '../components/About.vue';
 import RiceLeft from '../assets/svg-icon/rice-left.svg';
 import RiceRight from '../assets/svg-icon/rice-right.svg';
 import Search from '../assets/svg-icon/search-ending.svg';
-import LoadingPage from '@/components/LoadingPage.vue';
+
+const imgUrl = require('../assets/img/share-image-square.png');
 
 export default {
   name: 'EndingPage',
@@ -65,6 +68,9 @@ export default {
     return {
       isLoading: false,
       isEndingPage: true,
+      copiedText:
+        '借你的眼睛兩分鐘，幫台灣拆除新增違章工廠！\n\r#阿伯出事了 #大家來找廠 #新增建違章工廠即報即拆 #disfactory\n\rhttps://spot.disfactory.tw',
+      hasCopySuccess: false,
     };
   },
   computed: {
@@ -78,27 +84,40 @@ export default {
     playAgain() {
       this.$router.push('game');
     },
-    async shareImage() {
-      if (navigator.share) {
-        const response = await fetch('https://4.bp.blogspot.com/-Y3wVC48PhNY/XDVeuqNzvAI/AAAAAAAAB_g/w-FYFpnTi_stZ_6KO_OiK5qtGnpI83nDACLcBGAs/s1600/07.jpg');
-        const blob = await response.blob();
-        const filesArray = [
-          new File(
-            [blob],
-            'meme.jpg',
-            {
-              type: 'image/jpeg',
-              lastModified: new Date().getTime(),
-            },
-          ),
-        ];
-        const shareData = {
-          files: filesArray,
-        };
-        navigator.share(shareData);
-      } else { console.log('no navigator share'); }
+    shareText(text) {
+      navigator.clipboard.writeText(text);
+      this.hasCopySuccess = true;
+      setTimeout(() => {
+        this.hasCopySuccess = false;
+      }, 1000);
     },
-
+    async shareImage() {
+      const response = await fetch(imgUrl);
+      const blob = await response.blob();
+      const filesArray = [
+        new File([blob], '大家來找廠.png', {
+          type: 'image/png',
+          lastModified: new Date().getTime(),
+        }),
+      ];
+      const shareData = {
+        files: filesArray,
+      };
+      navigator.share(shareData);
+    },
+    share() {
+      if (navigator.share) {
+        try {
+          this.shareImage();
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.error(err);
+          this.shareText(this.copiedText);
+        }
+      } else {
+        this.shareText(this.copiedText);
+      }
+    },
   },
   async mounted() {
     try {
@@ -110,6 +129,7 @@ export default {
         this.isLoading = false;
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.log(error);
     }
   },
@@ -119,9 +139,9 @@ export default {
 <style lang="scss" scoped>
 .ending-page {
   text-align: center;
-  padding: 20px 0 63px;
+  padding: 20px 0 53px;
   .title-icon {
-    margin: 0 auto 44px;
+    margin: 0 auto 36px;
     display: block;
   }
   .thank-text {
@@ -143,10 +163,10 @@ export default {
     }
   }
   .play-again-wrapper {
-    margin-bottom: 37px;
+    margin-bottom: 30px;
   }
   .invite-text {
-    color: #4A5613;
+    color: #4a5613;
     width: 232px;
     font-size: 18px;
     font-weight: 500;
@@ -175,12 +195,15 @@ export default {
     flex-direction: column;
     justify-content: center;
     .share {
-      margin-bottom: 20px;
+      margin-bottom: 12px;
+      color: transparent;
+      &--copy-success {
+        color: #4a5613;
+      }
     }
   }
   .btn-share {
-    margin-left: 16px;
-    margin-right: 16px;
+    margin: 0 16px 8px;
   }
 
   .play-again-wrapper {
