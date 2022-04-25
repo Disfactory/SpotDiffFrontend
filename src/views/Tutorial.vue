@@ -1,5 +1,5 @@
 <template>
-  <div class="fill-full-background bg-darkBrown">
+  <div v-if='!shouldShowCut' class="fill-full-background bg-darkBrown">
     <div class="container tutorial-container container-border-brown">
       <ProgressBar
         :which-stage="whichStage"
@@ -10,16 +10,18 @@
       <TutorialContent :which-stage="whichStage" />
     </div>
   </div>
+  <CutBeforeGame v-else/>
 </template>
 
 <script>
 import ProgressBar from '@/components/ProgressBar.vue';
 import TutorialContent from '@/components/TutorialContent.vue';
+import CutBeforeGame from '@/components/CutBeforeGame.vue';
 
 export default {
   name: 'TheTutorial',
   data() {
-    return { whichStage: 1, completedStage: [1] };
+    return { whichStage: 1, completedStage: [1], shouldShowCut: false };
   },
   methods: {
     goToNextStage() {
@@ -36,6 +38,11 @@ export default {
         this.whichStage -= 1;
       }
     },
+    goToCut() {
+      if (this.whichStage === 4) {
+        this.shouldShowCut = !this.shouldShowCut;
+      } else { this.goToNextStage(); }
+    },
   },
   watch: {
     whichStage() {
@@ -47,10 +54,12 @@ export default {
   components: {
     ProgressBar,
     TutorialContent,
+    CutBeforeGame,
   },
   provide() {
     return {
       goToNextStage: this.goToNextStage,
+      goToCut: this.goToCut,
     };
   },
 };

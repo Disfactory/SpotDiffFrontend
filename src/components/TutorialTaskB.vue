@@ -91,7 +91,7 @@
     </div>
   </div>
   <button>
-    <ContinueButton v-if="isTaskCompleted" @click="goToNextStage" />
+    <ContinueButton v-if="isTaskCompleted" @click="goToCut" />
   </button>
 </template>
 
@@ -137,7 +137,7 @@ export default {
       }, 200);
     },
   },
-  inject: ['goToNextStage'],
+  inject: ['goToNextStage', 'goToCut'],
   props: {
     identifyHasIllegalFactory: Function,
     landUsage: String,

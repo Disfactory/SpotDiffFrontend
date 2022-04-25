@@ -9,9 +9,9 @@
   <div class="identify-box border-color-blue">
     <InnerBoundingBox class="inner-bounding-box" />
     <div class="address">
-      <!-- {{ factoryCoord.address }} -->
+      {{formattedAddress}}
     </div>
-    <PhotoYearAfter class="photo-year" />
+    <PhotoYearBefore class="photo-year" />
     <div id="oldMap" class="map"></div>
   </div>
 
@@ -28,7 +28,7 @@
 import ButtonLand from '../assets/svg-icon/button-land.svg';
 import ButtonFactory from '../assets/svg-icon/button-factory.svg';
 import ButtonUnknown from '../assets/svg-icon/button-unknown.svg';
-import PhotoYearAfter from '../assets/svg-icon/after.svg';
+import PhotoYearBefore from '../assets/svg-icon/before.svg';
 import InnerBoundingBox from '../assets/svg-icon/inner-bounding-box.svg';
 import L from '../../node_modules/leaflet/dist/leaflet';
 
@@ -41,11 +41,30 @@ export default {
       questionInfo: '',
     };
   },
+  computed: {
+    formattedAddress() {
+      const { address } = this.factoryCoord;
+      let formattedAddress = address;
+      if (address?.startsWith('臺灣省')) {
+        formattedAddress = address.replace('臺灣省', '');
+      }
+      const townshipCode = ['鄉', '鎮', '市', '區'];
+      if (address?.endsWith('村') || address?.endsWith('里')) {
+        townshipCode.forEach((township) => {
+          const index = address.lastIndexOf(township);
+          if (index !== -1) {
+            formattedAddress = address.slice(0, index + 1);
+          }
+        });
+      }
+      return formattedAddress;
+    },
+  },
   components: {
     ButtonLand,
     ButtonFactory,
     ButtonUnknown,
-    PhotoYearAfter,
+    PhotoYearBefore,
     InnerBoundingBox,
   },
   props: {
