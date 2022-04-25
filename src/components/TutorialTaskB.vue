@@ -1,6 +1,6 @@
 <template>
   <div class="question-text">
-    承上，你覺得 after 準心所在的 <br />位置上有<span class="text-color-blue">{{
+    承上，你覺得 after 有<span class="text-color-blue">{{
       whichStage === 2 ? '建物' : '擴建'
     }}</span
     >嗎？
@@ -217,7 +217,7 @@ export default {
   letter-spacing: 0.5px;
   text-align: center;
   margin-top: 30px;
-  margin-bottom: 20px;
+  margin-bottom: 55px;
   .text-color-green {
     color: #c7cc87;
   }
