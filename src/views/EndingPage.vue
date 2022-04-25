@@ -49,7 +49,7 @@ import RiceLeft from '../assets/svg-icon/rice-left.svg';
 import RiceRight from '../assets/svg-icon/rice-right.svg';
 import Search from '../assets/svg-icon/search-ending.svg';
 
-const imgUrl = require('../assets/img/share-image-square.png');
+const imgUrl = require('../assets/img/share-image-square.jpeg');
 
 export default {
   name: 'EndingPage',
@@ -95,8 +95,8 @@ export default {
       const response = await fetch(imgUrl);
       const blob = await response.blob();
       const filesArray = [
-        new File([blob], '大家來找廠.png', {
-          type: 'image/png',
+        new File([blob], '大家來找廠.jpeg', {
+          type: 'image/jpeg',
           lastModified: new Date().getTime(),
         }),
       ];
