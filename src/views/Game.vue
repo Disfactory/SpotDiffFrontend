@@ -22,7 +22,7 @@
         </div>
         <div class="button-group">
           <img src="../assets/svg-icon/intro-animation/farmer.gif" class="farmer-icon" />
-          <button class="btn" @click="sendAnswer"><sendAnswer /></button>
+          <button class="btn" @click="sendAnswer" data-value="send-answer"><sendAnswer /></button>
           <button class="btn" @click="backToPreviousStage"><backToGamePage /></button>
         </div>
       </div>
@@ -104,7 +104,7 @@ export default {
         this.isLoading = false;
         this.$router.push('ending');
       } catch (e) {
-        console.log(e.response.data.message);
+        // console.log(e.response.data.message);
       }
     },
   },
