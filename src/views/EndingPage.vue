@@ -8,7 +8,7 @@
       </div>
 
       <div class="play-again-wrapper">
-        <button @click="playAgain">
+        <button @click="playAgain" data-value="play-again">
           <PlayAgain />
         </button>
         <Search class="search-icon" />
@@ -25,10 +25,12 @@
       </div> -->
       <div class="button-group">
         <div class="share">
-          <RiceLeft /> <button class="btn-share" @click="share"><Share /></button><RiceRight />
+          <RiceLeft />
+          <button class="btn-share" @click="share" data-value="share"><Share /></button>
+          <RiceRight />
           <p :class="{ 'share--copy-success': hasCopySuccess }">已複製連結！</p>
         </div>
-        <button class="btn-form">
+        <button class="btn-form" data-value="view-about">
           <About :isEndingPage="isEndingPage" />
         </button>
       </div>

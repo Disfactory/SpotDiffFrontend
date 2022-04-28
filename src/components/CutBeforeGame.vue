@@ -6,7 +6,7 @@
   <h2>要正式開始辨識囉！</h2>
   <p>你的答案可以幫忙檢舉</p>
   <p>這些侵佔農地的壞壞工廠</p>
-  <button>
+  <button data-value="start-game">
     <StartToLook @click="goToNextStage" />
   </button>
     </div>

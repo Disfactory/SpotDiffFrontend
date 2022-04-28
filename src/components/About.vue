@@ -1,6 +1,6 @@
 <template>
   <button v-if='isEndingPage' @click="isModalOpen= true" ><AboutButton/></button>
-  <button v-else @click="isModalOpen = true" class="about-us">關於此專案</button>
+  <button v-else @click="isModalOpen = true" class="about-us" data-value="view-about">關於此專案</button>
   <teleport to="body">
     <transition name="modal" @after-enter="afterEnter">
       <div class="modal" v-if="isModalOpen">
