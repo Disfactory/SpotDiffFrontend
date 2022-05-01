@@ -9,6 +9,13 @@
   <button data-value="start-game">
     <StartToLook @click="goToNextStage" />
   </button>
+  <p class='gdpr'>
+    點擊開始辨識即我同意將辨識結果以<br><a
+        href="http://creativecommons.tw/cc0"
+        rel="noreferrer noopener"
+        target="_blank"
+        class="link">CC0公眾領域貢獻宣告</a> 釋出授權到公眾領域
+  </p>
     </div>
 
   </div>
@@ -24,13 +31,17 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.fill-full-background{
+  overflow: auto;
+  height: calc(100vh - 31.5px);
+}
 .intro {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
-  padding: 72px 21px 50px;
+  padding: 60px 21px 28px;
   overflow-x: hidden;
   color: #3989A3;
 }
@@ -66,4 +77,20 @@ p{
 button{
   margin-top: 28px;
 }
+.gdpr{
+  margin-top: 16px;
+  color: #006788;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: center;
+  .link{
+    text-decoration: underline;
+    color: #006788;
+    &:hover{
+      font-weight: 500;
+    }
+  }
+}
+
 </style>

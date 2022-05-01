@@ -41,6 +41,25 @@
         <GoToTutorial />
       </router-link>
     </button>
+    <p class='gdpr'
+      v-if="!isSecondIntro"
+    > 繼續遊戲代表同意此網站之
+      <a
+        href="https://license.spot.disfactory.tw/"
+        rel="noreferrer noopener"
+        target="_blank"
+        class="link">隱私條款</a>
+      <br>
+      本遊戲由 <a
+        href="https://www.cet-taiwan.org/"
+        rel="noreferrer noopener"
+        target="_blank"
+        class="link">地球公民基金會</a> 與 <a
+        href="https://g0v.tw/"
+        rel="noreferrer noopener"
+        target="_blank"
+        class="link">g0v.tw</a> 社群共同開發
+    </p>
   </div>
 </template>
 
@@ -86,7 +105,7 @@ export default {
   flex-direction: column;
   align-items: center;
   position: relative;
-  padding: 20px 21px 50px;
+  padding: 20px 21px 30px;
   overflow-x: hidden;
 }
 
@@ -113,7 +132,7 @@ export default {
 }
 
 .intro-button {
-  margin: 40px 0 40px;
+  margin: 40px 0 24px;
   &--less-margin {
     margin: 20px 0 ;
   }
@@ -144,6 +163,20 @@ export default {
   line-height: 25px;
   font-size: 17px;
 }
+.gdpr{
+  color: #006788;
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: center;
+  .link{
+    text-decoration: underline;
+    color: #006788;
+    &:hover{
+      font-weight: 500;
+    }
+  }
+}
+
 //animation of search icon in title
 .icon-search-enter-active {
   transition: opacity 0.5s ease-out, transform 1.5s 0.5s ease-out;
