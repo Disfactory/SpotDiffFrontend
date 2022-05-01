@@ -1,7 +1,8 @@
 <template>
   <div
-    class="fill-full-background"
-    :class="{ 'bg-skyBlue': isAllQuestionDone, 'bg-darkBlue': !isAllQuestionDone }"
+    :class="['fill-full-background',
+    { 'bg-skyBlue': isAllQuestionDone, 'bg-darkBlue': !isAllQuestionDone,
+    'fill-full-background--less-padding':shouldChangeHeight }]"
   >
     <div v-if="!isAllQuestionDone" class="container container-border-blue">
       <TheHeader />
@@ -11,7 +12,8 @@
         :whichStage="whichStage"
         :completed-stage="completedStage"
       />
-      <GameContent :which-Question="whichStage" :go-to-next-stage="goToNextStage" />
+      <GameContent :which-Question="whichStage" :go-to-next-stage="goToNextStage"
+      @taskAisCompleted='changeHeight' />
     </div>
     <div v-else class="container bg-skyBlue container-border-sky-blue">
       <div class="checking-page">
@@ -49,12 +51,15 @@ export default {
       whichStage: 1,
       completedStage: [1],
       isAllQuestionDone: false,
-
+      shouldChangeHeight: false,
       isLoading: false,
     };
   },
   methods: {
     ...mapActions(['createClientId', 'getUserToken', 'getStatusData']),
+    changeHeight() {
+      this.shouldChangeHeight = !this.shouldChangeHeight;
+    },
     goToNextStage() {
       if (this.whichStage < 5) {
         this.whichStage += 1;
@@ -111,6 +116,7 @@ export default {
   computed: {
     ...mapState(['userToken', 'clientId']),
   },
+
   watch: {
     whichStage() {
       if (!this.completedStage.some((item) => item === this.whichStage)) {
@@ -176,6 +182,13 @@ export default {
   .farmer-icon {
     width: 89px;
     height: 134px;
+  }
+}
+.fill-full-background {
+  overflow: auto;
+  padding-bottom: calc(100vh - 685px - 31.5px);
+  &--less-padding{
+    padding-bottom: calc(100vh - 718px - 31.5px);
   }
 }
 </style>

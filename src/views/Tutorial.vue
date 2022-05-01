@@ -1,5 +1,6 @@
 <template>
-  <div v-if='!shouldShowCut' class="fill-full-background bg-darkBrown">
+  <div v-if='!shouldShowCut' :class="['fill-full-background','bg-darkBrown',
+  {'fill-full-background--less-padding':whichStage === 2 || whichStage === 4}]">
     <div class="container tutorial-container container-border-brown">
       <ProgressBar
         :which-stage="whichStage"
@@ -69,4 +70,13 @@ export default {
 .tutorial-container {
   overflow-x: hidden;
 }
+.fill-full-background {
+  overflow: auto;
+  padding-bottom: calc(100vh - 617.5px - 31.5px);
+
+  &--less-padding{
+    padding-bottom: calc(100vh - 628px - 31.5px);
+  }
+}
+
 </style>

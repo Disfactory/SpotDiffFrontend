@@ -154,6 +154,7 @@ export default {
     },
     isTaskACompleted() {
       this.scrollToTop();
+      this.$emit('taskAisCompleted');
     },
   },
   computed: {
