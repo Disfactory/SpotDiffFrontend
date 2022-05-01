@@ -1,6 +1,6 @@
 <template>
-  <button v-if='isEndingPage' @click="isModalOpen= true" ><AboutButton/></button>
-  <button v-else @click="isModalOpen = true" class="about-us" data-value="view-about">關於此專案</button>
+  <button v-if='isEndingPage' @click="openModal" ><AboutButton/></button>
+  <button v-else @click="openModal" class="about-us" data-value="view-about">關於此專案</button>
   <teleport to="body">
     <transition name="modal" @after-enter="afterEnter">
       <div class="modal" v-if="isModalOpen">
@@ -28,6 +28,35 @@
                 class="know-more-button"
                 >了解更多</a
               >
+              <div class='license'>
+                <ol>
+                  <li>&diams; 大家來找廠全站由使用者辨識產生之資料以 <a
+                      href="http://creativecommons.tw/cc0"
+                      rel="noreferrer noopener"
+                      target="_blank"
+                      >CC0 公眾領域貢獻宣告</a
+                   > 釋出授權到公眾領域。</li>
+                  <li>&diams; 點位經緯度來自 <a
+                        href="https://maps.nlsc.gov.tw/"
+                        rel="noreferrer noopener"
+                        target="_blank"
+                        >內政部國土測繪中心</a
+                       > ，衛星空照圖來源為 <a
+                        href="https://data.csrsr.ncu.edu.tw/"
+                        rel="noreferrer noopener"
+                        target="_blank"
+                        >國立中央大學太空及遙測研究中心</a
+                       > 。</li>
+                  <li>&diams; 設計圖以 CC-BY姓名標示 4.0 International 釋出，標註「農地違章工廠回報系統貢獻者」。</li>
+                  <li>&diams; 專案原始碼以 MIT 開放授權公開在 <a
+                      href="https://github.com/Disfactory"
+                      rel="noreferrer noopener"
+                      target="_blank"
+                      >GitHub</a
+                   >
+                     上。</li>
+                </ol>
+              </div>
             </div></transition
           >
         </div>
@@ -55,9 +84,14 @@ export default {
     afterEnter() {
       this.isShowModalContent = true;
     },
+    openModal() {
+      this.isModalOpen = true;
+      document.documentElement.style.overflow = 'hidden';
+    },
     closeModal() {
       this.isShowModalContent = false;
       this.isModalOpen = false;
+      document.documentElement.style.overflow = 'auto';
     },
   },
   components: { CloseButton, AboutButton },
@@ -82,6 +116,7 @@ export default {
   top: 0;
   left: 0;
   z-index: 99999;
+
   .modal-shadow {
     background: rgba(0, 0, 0, 0.7);
     width: 100%;
@@ -90,15 +125,18 @@ export default {
     justify-content: center;
   }
   .modal-content {
-    overflow-y: auto;
+    display: block;
     background: #effffc;
-    padding: 20px 31px 26px 30px;
+    padding: 20px 31px 16px 30px;
     color: #0a2f42;
     width: 84%;
-    height: auto;
+    height: 75%;
+    overflow-y: auto;
     margin: auto;
     position: relative;
-
+    @media (min-width: 416px){
+       height: auto;
+    }
     .close-button {
       position: absolute;
       top: 20px;
@@ -171,5 +209,11 @@ export default {
 .modal-content-enter-to,
 .modal-content-leave-from {
   opacity: 1;
+}
+.license{
+  margin-top: 10px;
+  font-size: 12px;
+  line-height: 1.2;
+
 }
 </style>

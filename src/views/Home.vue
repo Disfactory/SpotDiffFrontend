@@ -11,4 +11,11 @@ export default {
   components: { TheIntro },
 };
 </script>
-<style scoped></style>
+<style lang="scss" scoped>
+
+.fill-full-background{
+  overflow: auto;
+  height: calc(100vh - 31.5px);
+}
+
+</style>
