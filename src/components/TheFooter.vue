@@ -1,13 +1,20 @@
 <template>
   <div class="footer">
     <About />
+    <div class='link-wrapper'>
     <a
       href="https://www.cet-taiwan.org/"
       target="_blank"
       rel="noreferrer noopener"
       class="link-to-cet"
-      >&#169; 地球公民基金會</a
-    >
+      >地球公民基金會 </a>與<a
+      href="https://g0v.tw/"
+      target="_blank"
+      rel="noreferrer noopener"
+      class="link-to-cet"
+      > g0v.tw</a
+    >社群 共同開發
+    </div>
   </div>
 </template>
 
@@ -36,14 +43,17 @@ export default {
   line-height: 18px;
   letter-spacing: 0px;
   text-align: left;
-  .link-to-cet {
-    cursor: pointer;
+  .link-wrapper {
     margin-right: 17px;
-    text-decoration: none;
+    .link-to-cet {
     color: #b8b8b8;
-    &:hover {
+    text-decoration: none;
+    cursor: pointer;
+      &:hover {
       font-weight: 600;
+      }
     }
   }
+
 }
 </style>
