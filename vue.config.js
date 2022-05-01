@@ -14,7 +14,7 @@ module.exports = {
   devServer: {
     proxy: {
       '/factories': {
-        target: 'https://api.disfactory.tw/api/',
+        target: 'https://staging.disfactory.tw/api/',
         ws: true,
         changeOrigin: true,
       },
