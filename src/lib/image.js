@@ -49,13 +49,13 @@ const argriculturalLandColors = [
 
 const isArrayEqual = (a, b) => !a.some((v, i) => b[i] !== v);
 
-const isArgriculturalLand = (arr) => argriculturalLandColors.some((c) => isArrayEqual(c, arr));
+const isAgriculturalLand = (arr) => argriculturalLandColors.some((c) => isArrayEqual(c, arr));
 
-export const flipArgriculturalLand = createImageProcessor((data) => {
+export const flipAgriculturalLand = createImageProcessor((data) => {
   for (let i = 0; i < data.length; i += 4) {
     const color = Array.from(data.slice(i, i + 3));
 
-    if (isArgriculturalLand(color)) {
+    if (isAgriculturalLand(color)) {
       // set to transparent
       data[i] = 0;
       data[i + 1] = 0;

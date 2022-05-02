@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import L from 'leaflet';
-import { flipArgriculturalLand as flipAgriculturalLand } from './image';
+import { flipAgriculturalLand } from './image';
 
 const { DomEvent, Util } = L;
 
