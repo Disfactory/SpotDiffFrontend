@@ -5,6 +5,8 @@ import { flipAgriculturalLand } from './image';
 const { DomEvent, Util } = L;
 
 export const FarmlandLayer = L.TileLayer.extend({
+  // Patch the Leaflet TileLayer createTile function to return a custom tile url
+  // https://github.com/Leaflet/Leaflet/blob/990d49773a129619f2eed09712867627c8e3cf60/src/layer/tile/TileLayer.js#L147
   createTile(coords, done) {
     const tile = document.createElement('img');
 
