@@ -63,7 +63,7 @@ export default {
       async function getCoordinate(factory) {
         const url = `${process.env.VUE_APP_DISFACTORY_API_URL || ''}/factories/${
           factory.factory_id
-        }`;
+        }/location`;
         const res = await axios.get(url);
         const obj = {
           latitude: res.data.lat,
@@ -188,6 +188,8 @@ export default {
     whichQuestion: Number,
     goToNextStage: Function,
   },
+  emits: ['taskAisCompleted'],
+
   async created() {
     try {
       this.isLoading = true;
