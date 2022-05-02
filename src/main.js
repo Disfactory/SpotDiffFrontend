@@ -1,8 +1,11 @@
 import { createApp } from 'vue';
-import VueScrollTo from 'vue-scrollto';
+import { createHead } from '@vueuse/head';
 import App from './App.vue';
 import router from './router';
 import store from './store';
+
+const head = createHead();
+
 /* eslint-disable */
 
 const app = createApp(App);
@@ -23,6 +26,6 @@ let clientId = '';
 
 app
   .use(store)
+  .use(head)
   .use(router)
-  .directive('scroll-to', VueScrollTo)
   .mount('#app');

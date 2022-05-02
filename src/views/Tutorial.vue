@@ -15,11 +15,18 @@
 </template>
 
 <script>
+import { ref } from 'vue';
+import { useHead } from '@vueuse/head';
 import ProgressBar from '@/components/ProgressBar.vue';
 import TutorialContent from '@/components/TutorialContent.vue';
 import CutBeforeGame from '@/components/CutBeforeGame.vue';
+import { TITLE } from '../constant/title';
 
 export default {
+  setup() {
+    const title = ref(`${TITLE}教學`);
+    useHead({ title });
+  },
   name: 'TheTutorial',
   data() {
     return { whichStage: 1, completedStage: [1], shouldShowCut: false };

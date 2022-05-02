@@ -36,6 +36,8 @@
 <script>
 import axios from 'axios';
 import { mapActions, mapState } from 'vuex';
+import { ref } from 'vue';
+import { useHead } from '@vueuse/head';
 import TheHeader from '@/components/TheHeader.vue';
 import ProgressBar from '@/components/ProgressBar.vue';
 import GameContent from '@/components/GameContent.vue';
@@ -43,8 +45,13 @@ import LoadingPage from '@/components/LoadingPage.vue';
 import IntroTitle from '../assets/svg-icon/intro-title.svg';
 import backToGamePage from '../assets/svg-icon/back-to-game-page.svg';
 import sendAnswer from '../assets/svg-icon/send-answer.svg';
+import { TITLE } from '../constant/title';
 
 export default {
+  setup() {
+    const title = ref(`${TITLE}辨識`);
+    useHead({ title });
+  },
   name: 'TheGame',
   data() {
     return {
@@ -81,7 +88,7 @@ export default {
         await this.getUserToken();
         const data = JSON.parse(localStorage.getItem('SpotDiffData'));
         data.forEach((factory) => {
-          /* eslint no-param-reassign: ["error", { "props": false }] */
+        /* eslint no-param-reassign: ["error", { "props": false }] */
           if (factory.land_usage === 'buliding-land') {
             factory.land_usage = 1;
           } else if (factory.land_usage === 'farm-land') {
@@ -109,7 +116,7 @@ export default {
         this.isLoading = false;
         this.$router.push('ending');
       } catch (e) {
-        // console.log(e.response.data.message);
+      // console.log(e.response.data.message);
       }
     },
   },
