@@ -41,6 +41,8 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
+import { ref } from 'vue';
+import { useHead } from '@vueuse/head';
 import LoadingPage from '@/components/LoadingPage.vue';
 import IntroTitle from '../assets/svg-icon/intro-title.svg';
 import PlayAgain from '../assets/svg-icon/play-again.svg';
@@ -50,10 +52,15 @@ import About from '../components/About.vue';
 import RiceLeft from '../assets/svg-icon/rice-left.svg';
 import RiceRight from '../assets/svg-icon/rice-right.svg';
 import Search from '../assets/svg-icon/search-ending.svg';
+import { TITLE } from '../constant/title';
 
 const imgUrl = require('../assets/img/share-image-square.jpeg');
 
 export default {
+  setup() {
+    const title = ref(`${TITLE}結束`);
+    useHead({ title });
+  },
   name: 'EndingPage',
   components: {
     IntroTitle,
@@ -139,6 +146,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.fill-full-background{
+  overflow: auto;
+  height: calc(100vh - 31.5px);
+}
 .ending-page {
   text-align: center;
   padding: 20px 0 53px;
@@ -234,5 +245,6 @@ export default {
       transform: translate(0px, 0px);
     }
   }
+
 }
 </style>
