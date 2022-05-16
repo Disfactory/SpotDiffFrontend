@@ -2,7 +2,7 @@
   <div class="loading-page">
     <Loading class="loading-icon" />
     <div class='alert'>
-    <p>感謝大家太踴躍幫忙阿伯，目前衛星雲圖前往拍攝中！</p>
+    <p>感謝大家太踴躍幫忙阿伯，目前 2000 間工廠都已經被回答完了！</p>
       <br>
     <p>但還有許多農地工廠還沒被辨識，廣告之後（？）馬上回來</p>
     </div>

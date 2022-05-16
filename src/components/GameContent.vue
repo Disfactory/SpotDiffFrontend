@@ -19,7 +19,7 @@
       />
     </div>
   </div>
-  <LoadingPage v-if="true" />
+  <LoadingPage v-if="isLoading" />
 </template>
 
 <script>
