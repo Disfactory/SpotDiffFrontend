@@ -41,6 +41,7 @@
 </template>
 
 <script>
+import L from 'leaflet';
 import PhotoYearAfter from '../assets/svg-icon/after.svg';
 import PhotoYearBefore from '../assets/svg-icon/before.svg';
 import InnerBoundingBox from '../assets/svg-icon/inner-bounding-box.svg';
@@ -50,7 +51,7 @@ import DividerIcon from '../assets/svg-icon/divider-icon.svg';
 import HasExpansion from '../assets/svg-icon/has-expansion.svg';
 import NoExpansion from '../assets/svg-icon/no-expansion.svg';
 import ToggleSwitcher from './ToggleSwitcher.vue';
-import L from '../../node_modules/leaflet/dist/leaflet';
+import { addFarmlandLayer } from '../lib/FarmlandLayer';
 
 export default {
   name: 'TaskB',
@@ -139,6 +140,8 @@ export default {
           opacity: 1,
         },
       ).addTo(this.newMap);
+      addFarmlandLayer(this.newMap);
+
       this.oldMap = L.map('oldMap', {
         zoomControl: false,
         attributionControl: false,
@@ -158,6 +161,7 @@ export default {
           opacity: 1,
         },
       ).addTo(this.oldMap);
+      addFarmlandLayer(this.oldMap);
     },
   },
   mounted() {
