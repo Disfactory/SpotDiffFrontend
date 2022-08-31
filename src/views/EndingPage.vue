@@ -36,6 +36,16 @@
       </div>
     </div>
     <LoadingPage v-if="isLoading" />
+
+    <Modal :isOpen="is10AnniOpen" :onDismiss="onDismiss">
+      <BlueCard>
+        <div class="finish-modal">
+          十週年任務完成！
+
+          <button class="close-button" @click="onDismiss">關閉</button>
+        </div>
+      </BlueCard>
+    </Modal>
   </div>
 </template>
 
@@ -52,6 +62,8 @@ import About from '../components/About.vue';
 import RiceLeft from '../assets/svg-icon/rice-left.svg';
 import RiceRight from '../assets/svg-icon/rice-right.svg';
 import Search from '../assets/svg-icon/search-ending.svg';
+import Modal from '../components/Modal.vue';
+import BlueCard from '../components/BlueCard.vue';
 import { TITLE } from '../constant/title';
 
 const imgUrl = require('../assets/img/share-image-square.jpeg');
@@ -72,6 +84,8 @@ export default {
     RiceRight,
     Search,
     LoadingPage,
+    Modal,
+    BlueCard,
   },
   data() {
     return {
@@ -80,6 +94,7 @@ export default {
       copiedText:
         '借你的眼睛兩分鐘，幫台灣拆除新增違章工廠！\n\r#阿伯出事了 #大家來找廠 #新增建違章工廠即報即拆 #disfactory\n\rhttps://spot.disfactory.tw',
       hasCopySuccess: false,
+      is10AnniOpen: new URLSearchParams(window.location.search).get('10vpoints'),
     };
   },
   computed: {
@@ -126,6 +141,9 @@ export default {
       } else {
         this.shareText(this.copiedText);
       }
+    },
+    onDismiss() {
+      this.is10AnniOpen = false;
     },
   },
   async mounted() {
@@ -245,6 +263,27 @@ export default {
       transform: translate(0px, 0px);
     }
   }
+}
 
+.finish-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.close-button {
+  background-color: #E9E9E9;
+  color: #000;
+  border: 3px solid #000;
+  padding: 8px 12px;
+  width: auto;
+  display: inline-block;
+  font-size: 16px;
+
+  &:hover {
+    background-color: #a8a8a8;
+  }
 }
 </style>
