@@ -25,12 +25,13 @@
 </template>
 
 <script>
+import L from 'leaflet';
 import ButtonLand from '../assets/svg-icon/button-land.svg';
 import ButtonFactory from '../assets/svg-icon/button-factory.svg';
 import ButtonUnknown from '../assets/svg-icon/button-unknown.svg';
 import PhotoYearBefore from '../assets/svg-icon/before.svg';
 import InnerBoundingBox from '../assets/svg-icon/inner-bounding-box.svg';
-import L from '../../node_modules/leaflet/dist/leaflet';
+import { addFarmlandLayer } from '../lib/FarmlandLayer';
 
 export default {
   name: 'TaskA',
@@ -94,6 +95,8 @@ export default {
           opacity: 1,
         },
       ).addTo(this.oldMap);
+
+      addFarmlandLayer(this.oldMap);
     },
   },
   watch: {
