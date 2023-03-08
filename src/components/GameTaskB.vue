@@ -7,7 +7,7 @@
   </div>
 
   <div class="identify-box border-color-blue">
-    <InnerBoundingBox class="inner-bounding-box" />
+    <InnerBoundingBox  v-if="!shouldShowNewFilter" class="inner-bounding-box" />
     <div class="address">
       {{ formattedAddress }}
     </div>
@@ -113,6 +113,8 @@ export default {
     paramsOfMaps: Object,
     factoryCoord: [Object, String],
     landUsage: String,
+    shouldShowNewFilter: Boolean,
+
   },
   methods: {
     changePhoto() {
@@ -140,8 +142,9 @@ export default {
           opacity: 1,
         },
       ).addTo(this.newMap);
-      addFarmlandLayer(this.newMap);
-
+      if (this.shouldShowNewFilter) {
+        addFarmlandLayer(this.newMap);
+      }
       this.oldMap = L.map('oldMap', {
         zoomControl: false,
         attributionControl: false,
@@ -161,7 +164,9 @@ export default {
           opacity: 1,
         },
       ).addTo(this.oldMap);
-      addFarmlandLayer(this.oldMap);
+      if (this.shouldShowNewFilter) {
+        addFarmlandLayer(this.oldMap);
+      }
     },
   },
   mounted() {

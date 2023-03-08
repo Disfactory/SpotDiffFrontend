@@ -13,7 +13,7 @@
         :completed-stage="completedStage"
       />
       <GameContent :which-Question="whichStage" :go-to-next-stage="goToNextStage"
-      @taskAisCompleted='changeHeight' />
+      :get-testing-result="getTestingResult" @taskAisCompleted='changeHeight' />
     </div>
     <div v-else class="container bg-skyBlue container-border-sky-blue">
       <div class="checking-page">
@@ -21,6 +21,9 @@
         <div class="check-text">
           <p>你確定要送出資料了嗎？</p>
           <p class="check-text--little-font">阿伯很期待 &gt; &lt;</p>
+          <p class="check-text--little-font">{{this.abTesting.isShowingNewFilter ?
+            '使用新版遮罩':'使用舊版遮罩'}}</p>
+          <p class="check-text--little-font">{{this.abTesting.userAnswer}}</p>
         </div>
         <div class="button-group">
           <img src="../assets/svg-icon/intro-animation/farmer.gif" class="farmer-icon" />
@@ -34,7 +37,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+// import axios from 'axios';
 import { mapActions, mapState } from 'vuex';
 import TheHeader from '@/components/TheHeader.vue';
 import ProgressBar from '@/components/ProgressBar.vue';
@@ -53,12 +56,20 @@ export default {
       isAllQuestionDone: false,
       shouldChangeHeight: false,
       isLoading: false,
+      abTesting: {
+        isShowingNewFilter: undefined,
+        userAnswer: [],
+      },
     };
   },
   methods: {
     ...mapActions(['createClientId', 'getUserToken', 'getStatusData']),
     changeHeight() {
-      this.shouldChangeHeight = !this.shouldChangeHeight;
+      this.shouldChangeHeight = !this.uldChangeHeight;
+    },
+    getTestingResult(isShowingNewFilter, userAnswer) {
+      this.abTesting.isShowingNewFilter = isShowingNewFilter;
+      this.abTesting.userAnswer = userAnswer;
     },
     goToNextStage() {
       if (this.whichStage < 5) {
@@ -75,42 +86,50 @@ export default {
       }
     },
     async sendAnswer() {
-      try {
-        this.isLoading = true;
-        await this.createClientId();
-        await this.getUserToken();
-        const data = JSON.parse(localStorage.getItem('SpotDiffData'));
-        data.forEach((factory) => {
-          /* eslint no-param-reassign: ["error", { "props": false }] */
-          if (factory.land_usage === 'buliding-land') {
-            factory.land_usage = 1;
-          } else if (factory.land_usage === 'farm-land') {
-            factory.land_usage = 2;
-          } else {
-            factory.land_usage = 0;
-          }
-          if (!factory.expansion) {
-            factory.expansion = 1;
-          } else if (factory.expansion) {
-            factory.expansion = 2;
-          } else {
-            factory.expansion = 0;
-          }
-          delete factory.latitude;
-          delete factory.longitude;
-          delete factory.address;
-        });
-        await axios.post(`${process.env.VUE_APP_SPOTDIFF_APP_URL || '/api'}/answer/`, {
-          user_token: this.userToken,
-          data,
-        });
-        localStorage.removeItem('SpotDiffData');
-        await this.getStatusData();
-        this.isLoading = false;
-        this.$router.push('ending');
-      } catch (e) {
-        // console.log(e.response.data.message);
-      }
+      // for a/b testing, we use data which is selected,
+      // so we don't send data to our database.
+
+      // code for a/b testing:
+      this.$router.push('ending');
+
+      // original code:
+
+      // try {
+      //   this.isLoading = true;
+      //   await this.createClientId();
+      //   await this.getUserToken();
+      //   const data = JSON.parse(localStorage.getItem('SpotDiffData'));
+      //   data.forEach((factory) => {
+      //     /* eslint no-param-reassign: ["error", { "props": false }] */
+      //     if (factory.land_usage === 'buliding-land') {
+      //       factory.land_usage = 1;
+      //     } else if (factory.land_usage === 'farm-land') {
+      //       factory.land_usage = 2;
+      //     } else {
+      //       factory.land_usage = 0;
+      //     }
+      //     if (!factory.expansion) {
+      //       factory.expansion = 1;
+      //     } else if (factory.expansion) {
+      //       factory.expansion = 2;
+      //     } else {
+      //       factory.expansion = 0;
+      //     }
+      //     delete factory.latitude;
+      //     delete factory.longitude;
+      //     delete factory.address;
+      //   });
+      //   await axios.post(`${process.env.VUE_APP_SPOTDIFF_APP_URL || '/api'}/answer/`, {
+      //     user_token: this.userToken,
+      //     data,
+      //   });
+      //   localStorage.removeItem('SpotDiffData');
+      //   await this.getStatusData();
+      //   this.isLoading = false;
+      //   this.$router.push('ending');
+      // } catch (e) {
+      //   // console.log(e.response.data.message);
+      // }
     },
   },
   computed: {

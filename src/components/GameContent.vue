@@ -4,6 +4,7 @@
     <div class="content" v-if="whichQuestion === item">
       <GameTaskA
         v-if="!isTaskACompleted"
+        :shouldShowNewFilter="shouldShowNewFilter"
         :which-question="whichQuestion"
         :identify-land-usage="identifyLandUsage"
         :params-of-maps="paramsOfMaps"
@@ -11,6 +12,7 @@
       />
       <GameTaskB
         v-else
+        :shouldShowNewFilter="shouldShowNewFilter"
         :which-question="whichQuestion"
         :params-of-maps="paramsOfMaps"
         :land-usage="landUsage"
@@ -23,12 +25,58 @@
 </template>
 
 <script>
+
 import axios from 'axios';
 import haversineOffset from 'haversine-offset';
 import { mapActions, mapState } from 'vuex';
 import GameTaskA from './GameTaskA.vue';
 import GameTaskB from './GameTaskB.vue';
 import LoadingPage from './LoadingPage.vue';
+
+const DATA_FOR_AB_TESTING = [
+
+  {
+    latitude: '23.99810304',
+    longitude: '120.6448603',
+    location_id: 0,
+    address: '南投縣草屯鎮石川里新光段1556地號',
+    landUsage: undefined,
+    hasIllegalFactory: undefined,
+  },
+  {
+    latitude: '24.45363464',
+    longitude: '120.7812774',
+    location_id: 1,
+    address: '苗栗縣銅鑼鄉樟樹村雙峰山段49地號',
+    landUsage: undefined,
+    hasIllegalFactory: undefined,
+  },
+  {
+    latitude: '24.05429213',
+    longitude: '120.4788423',
+    location_id: 2,
+    address: '彰化縣鹿港鎮東崎里東昇段101地號',
+    landUsage: undefined,
+    hasIllegalFactory: undefined,
+  },
+  {
+    latitude: '24.04974618',
+    longitude: '120.4635',
+    location_id: 3,
+    address: '彰化縣福興鄉新生段2400地號',
+    landUsage: undefined,
+    hasIllegalFactory: undefined,
+  },
+  {
+    latitude: '24.25721607',
+    longitude: '120.6481218',
+    location_id: 4,
+    address: '臺中市神岡區光復段854地號',
+    landUsage: undefined,
+    hasIllegalFactory: undefined,
+  },
+
+];
 
 export default {
   name: 'TutorialContent',
@@ -39,6 +87,8 @@ export default {
   },
   data() {
     return {
+      dataForABTesting: [...DATA_FOR_AB_TESTING],
+      shouldShowNewFilter: false,
       isLoading: false,
       allFactoriesData: [],
       currentQuestionData: {
@@ -78,12 +128,25 @@ export default {
       localStorage.setItem('SpotDiffData', JSON.stringify(allFactoriesData));
     },
     getFactoryCoord() {
-      const data = JSON.parse(localStorage.getItem('SpotDiffData'));
+      // for a/b testing, we use data which is selected,
+      // so we don't fetch request to get factory data from database.
+      // code for a/b testing:
+
       this.currentQuestionData.factoryCoord = {
-        latitude: data[this.whichQuestion - 1].latitude,
-        longitude: data[this.whichQuestion - 1].longitude,
-        address: data[this.whichQuestion - 1].address,
+        latitude: this.dataForABTesting[this.whichQuestion - 1].latitude,
+        longitude: this.dataForABTesting[this.whichQuestion - 1].longitude,
+        address: this.dataForABTesting[this.whichQuestion - 1].address,
       };
+
+      // original code:
+
+      // const data = JSON.parse(localStorage.getItem('SpotDiffData'));
+
+      // this.currentQuestionData.factoryCoord = {
+      //   latitude: data[this.whichQuestion - 1].latitude,
+      //   longitude: data[this.whichQuestion - 1].longitude,
+      //   address: data[this.whichQuestion - 1].address,
+      // };
     },
     scrollToTop() {
       if (this.$refs.start.scrollIntoView) {
@@ -91,6 +154,11 @@ export default {
       }
     },
     identifyLandUsage(landUsage) {
+      // for a/b testing, we use data which is selected,
+      // so we don't have to identify data from database.
+      // code for a/b testing:
+
+      this.dataForABTesting[this.whichQuestion - 1].landUsage = landUsage;
       this.currentQuestionData.userAnswer.landUsage = landUsage;
       // if (landUsage === 'unknown') {
       //   this.identifyHasIllegalFactory('unknown');
@@ -98,12 +166,37 @@ export default {
       //   this.isTaskACompleted = true;
       // }
       this.isTaskACompleted = true;
+
+      // original code:
+
+      // this.dataForABTesting[this.whichQuestion - 1].landUsage = landUsage;
+      // this.currentQuestionData.userAnswer.landUsage = landUsage;
+      // // if (landUsage === 'unknown') {
+      // //   this.identifyHasIllegalFactory('unknown');
+      // // } else {
+      // //   this.isTaskACompleted = true;
+      // // }
+      // this.isTaskACompleted = true;
     },
     identifyHasIllegalFactory(hasIllegalFactory) {
+      // for a/b testing, we use data which is selected,
+      // so we don't have to identify data from database.
+      // code for a/b testing:
+
+      this.dataForABTesting[this.whichQuestion - 1].hasIllegalFactory = hasIllegalFactory;
+
       this.currentQuestionData.userAnswer.hasIllegalFactory = hasIllegalFactory;
-      this.computeBoundingBoxLatLng();
-      this.storeQuestionData();
+      // this.computeBoundingBoxLatLng();
+      // this.storeQuestionData();
+      this.getTestingResult(this.shouldShowNewFilter, this.dataForABTesting);
       this.goToNextStage();
+
+      // original code:
+
+      // this.currentQuestionData.userAnswer.hasIllegalFactory = hasIllegalFactory;
+      // this.computeBoundingBoxLatLng();
+      // this.storeQuestionData();
+      // this.goToNextStage();
     },
     computeBoundingBoxLatLng() {
       // height and width of innerBoundingBox
@@ -187,16 +280,22 @@ export default {
   props: {
     whichQuestion: Number,
     goToNextStage: Function,
+    getTestingResult: Function,
   },
   emits: ['taskAisCompleted'],
 
   async created() {
+    const randomNumber = Math.floor(Math.random() * 2);
+    if (randomNumber === 1) {
+      this.shouldShowNewFilter = true;
+    }
+
     try {
       this.isLoading = true;
       await this.createClientId();
       await this.getUserToken();
       if (!this.hasSpotDiffDataInLocal) {
-        await this.getFactoriesData();
+        // await this.getFactoriesData();
         this.getFactoryCoord();
       }
       this.isLoading = false;

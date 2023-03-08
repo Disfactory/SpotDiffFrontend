@@ -7,7 +7,7 @@
     </p>
   </div>
   <div class="identify-box border-color-blue">
-    <InnerBoundingBox class="inner-bounding-box" />
+    <InnerBoundingBox  v-if="!shouldShowNewFilter" class="inner-bounding-box" />
     <div class="address">
       {{formattedAddress}}
     </div>
@@ -73,6 +73,7 @@ export default {
     whichQuestion: Number,
     paramsOfMaps: Object,
     factoryCoord: [Object, String],
+    shouldShowNewFilter: Boolean,
   },
   methods: {
     setMap() {
@@ -95,8 +96,9 @@ export default {
           opacity: 1,
         },
       ).addTo(this.oldMap);
-
-      addFarmlandLayer(this.oldMap);
+      if (this.shouldShowNewFilter) {
+        addFarmlandLayer(this.oldMap);
+      }
     },
   },
   watch: {
