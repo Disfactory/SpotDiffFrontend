@@ -27,7 +27,11 @@
         </div>
         <div class="button-group">
           <img src="../assets/svg-icon/intro-animation/farmer.gif" class="farmer-icon" />
-          <button class="btn" @click="sendAnswer" data-value="send-answer"><sendAnswer /></button>
+          <button class="btn--test" @click="copyAnswer">複製答案</button>
+          <!-- <button class="btn" @click="sendAnswer" data-value="send-answer">
+            <sendAnswer />
+            </button> -->
+
           <button class="btn" @click="backToPreviousStage"><backToGamePage /></button>
         </div>
       </div>
@@ -45,7 +49,7 @@ import GameContent from '@/components/GameContent.vue';
 import LoadingPage from '@/components/LoadingPage.vue';
 import IntroTitle from '../assets/svg-icon/intro-title.svg';
 import backToGamePage from '../assets/svg-icon/back-to-game-page.svg';
-import sendAnswer from '../assets/svg-icon/send-answer.svg';
+// import sendAnswer from '../assets/svg-icon/send-answer.svg';
 
 export default {
   name: 'TheGame',
@@ -64,6 +68,9 @@ export default {
   },
   methods: {
     ...mapActions(['createClientId', 'getUserToken', 'getStatusData']),
+    copyAnswer() {
+      navigator.clipboard.writeText(JSON.stringify(this.abTesting));
+    },
     changeHeight() {
       this.shouldChangeHeight = !this.uldChangeHeight;
     },
@@ -150,7 +157,7 @@ export default {
     LoadingPage,
     IntroTitle,
     backToGamePage,
-    sendAnswer,
+    // sendAnswer,
   },
   inject: ['isGamePage'],
 };
@@ -196,7 +203,15 @@ export default {
     margin-bottom: 94px;
     .btn {
       margin-bottom: 54px;
+      &--test{
+        color: black;
+        border: 1px solid black;
+        padding: 5px;
+        margin-top: 10px;
+        font-size: 18px;
+      }
     }
+
   }
   .farmer-icon {
     width: 89px;
